@@ -174,7 +174,6 @@
       enableDefaultConfig = false;
 
     };
-    ssh-agent.enable = true;
   };
 
   services = {
