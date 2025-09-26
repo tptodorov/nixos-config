@@ -68,8 +68,8 @@
       enableZshIntegration = true;
       settings = {
         theme = "TokyoNight Moon";
-        font-size = 20;
-        font-family = "Iosevka NFM";
+        font-size = 16;
+        font-family = "IosevkaTermSlab NFM";
       };
     };
 
