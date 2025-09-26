@@ -35,6 +35,8 @@
     kitty
     nixfmt-rfc-style
     nixfmt-tree
+    hyprpaper
+    hypridle
 
     wofi
     firefox
