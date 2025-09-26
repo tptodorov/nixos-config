@@ -32,6 +32,9 @@
   # The home.packages option allows you to install Nix packages into your
   # environment.
   home.packages = with pkgs; [
+
+    devenv
+
     kitty
     nixfmt-rfc-style
     nixfmt-tree
@@ -69,15 +72,22 @@
       enable = true;
       enableZshIntegration = true;
       settings = {
-        theme = "TokyoNight Moon";
-        font-size = 16;
-        font-family = "IosevkaTermSlab NFM";
+        theme = "TokyoNight Storm";
+        font-size = 12;
+        font-family = "ZedMono Nerd Font";
       };
     };
 
     ripgrep.enable = true;
     rio.enable = true;
     htop.enable = true;
+    zoxide.enable = true;
+    direnv = {
+      enable = true;
+      enableZshIntegration = true;
+      nix-direnv.enable = true;
+      silent = true;
+    };
     zed-editor = {
       enable = true;
       package = pkgs.zed-editor;

@@ -124,7 +124,8 @@
     nerd-fonts.droid-sans-mono
     nerd-fonts.inconsolata
     nerd-fonts.zed-mono
-    nerd-fonts.iosevka-term-slab
+    nerd-fonts.iosevka
+    nerd-fonts.iosevka-term
 
   ];
 

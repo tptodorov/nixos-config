@@ -19,6 +19,7 @@
   "buffer_line_height": "comfortable",
   "vim_mode": true,
   "vim": {
+    "leader": "SPACE",
     "use_system_clipboard": "always"
   },
   "indent_guides": {
@@ -66,7 +67,7 @@
       ]
     }
   },
-  "buffer_font_family": "Iosevka Nerd Font",
+  "buffer_font_family": "ZedMono Nerd Font",
   "ui_font_family": ".SystemUIFont",
   "ui_font_size": 16,
   "buffer_font_size": 16,
