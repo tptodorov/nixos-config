@@ -1,0 +1,113 @@
+{
+  "icon_theme": "Warm Charmed Icons",
+  "agent": {
+    "always_allow_tool_actions": true,
+    "play_sound_when_agent_done": true
+  },
+  "edit_predictions": {
+    "disabled_globs": [
+      ".env",
+      "main.js"
+    ]
+  },
+  "format_on_save": "language_server",
+  "formatter": "language_server",
+  "features": {
+    "edit_prediction_provider": "supermaven"
+  },
+  "autosave": "on_focus_change",
+  "buffer_line_height": "comfortable",
+  "vim_mode": true,
+  "vim": {
+    "use_system_clipboard": "always"
+  },
+  "indent_guides": {
+    "enabled": true,
+    "coloring": "indent_aware"
+  },
+  "inlay_hints": {
+    "enabled": true
+  },
+  "theme": {
+    "mode": "dark",
+    "dark": "Tokyo Night Storm",
+    "light": "One Light"
+  },
+  "languages": {
+    "Nix": {
+      "formatter": "language_server"
+    },
+    "TypeScript": {
+      "inlay_hints": {
+        "enabled": true
+      }
+    },
+    "TSX": {
+      "inlay_hints": {
+        "enabled": true
+      }
+    },
+    "Rust": {
+      "inlay_hints": {
+        "enabled": true
+      }
+    },
+    "Python": {
+      "language_servers": [
+        "ruff"
+      ],
+      "format_on_save": "on",
+      "formatter": [
+        {
+          "language_server": {
+            "name": "ruff"
+          }
+        }
+      ]
+    }
+  },
+  "buffer_font_family": "Iosevka Nerd Font",
+  "ui_font_family": ".SystemUIFont",
+  "ui_font_size": 16,
+  "buffer_font_size": 20,
+  "scroll_beyond_last_line": "off",
+  "terminal": {
+    "font_family": "IosevkaTerm Nerd Font Mono",
+    "env": {
+      "EDITOR": "zed --wait"
+    }
+  },
+  "file_types": {
+    "Dockerfile": [
+      "Dockerfile",
+      "Dockerfile.*"
+    ],
+    "JSON": [
+      "json",
+      "jsonc",
+      "*.code-snippets"
+    ]
+  },
+  "telemetry": {
+    "diagnostics": false,
+    "metrics": false
+  },
+  "project_panel": {},
+  "outline_panel": {
+    "dock": "right"
+  },
+  "collaboration_panel": {
+    "dock": "left"
+  },
+  "notification_panel": {
+    "dock": "left"
+  },
+  "chat_panel": {
+    "dock": "left"
+  },
+  "command_aliases": {
+    "W": "w",
+    "Wq": "wq",
+    "Q": "q"
+  }
+}
