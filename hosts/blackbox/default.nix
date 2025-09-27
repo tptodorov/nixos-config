@@ -1,7 +1,4 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
-
+# NixOS system configuration for blackbox host
 {
   inputs,
   outputs,
@@ -10,14 +7,29 @@
   lib,
   ...
 }:
-
 {
   imports = [
-    # Include the results of the hardware scan.
+    # Hardware configuration
     ./hardware-configuration.nix
+
+    # Home Manager integration
     inputs.home-manager.nixosModules.home-manager
+
+    # System modules
+    ./modules/boot.nix
+    ./modules/networking.nix
+    ./modules/desktop.nix
+    ./modules/services.nix
+
+    # Shared modules
+    ../../modules/common/fonts.nix
+    ../../modules/users/todor.nix
+
+    # Secrets
+    ../../secrets/ssh-keys.nix
   ];
 
+  # Home Manager configuration
   home-manager = {
     backupFileExtension = "backup";
     extraSpecialArgs = { inherit inputs outputs; };
@@ -25,152 +37,9 @@
     users.todor = ../../home/todor;
   };
 
-  # Bootloader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-
-  networking.hostName = "blackbox"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
-  # Enable networking
-  networking.networkmanager.enable = true;
-
-
-  # Create NetworkManager connection file
-  environment.etc."NetworkManager/system-connections/usb-gadget.nmconnection" = {
-    text = ''
-      [connection]
-      id=usb-gadget
-      type=ethernet
-      interface-name=usb0
-      autoconnect=true
-      autoconnect-priority=100
-
-      [ethernet]
-
-      [ipv4]
-      address1=192.168.10.1/24
-      method=manual
-
-      [ipv6]
-      addr-gen-mode=stable-privacy
-      method=auto
-
-      [proxy]
-    '';
-    mode = "0600";
-  };
-  
-  # Load module at boot
-  systemd.services.usb-gadget-module = {
-    description = "Load USB Gadget Module";
-    wantedBy = [ "multi-user.target" ];
-    serviceConfig.Type = "oneshot";
-    script = "${pkgs.kmod}/bin/modprobe g_ether";
-  };
-  # Set your time zone.
-  time.timeZone = "Europe/Zurich";
-
-  # Select internationalisation properties.
-  i18n.defaultLocale = "en_US.UTF-8";
-
-  security.rtkit.enable = true;
-
-  services = {
-
-    pulseaudio.enable = false;
-    # Enable the GNOME Desktop Environment.
-    displayManager.gdm.enable = true;
-    desktopManager.gnome.enable = true;
-
-    # Configure keymap in X11
-    xserver.xkb = {
-      layout = "us";
-      variant = "";
-    };
-
-    # Enable CUPS to print documents.
-    printing.enable = true;
-
-    # Enable sound with pipewire.
-    pipewire = {
-      enable = true;
-      alsa.enable = true;
-      alsa.support32Bit = true;
-      pulse.enable = true;
-      # If you want to use JACK applications, uncomment this
-      #jack.enable = true;
-
-      # use the example session manager (no others are packaged yet so this is enabled by default,
-      # no need to redefine it in your config for now)
-      #media-session.enable = true;
-    };
-    # Enable mDNS for hostname resolution (blackbox.local)
-    avahi = {
-      enable = true;
-      nssmdns4 = true;
-      publish = {
-        enable = true;
-        addresses = true;
-        domain = true;
-        hinfo = true;
-        userServices = true;
-        workstation = true;
-      };
-    };
-
-    # Enable the OpenSSH daemon.
-    openssh = {
-      enable = true;
-      settings = {
-        PermitRootLogin = "no";
-        PasswordAuthentication = true;
-        PubkeyAuthentication = true;
-      };
-    };
-  };
-
-  # Define a user account. Don't forget to set a password with 'passwd'.
-  users.users.todor = {
-    isNormalUser = true;
-    description = "Todor Todorov";
-    extraGroups = [
-      "networkmanager"
-      "wheel"
-    ];
-    packages = with pkgs; [
-      #  thunderbird
-    ];
-    shell = pkgs.zsh;
-    openssh.authorizedKeys.keys = [
-      "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCq6CJc4GBSd0JMVRznlbvKMP6XqEmzDj881O5O8/8jf31barMJyXY2yPEMsltUK/S1eobPgmw044RCn9gV+0xT2i4Wx3RWQz7adKKqRDVdbMVZdbIGLm0ZG8MNWKfAvtJ2Ghg7dg1ES7Htxi6i+WULhrCUlg0cKgBcjZGj0042k19IajT09Eyh0rV2B7R8qkqL0QC3c1tTHATRUSmDMSSU3LCt1DTLWU11ZDFDl8X1NwOfU0LWQ1qqCyGAC/kbILdp67GjqMj/qqGg8JheVWsicyI50IJ50DcqD9bv0hvEspwHrUKkN4bFm5im47w2OEX5vplsxdSYb1eotGovd4dj todor@pero.local"
-    ];
-  };
-
-  programs = {
-    zsh.enable = true;
-    xwayland.enable = true;
-    hyprland = {
-      enable = true;
-      xwayland.enable = true;
-    };
-
-    # Install firefox.
-    firefox.enable = true;
-
-  };
-
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
-
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
+  # Essential system packages
   environment.systemPackages = with pkgs; [
-    vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    vim
     wget
     git
     tree
@@ -178,45 +47,6 @@
     inputs.home-manager.packages.${pkgs.system}.default
   ];
 
-  fonts.packages = with pkgs; [
-    nerd-fonts.fira-code
-    nerd-fonts.droid-sans-mono
-    nerd-fonts.inconsolata
-    nerd-fonts.zed-mono
-    nerd-fonts.iosevka
-    nerd-fonts.iosevka-term
-
-  ];
-
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
-
-  nix.settings.experimental-features = [
-    "nix-command"
-    "flakes"
-  ];
-  nix.settings.trusted-users = [
-    "todor"
-    "root"
-  ];
-
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
-
-  # This value determines the NixOS release from which the default
-  # settings for stateful data, like file locations and database versions
-  # on your system were taken. It‘s perfectly fine and recommended to leave
-  # this value at the release version of the first install of this system.
-  # Before changing this value read the documentation for this option
-  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "25.05"; # Did you read the comment?
-
+  # System version
+  system.stateVersion = "25.05";
 }
