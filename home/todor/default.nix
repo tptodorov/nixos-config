@@ -34,6 +34,7 @@
   home.packages = with pkgs; [
 
     devenv
+    dua
 
     kitty
     nixfmt-rfc-style
@@ -82,6 +83,7 @@
     rio.enable = true;
     htop.enable = true;
     zoxide.enable = true;
+    claude-code.enable = true;
     direnv = {
       enable = true;
       enableZshIntegration = true;

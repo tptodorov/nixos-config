@@ -29,7 +29,7 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = "nixos"; # Define your hostname.
+  networking.hostName = "blackbox"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
@@ -39,6 +39,39 @@
   # Enable networking
   networking.networkmanager.enable = true;
 
+
+  # Create NetworkManager connection file
+  environment.etc."NetworkManager/system-connections/usb-gadget.nmconnection" = {
+    text = ''
+      [connection]
+      id=usb-gadget
+      type=ethernet
+      interface-name=usb0
+      autoconnect=true
+      autoconnect-priority=100
+
+      [ethernet]
+
+      [ipv4]
+      address1=192.168.10.1/24
+      method=manual
+
+      [ipv6]
+      addr-gen-mode=stable-privacy
+      method=auto
+
+      [proxy]
+    '';
+    mode = "0600";
+  };
+  
+  # Load module at boot
+  systemd.services.usb-gadget-module = {
+    description = "Load USB Gadget Module";
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig.Type = "oneshot";
+    script = "${pkgs.kmod}/bin/modprobe g_ether";
+  };
   # Set your time zone.
   time.timeZone = "Europe/Zurich";
 
@@ -76,11 +109,32 @@
       # no need to redefine it in your config for now)
       #media-session.enable = true;
     };
+    # Enable mDNS for hostname resolution (blackbox.local)
+    avahi = {
+      enable = true;
+      nssmdns4 = true;
+      publish = {
+        enable = true;
+        addresses = true;
+        domain = true;
+        hinfo = true;
+        userServices = true;
+        workstation = true;
+      };
+    };
+
     # Enable the OpenSSH daemon.
-    openssh.enable = true;
+    openssh = {
+      enable = true;
+      settings = {
+        PermitRootLogin = "no";
+        PasswordAuthentication = true;
+        PubkeyAuthentication = true;
+      };
+    };
   };
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
+  # Define a user account. Don't forget to set a password with 'passwd'.
   users.users.todor = {
     isNormalUser = true;
     description = "Todor Todorov";
@@ -91,9 +145,14 @@
     packages = with pkgs; [
       #  thunderbird
     ];
+    shell = pkgs.zsh;
+    openssh.authorizedKeys.keys = [
+      "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCq6CJc4GBSd0JMVRznlbvKMP6XqEmzDj881O5O8/8jf31barMJyXY2yPEMsltUK/S1eobPgmw044RCn9gV+0xT2i4Wx3RWQz7adKKqRDVdbMVZdbIGLm0ZG8MNWKfAvtJ2Ghg7dg1ES7Htxi6i+WULhrCUlg0cKgBcjZGj0042k19IajT09Eyh0rV2B7R8qkqL0QC3c1tTHATRUSmDMSSU3LCt1DTLWU11ZDFDl8X1NwOfU0LWQ1qqCyGAC/kbILdp67GjqMj/qqGg8JheVWsicyI50IJ50DcqD9bv0hvEspwHrUKkN4bFm5im47w2OEX5vplsxdSYb1eotGovd4dj todor@pero.local"
+    ];
   };
 
   programs = {
+    zsh.enable = true;
     xwayland.enable = true;
     hyprland = {
       enable = true;
