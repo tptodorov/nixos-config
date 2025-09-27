@@ -89,9 +89,9 @@
     };
   };
 
-  # Set Brave as default browser
+  # Set Brave as default browser (override existing Firefox setting)
   home.sessionVariables = {
-    BROWSER = "brave";
+    BROWSER = lib.mkForce "brave";
   };
 
   # Create initial setup script for first run
