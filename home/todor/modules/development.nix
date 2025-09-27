@@ -1,8 +1,15 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 {
   # Development tools and environment
   home.packages = with pkgs; [
     devenv
+    git-town
+    nil
   ];
 
   programs = {
@@ -36,7 +43,10 @@
       settings = {
         gui.theme = {
           lightTheme = true;
-          activeBorderColor = [ "blue" "bold" ];
+          activeBorderColor = [
+            "blue"
+            "bold"
+          ];
           inactiveBorderColor = [ "black" ];
           selectedLineBgColor = [ "default" ];
         };
@@ -64,7 +74,10 @@
     zed-editor = {
       enable = true;
       package = pkgs.zed-editor;
-      extraPackages = [ pkgs.nixd ];
+      extraPackages = [
+        pkgs.nixd
+        pkgs.nil
+      ];
       extensions = [
         "nix"
         "tokyo-night"

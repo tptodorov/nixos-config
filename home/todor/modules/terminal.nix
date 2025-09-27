@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 {
   imports = [
     # Import user-specific environment configuration (non-sensitive)
@@ -15,13 +20,13 @@
     nixfmt-tree
 
     # Supporting packages for Oh My Zsh plugins
-    jq              # for jsontools plugin
-    pass            # for pass plugin
-    awscli2         # for aws plugin
-    kubectl         # for kubectl plugin
-    nodejs          # for npm plugin
-    python3         # for python plugin
-    bun             # for bun plugin
+    jq # for jsontools plugin
+    pass # for pass plugin
+    awscli2 # for aws plugin
+    kubectl # for kubectl plugin
+    nodejs # for npm plugin
+    python3 # for python plugin
+    bun # for bun plugin
   ];
 
   programs = {
@@ -54,7 +59,6 @@
           "pass"
           "z"
           "jsontools"
-          "common-aliases"
           "aws"
           "kubectl"
           "bun"
@@ -114,7 +118,8 @@
         "wget" = "wget -c";
 
         # AWS/EC2 shortcuts
-        "ssh2ec2" = "ssh -oStrictHostKeyChecking=no -i ~/.ec2/laptop-\${AWS_DEFAULT_REGION}.pem -l ec2-user";
+        "ssh2ec2" =
+          "ssh -oStrictHostKeyChecking=no -i ~/.ec2/laptop-\${AWS_DEFAULT_REGION}.pem -l ec2-user";
         "scp2ec2" = "scp -i ~/.ec2/laptop.pem";
 
         # Development tools
@@ -122,7 +127,6 @@
         "b" = "bun";
         "cs" = "coursier";
         "bb" = "ssh blackbox";
-        "gw" = "gradle -t";
       };
     };
 

@@ -20,6 +20,7 @@
     ./modules/networking.nix
     ./modules/desktop.nix
     ./modules/services.nix
+    ./modules/nix.nix
 
     # Shared modules
     ../../modules/common/fonts.nix
@@ -33,7 +34,7 @@
   home-manager = {
     backupFileExtension = "backup";
     extraSpecialArgs = { inherit inputs outputs; };
-    sharedModules = [];
+    sharedModules = [ ];
     users.todor = ../../home/todor;
   };
 
@@ -46,6 +47,7 @@
     rep-grep
     age
     sops
+    efibootmgr
     inputs.home-manager.packages.${pkgs.system}.default
   ];
 

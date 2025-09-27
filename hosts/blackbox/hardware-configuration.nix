@@ -22,7 +22,11 @@
     "usbhid"
     "sd_mod"
   ];
-  boot.kernelModules = [ "kvm-amd" "g_ether" "libcomposite" ];
+  boot.kernelModules = [
+    "kvm-amd"
+    "g_ether"
+    "libcomposite"
+  ];
   boot.initrd.kernelModules = [ ];
   boot.extraModulePackages = [ ];
 

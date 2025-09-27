@@ -10,16 +10,16 @@
       "main.js"
     ]
   },
-  "format_on_save": "language_server",
-  "formatter": "language_server",
   "features": {
     "edit_prediction_provider": "supermaven"
   },
+  "format_on_save": "language_server",
   "autosave": "on_focus_change",
   "buffer_line_height": "comfortable",
+  "soft_wrap": "none",
   "vim_mode": true,
   "vim": {
-    "leader": "SPACE",
+    "leader": " ",
     "use_system_clipboard": "always"
   },
   "indent_guides": {
@@ -73,7 +73,7 @@
   "buffer_font_size": 16,
   "scroll_beyond_last_line": "off",
   "terminal": {
-    "font_family": "IosevkaTerm Nerd Font Mono",
+    "font_family": "ZedMono Nerd Font",
     "env": {
       "EDITOR": "zed --wait"
     }
@@ -93,7 +93,6 @@
     "diagnostics": false,
     "metrics": false
   },
-  "project_panel": {},
   "outline_panel": {
     "dock": "right"
   },
