@@ -25,11 +25,6 @@
     }@inputs:
     let
       inherit (self) outputs;
-      systems = [
-        "i686-linux"
-        "x86_64-linux"
-      ];
-      forAllSystems = nixpkgs.lib.genAttrs systems;
     in
     {
       overlays = import ./overlays { inherit inputs; };
@@ -37,9 +32,9 @@
         blackbox = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs outputs; };
           modules = [
-		inputs.home-manager.nixosModules.home-manager
-		 ./hosts/blackbox 
-		];
+            inputs.home-manager.nixosModules.home-manager
+            ./hosts/blackbox
+          ];
 
         };
       };

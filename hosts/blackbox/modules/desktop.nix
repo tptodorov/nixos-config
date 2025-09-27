@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 {
   # Desktop environment configuration
   services = {
@@ -20,6 +25,20 @@
       enable = true;
       xwayland.enable = true;
     };
-    firefox.enable = true;
+    # Brave browser is configured via Home Manager
+  };
+
+  # System-wide browser support
+  environment.systemPackages = with pkgs; [
+    # Browser support packages
+    libva
+    libva-utils
+  ];
+
+  # Hardware acceleration support for browsers
+  hardware.opengl = {
+    enable = true;
+    driSupport = true;
+    driSupport32Bit = true;
   };
 }

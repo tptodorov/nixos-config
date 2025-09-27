@@ -1,4 +1,3 @@
-{ config, lib, pkgs, ... }:
 {
   # Environment variables and secrets for user todor's zsh profile
   # This file contains non-sensitive defaults for user todor
@@ -15,7 +14,7 @@
     # OPENROUTER_API_KEY = "your-openrouter-key";
 
     # Non-sensitive environment variables for todor
-    BROWSER = "firefox";
+    BROWSER = "brave";
     TERMINAL = "ghostty";
 
     # User-specific preferences

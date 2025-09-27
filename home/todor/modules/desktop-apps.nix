@@ -1,13 +1,10 @@
 {
-  config,
-  lib,
   pkgs,
   ...
 }:
 {
   # Desktop applications and GUI tools
   home.packages = with pkgs; [
-    firefox
     xdg-utils
     xdg-user-dirs
   ];
@@ -24,8 +21,6 @@
         let
           browser = [
             "brave-browser.desktop"
-            "firefox.desktop"
-            "google-chrome.desktop"
           ];
           editor = [
             "Helix.desktop"
