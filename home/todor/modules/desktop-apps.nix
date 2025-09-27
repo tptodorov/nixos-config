@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 {
   # Desktop applications and GUI tools
   home.packages = with pkgs; [
@@ -18,8 +23,9 @@
       defaultApplications =
         let
           browser = [
-            "google-chrome.desktop"
+            "brave-browser.desktop"
             "firefox.desktop"
+            "google-chrome.desktop"
           ];
           editor = [
             "Helix.desktop"
@@ -67,7 +73,7 @@
           "inode/directory" = [ "yazi.desktop" ];
         };
 
-      associations.removed = {};
+      associations.removed = { };
     };
 
     userDirs = {

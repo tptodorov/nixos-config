@@ -11,6 +11,7 @@
     ./modules/development.nix
     ./modules/terminal.nix
     ./modules/desktop-apps.nix
+    ./modules/brave.nix
     ./modules/hyprland.nix
     ./modules/media.nix
   ];
