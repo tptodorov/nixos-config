@@ -1,0 +1,24 @@
+# Age encryption keys (never commit these!)
+**/.config/sops/age/keys.txt
+**/age/keys.txt
+
+# Legacy plain text secrets (if any exist)
+home/*/secrets/local.nix
+secrets/*.env
+secrets/*.key
+secrets/*.pem
+
+# Build results
+result/
+result-*
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db

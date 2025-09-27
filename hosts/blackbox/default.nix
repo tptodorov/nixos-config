@@ -44,6 +44,8 @@
     git
     tree
     rep-grep
+    age
+    sops
     inputs.home-manager.packages.${pkgs.system}.default
   ];
 

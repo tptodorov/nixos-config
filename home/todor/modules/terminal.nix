@@ -1,5 +1,13 @@
 { config, lib, pkgs, ... }:
 {
+  imports = [
+    # Import user-specific environment configuration (non-sensitive)
+    ../secrets/environment.nix
+
+    # Import encrypted secrets management
+    ../secrets/secrets.nix
+  ];
+
   # Terminal and shell configuration
   home.packages = with pkgs; [
     dua
@@ -27,6 +35,20 @@
       enable = true;
       oh-my-zsh = {
         enable = true;
+        plugins = [
+          "git"
+          "sudo"
+          "docker"
+          "kubectl"
+        ];
+      };
+
+      # History configuration
+      history = {
+        size = 10000;
+        save = 10000;
+        ignoreDups = true;
+        ignoreSpace = true;
       };
     };
 
