@@ -72,6 +72,8 @@
         "nix"
         "tokyo-night"
         "php"
+        "log"
+        "rust"
       ];
       userSettings = builtins.fromJSON (builtins.readFile ../config/zed/private_settings.json);
     };

@@ -28,6 +28,9 @@
     ../../secrets/ssh-keys.nix
   ];
 
+  # Add fenix overlay for Rust toolchain
+  nixpkgs.overlays = [ inputs.fenix.overlays.default ];
+
   # Home Manager configuration
   home-manager = {
     backupFileExtension = "backup";
@@ -49,6 +52,16 @@
     sops
     efibootmgr
     inputs.home-manager.packages.${pkgs.system}.default
+
+    # Rust toolchain via fenix
+    (fenix.complete.withComponents [
+      "cargo"
+      "clippy"
+      "rust-src"
+      "rustc"
+      "rustfmt"
+    ])
+    rust-analyzer-nightly
   ];
 
   # System version

@@ -15,6 +15,9 @@
     hyprshot
     cliphist
     wl-clipboard
+    swappy
+    grim
+    slurp
   ];
 
   programs = {
