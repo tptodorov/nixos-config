@@ -1,0 +1,88 @@
+/* Wofi Clipboard Manager Custom Styling */
+
+window {
+    margin: 0px;
+    border: 2px solid #33ccff;
+    border-radius: 15px;
+    background-color: rgba(40, 42, 54, 0.95);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 14px;
+}
+
+#input {
+    margin: 10px;
+    border: 2px solid #6272a4;
+    border-radius: 8px;
+    color: #f8f8f2;
+    background-color: rgba(68, 71, 90, 0.8);
+    padding: 8px 12px;
+    font-size: 14px;
+}
+
+#input:focus {
+    border-color: #33ccff;
+    outline: none;
+}
+
+#inner-box {
+    margin: 5px;
+    border: none;
+    background-color: transparent;
+}
+
+#outer-box {
+    margin: 5px;
+    border: none;
+    background-color: transparent;
+}
+
+#scroll {
+    margin: 0px;
+    border: none;
+}
+
+#text {
+    margin: 5px;
+    border: none;
+    color: #f8f8f2;
+    font-size: 13px;
+    padding: 8px 12px;
+}
+
+#entry {
+    border: none;
+    border-radius: 8px;
+    margin: 2px;
+    background-color: transparent;
+    transition: all 0.2s ease;
+}
+
+#entry:selected {
+    background-color: rgba(51, 204, 255, 0.2);
+    border: 1px solid #33ccff;
+}
+
+#entry:hover {
+    background-color: rgba(98, 114, 164, 0.3);
+}
+
+/* Style for long text entries */
+#text:first-line {
+    font-weight: bold;
+    color: #50fa7b;
+}
+
+/* Custom scrollbar */
+scrollbar {
+    background-color: rgba(68, 71, 90, 0.3);
+    border-radius: 5px;
+}
+
+scrollbar slider {
+    background-color: rgba(98, 114, 164, 0.8);
+    border-radius: 5px;
+}
+
+scrollbar slider:hover {
+    background-color: rgba(139, 233, 253, 0.8);
+}

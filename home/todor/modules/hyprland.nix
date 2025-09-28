@@ -13,6 +13,8 @@
     pyprland
     pulseaudio
     hyprshot
+    cliphist
+    wl-clipboard
   ];
 
   programs = {
@@ -71,6 +73,14 @@
     };
     ".config/hypr" = {
       source = ../config/hypr;
+      recursive = true;
+    };
+    ".config/scripts" = {
+      source = ../config/scripts;
+      recursive = true;
+    };
+    ".config/wofi" = {
+      source = ../config/wofi;
       recursive = true;
     };
   };
