@@ -102,6 +102,9 @@
         "vis" = "nvim \"+set si\"";
         "edit" = "nvim";
 
+        # Password manager
+        "pass" = "gopass";
+
         # Network utilities
         "ping" = "ping -c 5";
         "fastping" = "ping -c 100 -s.2";
@@ -169,12 +172,7 @@
     };
   };
 
-  # GPG and SSH services
+  # SSH services
   services = {
-    gpg-agent = {
-      enable = true;
-      defaultCacheTtl = 1800;
-      enableSshSupport = true;
-    };
   };
 }

@@ -5,8 +5,15 @@
 {
   # Desktop applications and GUI tools
   home.packages = with pkgs; [
+    spotify
     xdg-utils
     xdg-user-dirs
+
+    # Messenger applications
+    telegram-desktop
+    signal-desktop
+    whatsapp-for-linux
+    discord
   ];
 
   # XDG configuration
@@ -57,7 +64,10 @@
           "x-scheme-handler/tg" = [ "org.telegram.desktop.desktop " ];
 
           # Media types
-          "audio/*" = [ "mpv.desktop" ];
+          "audio/*" = [
+            "spotify.desktop"
+            "mpv.desktop"
+          ];
           "video/*" = [ "mpv.desktop" ];
           "image/*" = [ "imv-dir.desktop" ];
           "image/gif" = [ "imv-dir.desktop" ];

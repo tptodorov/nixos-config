@@ -8,6 +8,7 @@
   imports = [
     # User modules
     ./modules/development.nix
+    ./modules/nixvim.nix
     ./modules/terminal.nix
     ./modules/desktop-apps.nix
     ./modules/brave.nix

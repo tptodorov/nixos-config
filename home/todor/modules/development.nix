@@ -8,6 +8,7 @@
     devenv
     git-town
     nil
+    gopass
   ];
 
   programs = {
@@ -59,15 +60,6 @@
       silent = true;
     };
 
-    # Editors
-    neovim = {
-      enable = true;
-      defaultEditor = true;
-      viAlias = true;
-      vimAlias = true;
-      withNodeJs = true;
-      withPython3 = true;
-    };
 
     zed-editor = {
       enable = true;

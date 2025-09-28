@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 {
   # Hyprland desktop environment configuration
   home.packages = with pkgs; [
@@ -66,10 +71,6 @@
     };
     ".config/hypr" = {
       source = ../config/hypr;
-      recursive = true;
-    };
-    ".config/nvim" = {
-      source = ../config/nvim;
       recursive = true;
     };
   };

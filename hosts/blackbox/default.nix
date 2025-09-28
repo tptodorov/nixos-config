@@ -32,7 +32,9 @@
   home-manager = {
     backupFileExtension = "backup";
     extraSpecialArgs = { inherit inputs outputs; };
-    sharedModules = [ ];
+    sharedModules = [
+      inputs.nixvim.homeModules.nixvim
+    ];
     users.todor = ../../home/todor;
   };
 
@@ -42,7 +44,7 @@
     wget
     git
     tree
-    rep-grep
+    ripgrep
     age
     sops
     efibootmgr
