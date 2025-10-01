@@ -21,12 +21,14 @@
 
     # Supporting packages for Oh My Zsh plugins
     jq # for jsontools plugin
-    pass # for pass plugin
+    gopass # for pass plugin
     awscli2 # for aws plugin
     kubectl # for kubectl plugin
     nodejs # for npm plugin
     python3 # for python plugin
     bun # for bun plugin
+
+    fd
   ];
 
   programs = {
