@@ -21,6 +21,7 @@
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    flake-utils.url = "github:numtide/flake-utils";
   };
 
   outputs =
@@ -31,13 +32,33 @@
       nixpkgs,
       nixvim,
       sops-nix,
+      flake-utils,
       ...
     }@inputs:
     let
       inherit (self) outputs;
+      lib = import ./lib { inherit inputs; };
     in
     {
       overlays = import ./overlays { inherit inputs; };
+    }
+    // flake-utils.lib.eachDefaultSystem (
+      system:
+      let
+        pkgs = nixpkgs.legacyPackages.${system};
+      in
+      {
+        devShells.default = pkgs.mkShell {
+          packages = with pkgs; [
+            alejandra
+            deadnix
+            statix
+            lazygit
+          ];
+        };
+      }
+    )
+    // {
       nixosConfigurations = {
         blackbox = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs outputs; };

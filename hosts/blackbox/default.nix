@@ -26,10 +26,18 @@
 
     # Secrets
     ../../secrets/ssh-keys.nix
+    inputs.sops-nix.nixosModules.sops
   ];
 
-  # Add fenix overlay for Rust toolchain
-  nixpkgs.overlays = [ inputs.fenix.overlays.default ];
+  # Sops-nix configuration for system-level secrets
+  sops = {
+    defaultSopsFile = ../../secrets/secrets.yaml;
+    secrets.ssh_public_key = { };
+    # The host key will be generated automatically on first boot
+    # and stored at /var/lib/sops/age/keys.txt.
+    # You can then get the public key and add it to .sops.yaml
+    # to encrypt new secrets for this host.
+  };
 
   # Home Manager configuration
   home-manager = {
@@ -43,25 +51,10 @@
 
   # Essential system packages
   environment.systemPackages = with pkgs; [
-    vim
-    wget
-    git
-    tree
-    ripgrep
     age
     sops
     efibootmgr
     inputs.home-manager.packages.${pkgs.system}.default
-
-    # Rust toolchain via fenix
-    (fenix.complete.withComponents [
-      "cargo"
-      "clippy"
-      "rust-src"
-      "rustc"
-      "rustfmt"
-    ])
-    rust-analyzer-nightly
   ];
 
   # System version
