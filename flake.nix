@@ -47,6 +47,19 @@
           ];
 
         };
+        vm = nixpkgs.lib.nixosSystem {
+          specialArgs = { inherit inputs outputs; };
+          modules = [
+            inputs.home-manager.nixosModules.home-manager
+            ./hosts/vm
+          ];
+          config = {
+            imports = [
+              ./modules/aarch64-linux.nix
+            ];
+          };
+        };
+
       };
     };
 }
