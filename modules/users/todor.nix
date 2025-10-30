@@ -10,6 +10,7 @@
     ];
     packages = with pkgs; [];
     shell = pkgs.zsh;
+    initialPassword = "todor";
   };
 
   # Enable zsh system-wide
