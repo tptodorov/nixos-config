@@ -7,8 +7,6 @@
 {
   # Hyprland desktop environment configuration
   home.packages = with pkgs; [
-    hyprpaper
-    hypridle
     wofi
     pyprland
     pulseaudio
@@ -18,11 +16,14 @@
     swappy
     grim
     slurp
-  ];
+  ] ++ (lib.optionals (pkgs.system != "aarch64-linux") [
+    hyprpaper
+    hypridle
+  ]);
 
   programs = {
     # Hyprland-related programs
-    hyprlock.enable = true;
+    hyprlock.enable = lib.mkIf (pkgs.system != "aarch64-linux") true;
     wofi.enable = true;
     waybar.enable = true;
     waylogout.enable = true;
@@ -32,7 +33,7 @@
   services = {
     # Hyprland services
     hyprsunset.enable = true;
-    hyprpaper.enable = true;
+    hyprpaper.enable = lib.mkIf (pkgs.system != "aarch64-linux") true;
     playerctld.enable = true;
 
     # Notification daemon
@@ -75,7 +76,7 @@
       recursive = true;
     };
     ".config/hypr" = {
-      source = ../config/hypr;
+      source = if pkgs.system == "aarch64-linux" then ../config/hypr-vm else ../config/hypr;
       recursive = true;
     };
 

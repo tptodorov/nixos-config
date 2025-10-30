@@ -1,11 +1,11 @@
 {
   pkgs,
+  lib,
   ...
 }:
 {
   # Desktop applications and GUI tools
   home.packages = with pkgs; [
-    spotify
     xdg-utils
     xdg-user-dirs
 
@@ -13,8 +13,10 @@
     telegram-desktop
     signal-desktop
     whatsapp-for-linux
+  ] ++ (lib.optionals (pkgs.system != "aarch64-linux") [
+    spotify
     discord
-  ];
+  ]);
 
   # XDG configuration
   xdg = {
@@ -65,9 +67,10 @@
 
           # Media types
           "audio/*" = [
-            "spotify.desktop"
             "mpv.desktop"
-          ];
+          ] ++ (lib.optionals (pkgs.system != "aarch64-linux") [
+            "spotify.desktop"
+          ]);
           "video/*" = [ "mpv.desktop" ];
           "image/*" = [ "imv-dir.desktop" ];
           "image/gif" = [ "imv-dir.desktop" ];

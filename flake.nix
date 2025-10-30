@@ -48,18 +48,25 @@
 
         };
         vm = nixpkgs.lib.nixosSystem {
+          system = "aarch64-linux";
           specialArgs = { inherit inputs outputs; };
           modules = [
             inputs.home-manager.nixosModules.home-manager
             ./hosts/vm
           ];
-          config = {
-            imports = [
-              ./modules/aarch64-linux.nix
-            ];
-          };
         };
 
       };
+      packages.aarch64-linux.vm-image = self.nixosConfigurations.vm.config.system.build.vm;
     };
 }
+
+# To build the VM image for UTM, run the following command:
+# nix build .#vm-image
+#
+# If you get an error about the attribute not being found, it might be because
+# you are on a different system than the target system (aarch64-linux).
+# In that case, you can try to specify the target system explicitly:
+# nix build .#packages.aarch64-linux.vm-image
+#
+# The resulting image will be in the `result` directory.
