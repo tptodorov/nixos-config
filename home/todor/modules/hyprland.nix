@@ -18,7 +18,7 @@
     slurp
     hyprpaper
     hypridle
-  ]);
+  ];
 
   programs = {
     # Hyprland-related programs

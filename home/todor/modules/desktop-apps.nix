@@ -15,7 +15,7 @@
     whatsapp-for-linux
     spotify
     discord
-  ]);
+  ];
 
   # XDG configuration
   xdg = {
@@ -68,7 +68,7 @@
           "audio/*" = [
             "mpv.desktop"
             "spotify.desktop"
-          ]);
+          ];
           "video/*" = [ "mpv.desktop" ];
           "image/*" = [ "imv-dir.desktop" ];
           "image/gif" = [ "imv-dir.desktop" ];
