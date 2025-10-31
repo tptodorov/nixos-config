@@ -4,6 +4,10 @@
   '';
 
   inputs = {
+    # Other packages
+    jujutsu.url = "github:martinvonz/jj";
+    zig.url = "github:mitchellh/zig-overlay";
+
     fenix = {
       url = "github:nix-community/fenix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -21,6 +25,7 @@
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
   };
 
   outputs =
@@ -35,6 +40,7 @@
     }@inputs:
     let
       inherit (self) outputs;
+
     in
     {
       overlays = import ./overlays { inherit inputs; };
@@ -47,26 +53,16 @@
           ];
 
         };
-        vm = nixpkgs.lib.nixosSystem {
+        vm-aarch64 = nixpkgs.lib.nixosSystem {
           system = "aarch64-linux";
           specialArgs = { inherit inputs outputs; };
           modules = [
             inputs.home-manager.nixosModules.home-manager
-            ./hosts/vm
+            ./hosts/vm-aarch64
           ];
         };
 
       };
-      packages.aarch64-linux.vm-image = self.nixosConfigurations.vm.config.system.build.vm;
     };
-}
 
-# To build the VM image for UTM, run the following command:
-# nix build .#vm-image
-#
-# If you get an error about the attribute not being found, it might be because
-# you are on a different system than the target system (aarch64-linux).
-# In that case, you can try to specify the target system explicitly:
-# nix build .#packages.aarch64-linux.vm-image
-#
-# The resulting image will be in the `result` directory.
+}
