@@ -13,7 +13,6 @@
     telegram-desktop
     signal-desktop
     whatsapp-for-linux
-  ] ++ (lib.optionals (pkgs.system != "aarch64-linux") [
     spotify
     discord
   ]);
@@ -68,7 +67,6 @@
           # Media types
           "audio/*" = [
             "mpv.desktop"
-          ] ++ (lib.optionals (pkgs.system != "aarch64-linux") [
             "spotify.desktop"
           ]);
           "video/*" = [ "mpv.desktop" ];

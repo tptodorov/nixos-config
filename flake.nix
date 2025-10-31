@@ -55,6 +55,7 @@
         };
         vm-aarch64 = nixpkgs.lib.nixosSystem {
           system = "aarch64-linux";
+          vm = true;
           specialArgs = { inherit inputs outputs; };
           modules = [
             inputs.home-manager.nixosModules.home-manager

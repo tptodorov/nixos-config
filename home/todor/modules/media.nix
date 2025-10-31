@@ -2,7 +2,7 @@
 {
   # Media and entertainment applications
   programs = {
-    spotify-player.enable = lib.mkIf (pkgs.system != "aarch64-linux") true;
+    spotify-player.enable = true;
   };
 
   services = {
