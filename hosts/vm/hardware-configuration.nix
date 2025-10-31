@@ -17,7 +17,6 @@
     "nvme"
     "virtio_pci"
     "xhci_pci"
-    "uhci_pci"
     "usb_storage"
     "usbhid"
     "sr_mod"
