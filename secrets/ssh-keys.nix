@@ -2,6 +2,7 @@
 {
   # SSH public keys for user authentication
   users.users.todor.openssh.authorizedKeys.keys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP6jjsa6wJRx1OK1F9qY2hniUv9JsSIGXb4uw7icAl0l"
     "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCq6CJc4GBSd0JMVRznlbvKMP6XqEmzDj881O5O8/8jf31barMJyXY2yPEMsltUK/S1eobPgmw044RCn9gV+0xT2i4Wx3RWQz7adKKqRDVdbMVZdbIGLm0ZG8MNWKfAvtJ2Ghg7dg1ES7Htxi6i+WULhrCUlg0cKgBcjZGj0042k19IajT09Eyh0rV2B7R8qkqL0QC3c1tTHATRUSmDMSSU3LCt1DTLWU11ZDFDl8X1NwOfU0LWQ1qqCyGAC/kbILdp67GjqMj/qqGg8JheVWsicyI50IJ50DcqD9bv0hvEspwHrUKkN4bFm5im47w2OEX5vplsxdSYb1eotGovd4dj todor@pero.local"
   ];
 }

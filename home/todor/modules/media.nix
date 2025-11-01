@@ -1,8 +1,8 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, vm ? false, ... }:
 {
   # Media and entertainment applications
   programs = {
-    spotify-player.enable = true;
+    spotify-player.enable = !vm;
   };
 
   services = {

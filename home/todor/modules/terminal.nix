@@ -1,13 +1,14 @@
 {
   pkgs,
+  lib,
+  vm ? false,
   ...
 }:
 {
   imports = [
     # Import user-specific environment configuration (non-sensitive)
     ../secrets/environment.nix
-
-    # Import encrypted secrets management
+    # Import encrypted secrets management (conditionally disabled in VMs)
     ../secrets/secrets.nix
   ];
 
@@ -30,8 +31,8 @@
   programs = {
     # Terminal emulators
     ghostty = {
-      enable = true;
-      enableZshIntegration = true;
+      enable = !vm;  # Use ghostty on blackbox, not in VMs
+      enableZshIntegration = !vm;
       settings = {
         theme = "TokyoNight Storm";
         font-size = 12;
@@ -39,8 +40,51 @@
       };
     };
 
-    rio.enable = true;
-    kitty.enable = true;
+    rio.enable = !vm;  # Enable on blackbox, disable in VMs
+
+    kitty = {
+      enable = !vm;  # Enable on blackbox, disable in VMs
+      settings = {
+        linux_display_server = "wayland";
+        wayland_titlebar_color = "system";
+      };
+    };
+
+    # Enable alacritty on both VM and blackbox
+    alacritty = {
+      enable = true;
+      settings = {
+        window = {
+          padding = { x = 10; y = 10; };
+          decorations = "full";
+        };
+        font = {
+          normal = { family = "ZedMono Nerd Font"; };
+          size = 12;
+        };
+        colors = {
+          primary = {
+            background = "#1a1b26";
+            foreground = "#c0caf5";
+          };
+        };
+      };
+    };
+
+    # Foot terminal - VM-specific
+    foot = lib.mkIf vm {
+      enable = true;
+      settings = {
+        main = {
+          font = "ZedMono Nerd Font:size=12";
+          dpi-aware = "yes";
+        };
+        colors = {
+          background = "1a1b26";
+          foreground = "c0caf5";
+        };
+      };
+    };
 
     # Shell and utilities
     zsh = {

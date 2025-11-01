@@ -2,6 +2,7 @@
 {
   config,
   lib,
+  vm ? false,
   ...
 }:
 {
@@ -14,6 +15,9 @@
     ./modules/brave.nix
     ./modules/hyprland.nix
     ./modules/media.nix
+    # Secrets (now enabled for both VM and blackbox)
+    ./secrets/secrets.nix
+    ./secrets/environment.nix
   ];
 
   # Nixpkgs configuration

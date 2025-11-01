@@ -1,6 +1,7 @@
 {
   pkgs,
   lib,
+  vm ? false,
   ...
 }:
 {
@@ -8,13 +9,16 @@
   home.packages = with pkgs; [
     xdg-utils
     xdg-user-dirs
-
-    # Messenger applications
+    # Messenger applications (available on both VM and blackbox)
     telegram-desktop
     signal-desktop
     whatsapp-for-linux
-    spotify
+  ] ++ lib.optionals (!vm || pkgs.stdenv.system != "aarch64-linux") [
+    # Discord not available on aarch64-linux
     discord
+  ] ++ lib.optionals (!vm) [
+    # Audio applications (blackbox only, no audio in VM)
+    spotify
   ];
 
   # XDG configuration
@@ -62,11 +66,11 @@
           "x-scheme-handler/vscode" = [ "code-url-handler.desktop" ];
           "x-scheme-handler/vscode-insiders" = [ "code-insiders-url-handler.desktop" ];
           "x-scheme-handler/zoommtg" = [ "Zoom.desktop" ];
-          "x-scheme-handler/tg" = [ "org.telegram.desktop.desktop " ];
 
           # Media types
           "audio/*" = [
             "mpv.desktop"
+          ] ++ lib.optionals (!vm) [
             "spotify.desktop"
           ];
           "video/*" = [ "mpv.desktop" ];
@@ -77,6 +81,8 @@
           "image/webp" = [ "imv-dir.desktop" ];
 
           "inode/directory" = [ "yazi.desktop" ];
+        } // lib.optionalAttrs (!vm) {
+          "x-scheme-handler/tg" = [ "org.telegram.desktop.desktop " ];
         };
 
       associations.removed = { };

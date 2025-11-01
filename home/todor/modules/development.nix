@@ -1,5 +1,7 @@
 {
   pkgs,
+  lib,
+  vm ? false,
   ...
 }:
 {

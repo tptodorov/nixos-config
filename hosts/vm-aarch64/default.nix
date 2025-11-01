@@ -1,8 +1,9 @@
-# NixOS system configuration for blackbox host
+# NixOS system configuration for vm-aarch64 host
 {
   inputs,
   outputs,
   pkgs,
+  vm ? true,
   ...
 }:
 {
@@ -34,7 +35,7 @@
   # Home Manager configuration
   home-manager = {
     backupFileExtension = "backup";
-    extraSpecialArgs = { inherit inputs outputs; };
+    extraSpecialArgs = { inherit inputs outputs vm; };
     sharedModules = [
       inputs.nixvim.homeModules.nixvim
     ];

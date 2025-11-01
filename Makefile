@@ -11,7 +11,7 @@ NIXNAME ?= vm
 
 # SSH options that are used. These aren't meant to be overridden but are
 # reused a lot so we just store them up here.
-SSH_OPTIONS=-o PubkeyAuthentication=no -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o MACs=hmac-sha2-256-etm@openssh.com
+SSH_OPTIONS=-v -o PubkeyAuthentication=yes -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o MACs=hmac-sha2-256-etm@openssh.com
 
 # We need to do some OS switching below.
 UNAME := $(shell uname)
@@ -107,10 +107,12 @@ vm/bootstrap0:
 vm/bootstrap:
 	NIXUSER=root $(MAKE) vm/copy
 	NIXUSER=root $(MAKE) vm/switch
-	$(MAKE) vm/secrets
-	ssh $(SSH_OPTIONS) -p$(NIXPORT) $(NIXUSER)@$(NIXADDR) " \
-		sudo reboot; \
-	"
+	# $(MAKE) vm/secrets
+	# # to be able to ssh into the VM
+	# NIXUSER=root $(MAKE) vm/secrets
+	# NIXUSER=root ssh $(SSH_OPTIONS) -p$(NIXPORT) $(NIXUSER)@$(NIXADDR) " \
+	# 	reboot; \
+	# "
 
 vm/login:
 	ssh $(SSH_OPTIONS) -p$(NIXPORT) $(NIXUSER)@$(NIXADDR)
