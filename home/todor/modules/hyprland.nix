@@ -16,6 +16,11 @@
     nautilus
     grim
     slurp
+    # GNOME dependencies for Nautilus
+    gnome-themes-extra
+    gsettings-desktop-schemas
+    glib
+    dconf
   ] ++ lib.optionals vm [
     foot  # VM-specific terminal
   ] ++ lib.optionals (!vm) [
@@ -422,8 +427,14 @@
     };
   };
 
-  # Wayland environment variable
+  # Wayland and GNOME environment variables
   home.sessionVariables = {
     NIXOS_OZONE_WL = "1";
+    # GNOME/GTK settings for Nautilus
+    GTK_USE_PORTAL = "1";
+    GSETTINGS_SCHEMA_DIR = "${pkgs.gsettings-desktop-schemas}/share/gsettings-schemas/${pkgs.gsettings-desktop-schemas.name}/glib-2.0/schemas:${pkgs.gtk3}/share/gsettings-schemas/${pkgs.gtk3.name}/glib-2.0/schemas";
   };
+
+  # Enable dconf for GNOME apps
+  dconf.enable = true;
 }
