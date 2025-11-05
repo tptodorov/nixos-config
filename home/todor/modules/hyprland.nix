@@ -76,12 +76,12 @@
       # VM Configuration - MacBook Pro 14" 2024/2025 display (3024x1964) with 2x scaling
       monitor =,3024x1964@60,auto,2
 
-      # VM-specific environment variables for better compatibility
+      # VM-specific environment variables for VMware 3D acceleration
       env = WLR_NO_HARDWARE_CURSORS,1
-      env = WLR_RENDERER_ALLOW_SOFTWARE,1
-      env = WLR_RENDERER,pixman
       env = __GLX_VENDOR_LIBRARY_NAME,mesa
-      env = LIBGL_ALWAYS_SOFTWARE,1
+      env = LIBGL_ALWAYS_INDIRECT,0
+      env = LIBGL_ALWAYS_SOFTWARE,0
+      env = MESA_LOADER_DRIVER_OVERRIDE,vmwgfx
 
       # Basic variables - matching blackbox style
       $color9=rgba(33ccffee)

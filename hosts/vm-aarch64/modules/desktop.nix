@@ -36,11 +36,14 @@
   ];
 
   # VM-specific graphics configuration (override blackbox settings)
+  # NOTE: ARM64 VMs in VMware Fusion have limited 3D acceleration support
+  # The vmwgfx driver loads but falls back to software rendering (llvmpipe)
+  # This is a VMware limitation, not a NixOS issue
   hardware.graphics = {
     enable = lib.mkForce true;
     # Note: enable32Bit is only supported on x86_64, not aarch64
     extraPackages = with pkgs; [
-      # VMware 3D acceleration support
+      # Mesa for software rendering (llvmpipe)
       mesa
       libGL
       libGLU
@@ -58,12 +61,13 @@
 
   # VM-specific environment variables (extend blackbox variables)
   environment.sessionVariables = {
-    # VMware 3D acceleration
+    # Graphics configuration for ARM64 VM
     LIBGL_ALWAYS_INDIRECT = "0";
     LIBGL_ALWAYS_SOFTWARE = "0";
     MESA_GL_VERSION_OVERRIDE = "4.5";
     MESA_GLSL_VERSION_OVERRIDE = "450";
-    VMWARE_USE_LLVMPIPE = "0";
+    # Use llvmpipe (software) renderer - ARM64 VMs don't have HW acceleration
+    GALLIUM_DRIVER = "llvmpipe";
     # Zed editor - allow emulated GPU in VMs
     ZED_ALLOW_EMULATED_GPU = "1";
     # Display scaling for VM (2x scaling)
