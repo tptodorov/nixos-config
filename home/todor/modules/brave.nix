@@ -60,16 +60,12 @@
       # Audio/Video codec support
       "--enable-features=VaapiVideoDecoder"
     ] ++ lib.optionals vm [
-      # VM-specific flags - optimized software rendering for ARM64 VMs
-      # ARM64 VMware VMs don't have full 3D acceleration, so optimize for software rendering
+      # VM-specific flags - optimized for ARM64 VMs
+      # ARM64 VMware VMs don't have full 3D acceleration
       "--disable-gpu"
-      "--disable-gpu-compositing"
-      "--disable-software-rasterizer"
       "--enable-features=CanvasOopRasterization"
-      "--disable-gpu-sandbox"
       "--num-raster-threads=4"
       "--enable-zero-copy"
-      # Keep these for better compatibility
       "--ignore-gpu-blocklist"
       "--in-process-gpu"
     ];
