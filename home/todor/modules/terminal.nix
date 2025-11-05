@@ -214,10 +214,24 @@
     ssh = {
       enable = true;
       enableDefaultConfig = false;
+      matchBlocks = {
+        "*" = {
+          addKeysToAgent = "yes";
+          identityFile = "~/.ssh/id_rsa";
+        };
+      };
     };
   };
 
   # SSH services
   services = {
+    ssh-agent = {
+      enable = true;
+    };
+  };
+
+  # Session variables for SSH agent
+  home.sessionVariables = {
+    SSH_AUTH_SOCK = "$XDG_RUNTIME_DIR/ssh-agent";
   };
 }
