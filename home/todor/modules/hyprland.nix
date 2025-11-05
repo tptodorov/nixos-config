@@ -16,6 +16,7 @@
       waybar
       mako
       nautilus
+      nemo
       grim
       slurp
       # GNOME dependencies for Nautilus
