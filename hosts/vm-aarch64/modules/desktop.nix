@@ -26,6 +26,22 @@
     headless = false;
   };
 
+  # Enable Sway window manager for VM
+  programs.sway = {
+    enable = true;
+    wrapperFeatures.gtk = true;
+    extraPackages = with pkgs; [
+      swaylock
+      swayidle
+      swaybg
+      wl-clipboard
+      grim
+      slurp
+      wofi
+      foot
+    ];
+  };
+
   # Add VM-specific packages to the blackbox package list
   environment.systemPackages = with pkgs; [
     # VM-specific tools

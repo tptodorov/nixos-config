@@ -16,6 +16,9 @@
     ./modules/hyprland.nix
     ./modules/media.nix
     # Secrets (now enabled for both VM and blackbox)
+  ] ++ lib.optionals vm [
+    # VM-specific modules
+    ./modules/sway.nix
   ] ++ lib.optionals (!vm) [
     ./secrets/secrets.nix
     ./secrets/environment.nix
