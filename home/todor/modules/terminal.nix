@@ -7,6 +7,7 @@
 {
   imports = [
     # Import user-specific environment configuration (non-sensitive)
+  ] ++ lib.optionals (!vm) [
     ../secrets/environment.nix
     # Import encrypted secrets management (conditionally disabled in VMs)
     ../secrets/secrets.nix

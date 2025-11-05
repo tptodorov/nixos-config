@@ -1,6 +1,7 @@
 {
   lib,
   pkgs,
+  vm ? false,
   ...
 }:
 {
@@ -51,7 +52,6 @@
 
       # Sync and profile support
       "--enable-sync"
-      "--password-store=gnome-libsecret"
 
       # Better user experience
       "--no-default-browser-check"
@@ -60,6 +60,10 @@
 
       # Audio/Video codec support
       "--enable-features=VaapiVideoDecoder"
+    ] ++ lib.optionals vm [
+      # VM-specific flags for better compatibility
+      "--disable-dev-shm-usage"
+      "--ignore-gpu-blocklist"
     ];
   };
 

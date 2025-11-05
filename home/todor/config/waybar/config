@@ -6,16 +6,15 @@
 
   "modules-left": [
   "hyprland/workspaces",
-  "cpu", 
+  "cpu",
 "memory"
   ],
 
-  "modules-center": ["clock", "clock#sofia", "custom/music"],
+  "modules-center": ["clock", "clock#sofia"],
 
   "modules-right": [
     "bluetooth",
     "network",
-    "pulseaudio", 
     "battery",
     "sway/language",
   ],
@@ -36,7 +35,7 @@
   "bluetooth": {
     "format": "󰂲",
     "format-on": "{icon}",
-    "format-off": "{icon}", 
+    "format-off": "{icon}",
     "format-connected":"{icon}",
     "format-icons":{
         "on":"󰂯",
@@ -118,8 +117,7 @@
         // "format-full": "",
         "format-icons": ["", "", "", "", ""]
   },
-  
+
 
 
 }
-

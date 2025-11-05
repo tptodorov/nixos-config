@@ -33,9 +33,9 @@
 
   programs = {
     wofi.enable = true;
+    waybar.enable = true;  # Enable waybar for both VM and blackbox
   } // lib.optionalAttrs (!vm) {
     hyprlock.enable = true;
-    waybar.enable = true;
     waylogout.enable = true;
     wayprompt.enable = true;
   };
@@ -73,8 +73,15 @@
     enable = true;
     xwayland.enable = true;
     extraConfig = if vm then ''
-      # VM Configuration - MacBook Pro 14" 2025 display (3024x1964)
-      monitor =,3024x1964@120,auto,2
+      # VM Configuration - MacBook Pro 14" 2024/2025 display (3024x1964) with 2x scaling
+      monitor =,3024x1964@60,auto,2
+
+      # VM-specific environment variables for better compatibility
+      env = WLR_NO_HARDWARE_CURSORS,1
+      env = WLR_RENDERER_ALLOW_SOFTWARE,1
+      env = WLR_RENDERER,pixman
+      env = __GLX_VENDOR_LIBRARY_NAME,mesa
+      env = LIBGL_ALWAYS_SOFTWARE,1
 
       # Basic variables - matching blackbox style
       $color9=rgba(33ccffee)

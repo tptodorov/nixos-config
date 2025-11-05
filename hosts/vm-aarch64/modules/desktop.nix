@@ -16,6 +16,10 @@
   services.pulseaudio.enable = lib.mkForce false;
   security.rtkit.enable = lib.mkForce false;
 
+  # Lots of stuff that uses aarch64 that claims doesn't work, but actually works.
+  nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.allowUnsupportedSystem = true;
+
   # VM-specific additions
   virtualisation.vmware.guest = {
     enable = true;
@@ -26,6 +30,9 @@
   environment.systemPackages = with pkgs; [
     # VM-specific tools
     phoronix-test-suite
+    # Clipboard tools for VMware guest
+    wl-clipboard
+    xclip
   ];
 
   # VM-specific graphics configuration (override blackbox settings)
@@ -59,8 +66,13 @@
     VMWARE_USE_LLVMPIPE = "0";
     # Zed editor - allow emulated GPU in VMs
     ZED_ALLOW_EMULATED_GPU = "1";
-    # General GPU debugging
-    MESA_DEBUG = "1";
-    LIBGL_DEBUG = "verbose";
+    # Display scaling for VM (2x scaling)
+    GDK_SCALE = "2";
+    GDK_DPI_SCALE = "1";
+    QT_AUTO_SCREEN_SCALE_FACTOR = "1";
+    QT_SCALE_FACTOR = "2";
+    # General GPU debugging (can be disabled for better performance)
+    # MESA_DEBUG = "1";
+    # LIBGL_DEBUG = "verbose";
   };
 }
