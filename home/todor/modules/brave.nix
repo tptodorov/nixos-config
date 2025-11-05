@@ -30,12 +30,6 @@
       "--enable-features=UseOzonePlatform,WaylandWindowDecorations"
       "--ozone-platform=wayland"
 
-      # GPU acceleration and performance
-      "--enable-gpu-rasterization"
-      "--enable-zero-copy"
-      "--enable-hardware-overlays"
-      "--max_old_space_size=4096"
-
       # Security and privacy enhancements
       "--disable-background-networking"
       "--disable-background-timer-throttling"
@@ -57,13 +51,26 @@
       "--no-default-browser-check"
       "--disable-features=TranslateUI"
       "--enable-smooth-scrolling"
-
+    ] ++ lib.optionals (!vm) [
+      # GPU acceleration and performance (only on physical machines)
+      "--enable-gpu-rasterization"
+      "--enable-zero-copy"
+      "--enable-hardware-overlays"
+      "--max_old_space_size=4096"
       # Audio/Video codec support
       "--enable-features=VaapiVideoDecoder"
     ] ++ lib.optionals vm [
       # VM-specific flags for better compatibility
-      "--disable-dev-shm-usage"
+      "--disable-gpu"
+      "--disable-software-rasterizer"
+      "--disable-gpu-compositing"
+      "--disable-gpu-rasterization"
+      "--disable-gpu-sandbox"
+      "--disable-accelerated-2d-canvas"
+      "--disable-accelerated-video-decode"
+      "--num-raster-threads=1"
       "--ignore-gpu-blocklist"
+      "--in-process-gpu"
     ];
   };
 
