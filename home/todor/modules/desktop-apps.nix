@@ -6,20 +6,24 @@
 }:
 {
   # Desktop applications and GUI tools
-  home.packages = with pkgs; [
-    xdg-utils
-    xdg-user-dirs
-    # Messenger applications (available on both VM and blackbox)
-    telegram-desktop
-    signal-desktop
-    whatsapp-for-linux
-  ] ++ lib.optionals (!vm || pkgs.stdenv.system != "aarch64-linux") [
-    # Discord not available on aarch64-linux
-    discord
-  ] ++ lib.optionals (!vm) [
-    # Audio applications (blackbox only, no audio in VM)
-    spotify
-  ];
+  home.packages =
+    with pkgs;
+    [
+      xdg-utils
+      xdg-user-dirs
+      # Messenger applications (available on both VM and blackbox)
+      telegram-desktop
+      signal-desktop
+      whatsapp-for-linux
+    ]
+    ++ lib.optionals (!vm || pkgs.stdenv.system != "aarch64-linux") [
+      # Discord not available on aarch64-linux
+      discord
+    ]
+    ++ lib.optionals (!vm) [
+      # Audio applications (blackbox only, no audio in VM)
+      spotify
+    ];
 
   # XDG configuration
   xdg = {
@@ -70,7 +74,8 @@
           # Media types
           "audio/*" = [
             "mpv.desktop"
-          ] ++ lib.optionals (!vm) [
+          ]
+          ++ lib.optionals (!vm) [
             "spotify.desktop"
           ];
           "video/*" = [ "mpv.desktop" ];
@@ -81,7 +86,8 @@
           "image/webp" = [ "imv-dir.desktop" ];
 
           "inode/directory" = [ "yazi.desktop" ];
-        } // lib.optionalAttrs (!vm) {
+        }
+        // lib.optionalAttrs (!vm) {
           "x-scheme-handler/tg" = [ "org.telegram.desktop.desktop " ];
         };
 
