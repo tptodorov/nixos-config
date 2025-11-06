@@ -3,6 +3,7 @@
   inputs,
   outputs,
   pkgs,
+  vm,
   ...
 }:
 {
@@ -34,7 +35,7 @@
   # Home Manager configuration
   home-manager = {
     backupFileExtension = "backup";
-    extraSpecialArgs = { inherit inputs outputs; };
+    extraSpecialArgs = { inherit inputs outputs vm; };
     sharedModules = [
       inputs.nixvim.homeModules.nixvim
     ];

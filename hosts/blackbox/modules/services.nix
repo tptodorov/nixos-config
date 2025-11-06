@@ -15,6 +15,13 @@
 
     # Printing
     printing.enable = true;
+
+    # RDP (Remote Desktop Protocol)
+    xrdp = {
+      enable = true;
+      defaultWindowManager = "gnome-session";
+      openFirewall = true;
+    };
   };
 
   # System settings

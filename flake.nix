@@ -46,7 +46,7 @@
       overlays = import ./overlays { inherit inputs; };
       nixosConfigurations = {
         blackbox = nixpkgs.lib.nixosSystem {
-          specialArgs = { inherit inputs outputs; };
+          specialArgs = { inherit inputs outputs; vm = false; };
           modules = [
             inputs.home-manager.nixosModules.home-manager
             ./hosts/blackbox

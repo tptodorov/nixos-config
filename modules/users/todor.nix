@@ -13,6 +13,9 @@
     initialPassword = "todor";
   };
 
+  # Enable passwordless sudo for wheel group
+  security.sudo.wheelNeedsPassword = false;
+
   # Enable zsh system-wide
   programs.zsh.enable = true;
 }
