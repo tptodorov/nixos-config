@@ -19,9 +19,9 @@
 
 {
   imports = [
+    (modulesPath + "/hardware/network/broadcom-43xx.nix")
     (modulesPath + "/installer/scan/not-detected.nix")
   ];
-
   # System platform
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 
@@ -47,24 +47,24 @@
   # Note: If you need Broadcom WiFi driver, you may need to enable broadcom_sta
   # and add it to permittedInsecurePackages (see nixpkgs.config.permittedInsecurePackages)
 
-  # Placeholder filesystem configuration
-  # REPLACE THIS with actual partition layout from nixos-generate-config
   fileSystems."/" = {
-    device = "/dev/disk/by-label/nixos";
+    device = "/dev/disk/by-uuid/0b6e04e5-52cc-4fa5-a72f-6d11555638ee";
     fsType = "ext4";
   };
 
   fileSystems."/boot" = {
-    device = "/dev/disk/by-label/EFIBOOT";
+    device = "/dev/disk/by-uuid/5F66-17ED";
     fsType = "vfat";
+    options = [
+      "fmask=0077"
+      "dmask=0077"
+    ];
   };
 
-  # Enable swap if you create a swap partition
   swapDevices = [
-    { device = "/dev/disk/by-label/swap"; }
+    { device = "/dev/disk/by-uuid/69d9f2cf-bb0a-438e-b9ff-d1a772f09a76"; }
   ];
 
-  # CPU microcode updates for Intel
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 
   # Graphics drivers
