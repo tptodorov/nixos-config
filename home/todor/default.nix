@@ -17,8 +17,6 @@
     ./modules/niri.nix
     ./modules/media.nix
     ./modules/icloud.nix
-    # Secrets (now enabled for both VM and blackbox)
-  ] ++ lib.optionals (!vm) [
     ./secrets/secrets.nix
     ./secrets/environment.nix
   ];
