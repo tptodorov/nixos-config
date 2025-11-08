@@ -39,6 +39,8 @@
     blueman # Bluetooth manager
     networkmanagerapplet # Network manager GUI
     htop # System monitor
+    swayidle # Idle timeout manager
+    swaylock # Screen locker
 
     # GNOME dependencies for Nautilus
     gnome-themes-extra
@@ -95,20 +97,6 @@
 
     prefer-no-csd
 
-    // Screen idle and power management
-    // After 10 minutes of inactivity, turn off the screen
-    idle {
-        timeout 600 {
-            spawn "${pkgs.systemd}/bin/systemctl" "suspend"
-        }
-        timeout 300 {
-            spawn "${pkgs.brightnessctl}/bin/brightnessctl" "set" "10%"
-        }
-        resume {
-            spawn "${pkgs.brightnessctl}/bin/brightnessctl" "set" "100%"
-        }
-    }
-
     // Startup applications
     spawn-at-startup "sh" "-c" "${pkgs.waybar}/bin/waybar -c $HOME/.config/waybar/config-niri -s $HOME/.config/waybar/style-niri.css"
     spawn-at-startup "${pkgs.mako}/bin/mako"
@@ -120,6 +108,9 @@
     spawn-at-startup "${pkgs.ghostty}/bin/ghostty"
     spawn-at-startup "${pkgs.brave}/bin/brave"
     spawn-at-startup "${pkgs.spotify}/bin/spotify"
+
+    // Idle management: dim screen after 5min, suspend after 10min
+    spawn-at-startup "${pkgs.swayidle}/bin/swayidle" "-w" "timeout" "300" "${pkgs.brightnessctl}/bin/brightnessctl set 10%" "resume" "${pkgs.brightnessctl}/bin/brightnessctl set 100%" "timeout" "600" "${pkgs.systemd}/bin/systemctl suspend"
 
     environment {
         ELECTRON_OZONE_PLATFORM_HINT "wayland"
@@ -218,6 +209,9 @@
         // Custom scripts
         Super+W { spawn "sh" "-c" "$HOME/.config/niri/scripts/wallpaper.sh"; }
         Super+V { spawn "sh" "-c" "$HOME/.config/niri/scripts/clipboard.sh"; }
+
+        // Show hotkey overlay
+        Super+Shift+Slash { show-hotkey-overlay; }
 
         // Exit niri
         Super+Shift+E { quit; }
