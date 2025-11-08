@@ -102,6 +102,7 @@ rg <pattern>  # ripgrep for content search
   - Desktop services in `hosts/blackbox/modules/desktop.nix`
 - **Shell config**: Zsh and Oh My Zsh setup in user configuration
 - **Editor config**: Neovim LazyVim in `home/todor/config/nvim/`
+- **iCloud integration**: `home/todor/modules/icloud.nix` - See `docs/ICLOUD-SETUP.md` for setup instructions
 
 ### Testing Changes
 - Use `nixos-rebuild test` for system changes without permanent switch
@@ -177,3 +178,23 @@ Both window managers share:
 - Custom scripts (wallpaper, clipboard)
 - Theming and fonts
 - Terminal and editor configs
+
+## Cloud Services Integration
+
+### iCloud
+The system includes integration with Apple iCloud services:
+- **Mail, Calendar, Contacts**: Full support via Evolution and GNOME Online Accounts
+- **iCloud Drive & Photos**: Limited support (web access only)
+- **Configuration**: `home/todor/modules/icloud.nix`
+- **Setup Guide**: See `docs/ICLOUD-SETUP.md` for detailed instructions
+
+Quick start:
+```bash
+# Open GNOME Online Accounts to add iCloud
+gnome-control-center online-accounts
+
+# Or launch Evolution directly
+evolution
+```
+
+**Important**: You must use an app-specific password (not your regular Apple ID password). Generate one at [appleid.apple.com](https://appleid.apple.com) under Security → App-Specific Passwords.

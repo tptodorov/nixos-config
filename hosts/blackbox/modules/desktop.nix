@@ -16,6 +16,12 @@
     # Enable Flatpak for COSMIC Store
     flatpak.enable = true;
 
+    # GNOME services for online accounts and keyring
+    gnome = {
+      gnome-keyring.enable = true;
+      gnome-online-accounts.enable = true;
+    };
+
     # Configure keymap in X11
     xserver.xkb = {
       layout = "us";
