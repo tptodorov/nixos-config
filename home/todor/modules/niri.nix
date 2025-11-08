@@ -14,7 +14,6 @@
     mako # Notification daemon
     nautilus # File manager
     nemo # Alternative file manager
-    fuzzel # Alternative app launcher
 
     # Screenshot and screen tools
     grim # Screenshot tool
@@ -52,7 +51,6 @@
 
   programs = {
     wofi.enable = true;
-    fuzzel.enable = true;
   };
 
   # Niri configuration
@@ -71,12 +69,6 @@
         touchpad {
             tap
             natural-scroll
-            dwt
-            dwtp
-        }
-
-        mouse {
-            accel-speed 0.0
         }
 
         focus-follows-mouse
@@ -89,26 +81,13 @@
 
     layout {
         gaps 8
-        center-focused-column "never"
-
-        preset-column-widths {
-            proportion 0.33333
-            proportion 0.5
-            proportion 0.66667
-        }
-
-        default-column-width { proportion 0.5; }
 
         focus-ring {
-            width 2
             active-color "#33ccff"
-            inactive-color "#595959"
         }
 
         border {
-            width 2
             active-color "#33ccff"
-            inactive-color "#595959"
         }
     }
 
@@ -144,113 +123,68 @@
         skip-at-startup
     }
 
-    animations {
-        slowdown 1.0
-
-        window-open {
-            duration-ms 150
-            curve "ease-out-expo"
-        }
-
-        window-close {
-            duration-ms 150
-            curve "ease-out-expo"
-        }
-
-        workspace-switch {
-            spring damping-ratio=1.0 stiffness=1000 epsilon=0.0001
-        }
-
-        horizontal-view-movement {
-            spring damping-ratio=1.0 stiffness=800 epsilon=0.0001
-        }
-
-        window-movement {
-            spring damping-ratio=1.0 stiffness=800 epsilon=0.0001
-        }
-
-        window-resize {
-            spring damping-ratio=1.0 stiffness=800 epsilon=0.0001
-        }
-    }
-
     binds {
         // Basic keybindings
-        Mod+Return { spawn "${pkgs.ghostty}/bin/ghostty"; }
-        Mod+T { spawn "${pkgs.ghostty}/bin/ghostty"; }
-        Mod+Shift+Return { spawn "${pkgs.gnome-terminal}/bin/gnome-terminal"; }
-        Mod+Q { close-window; }
-        Mod+E { spawn "${pkgs.nautilus}/bin/nautilus"; }
-        Mod+S { spawn "${pkgs.brave}/bin/brave"; }
+        Super+Return { spawn "${pkgs.ghostty}/bin/ghostty"; }
+        Super+T { spawn "${pkgs.ghostty}/bin/ghostty"; }
+        Super+Q { close-window; }
+        Super+E { spawn "${pkgs.nautilus}/bin/nautilus"; }
+        Super+S { spawn "${pkgs.brave}/bin/brave"; }
 
         // Application launcher
-        Mod+Space { spawn "${pkgs.wofi}/bin/wofi" "--show" "drun"; }
-        Mod+Alt+Space { spawn "${pkgs.fuzzel}/bin/fuzzel"; }
+        Super+D { spawn "${pkgs.wofi}/bin/wofi" "--show" "drun"; }
 
-        // Window management
-        Mod+Left { focus-column-left; }
-        Mod+Right { focus-column-right; }
-        Mod+Up { focus-window-up; }
-        Mod+Down { focus-window-down; }
+        // Window management (vim-style)
+        Super+H { focus-column-left; }
+        Super+L { focus-column-right; }
+        Super+K { focus-window-up; }
+        Super+J { focus-window-down; }
 
-        Mod+H { focus-column-left; }
-        Mod+L { focus-column-right; }
-        Mod+K { focus-window-up; }
-        Mod+J { focus-window-down; }
+        // Window management (arrow keys)
+        Super+Left { focus-column-left; }
+        Super+Right { focus-column-right; }
+        Super+Up { focus-window-up; }
+        Super+Down { focus-window-down; }
 
-        // Move windows
-        Mod+Shift+Left { move-column-left; }
-        Mod+Shift+Right { move-column-right; }
-        Mod+Shift+Up { move-window-up; }
-        Mod+Shift+Down { move-window-down; }
+        // Move windows (vim-style)
+        Super+Shift+H { move-column-left; }
+        Super+Shift+L { move-column-right; }
+        Super+Shift+K { move-window-up; }
+        Super+Shift+J { move-window-down; }
 
-        Mod+Shift+H { move-column-left; }
-        Mod+Shift+L { move-column-right; }
-        Mod+Shift+K { move-window-up; }
-        Mod+Shift+J { move-window-down; }
-
-        // Column width
-        Mod+Minus { set-column-width "-10%"; }
-        Mod+Equal { set-column-width "+10%"; }
-
-        Mod+Shift+Minus { set-window-height "-10%"; }
-        Mod+Shift+Equal { set-window-height "+10%"; }
+        // Move windows (arrow keys)
+        Super+Shift+Left { move-column-left; }
+        Super+Shift+Right { move-column-right; }
+        Super+Shift+Up { move-window-up; }
+        Super+Shift+Down { move-window-down; }
 
         // Workspaces
-        Mod+1 { focus-workspace 1; }
-        Mod+2 { focus-workspace 2; }
-        Mod+3 { focus-workspace 3; }
-        Mod+4 { focus-workspace 4; }
-        Mod+5 { focus-workspace 5; }
-        Mod+6 { focus-workspace 6; }
-        Mod+7 { focus-workspace 7; }
-        Mod+8 { focus-workspace 8; }
-        Mod+9 { focus-workspace 9; }
+        Super+1 { focus-workspace 1; }
+        Super+2 { focus-workspace 2; }
+        Super+3 { focus-workspace 3; }
+        Super+4 { focus-workspace 4; }
+        Super+5 { focus-workspace 5; }
+        Super+6 { focus-workspace 6; }
+        Super+7 { focus-workspace 7; }
+        Super+8 { focus-workspace 8; }
+        Super+9 { focus-workspace 9; }
 
         // Move to workspace
-        Mod+Shift+1 { move-column-to-workspace 1; }
-        Mod+Shift+2 { move-column-to-workspace 2; }
-        Mod+Shift+3 { move-column-to-workspace 3; }
-        Mod+Shift+4 { move-column-to-workspace 4; }
-        Mod+Shift+5 { move-column-to-workspace 5; }
-        Mod+Shift+6 { move-column-to-workspace 6; }
-        Mod+Shift+7 { move-column-to-workspace 7; }
-        Mod+Shift+8 { move-column-to-workspace 8; }
-        Mod+Shift+9 { move-column-to-workspace 9; }
-
-        // Horizontal workspace switching (scrolling)
-        Mod+Ctrl+Left { focus-workspace-down; }
-        Mod+Ctrl+Right { focus-workspace-up; }
-        Mod+Ctrl+H { focus-workspace-down; }
-        Mod+Ctrl+L { focus-workspace-up; }
+        Super+Shift+1 { move-column-to-workspace 1; }
+        Super+Shift+2 { move-column-to-workspace 2; }
+        Super+Shift+3 { move-column-to-workspace 3; }
+        Super+Shift+4 { move-column-to-workspace 4; }
+        Super+Shift+5 { move-column-to-workspace 5; }
+        Super+Shift+6 { move-column-to-workspace 6; }
+        Super+Shift+7 { move-column-to-workspace 7; }
+        Super+Shift+8 { move-column-to-workspace 8; }
+        Super+Shift+9 { move-column-to-workspace 9; }
 
         // Fullscreen
-        Mod+F { fullscreen-window; }
+        Super+F { fullscreen-window; }
 
         // Screenshots
-        Print { screenshot; }
-        Mod+Shift+S { screenshot-screen; }
-        Mod+Print { screenshot-window; }
+        Super+Shift+S { screenshot-screen; }
 
         // Media keys
         XF86AudioRaiseVolume { spawn "${pkgs.wireplumber}/bin/wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%+"; }
@@ -261,22 +195,16 @@
         XF86MonBrightnessUp { spawn "${pkgs.brightnessctl}/bin/brightnessctl" "s" "10%+"; }
         XF86MonBrightnessDown { spawn "${pkgs.brightnessctl}/bin/brightnessctl" "s" "10%-"; }
 
-        XF86AudioNext { spawn "${pkgs.playerctl}/bin/playerctl" "next"; }
-        XF86AudioPause { spawn "${pkgs.playerctl}/bin/playerctl" "play-pause"; }
         XF86AudioPlay { spawn "${pkgs.playerctl}/bin/playerctl" "play-pause"; }
+        XF86AudioNext { spawn "${pkgs.playerctl}/bin/playerctl" "next"; }
         XF86AudioPrev { spawn "${pkgs.playerctl}/bin/playerctl" "previous"; }
 
         // Custom scripts
-        Mod+W { spawn "sh" "-c" "$HOME/.config/niri/scripts/wallpaper.sh"; }
-        Mod+V { spawn "sh" "-c" "$HOME/.config/niri/scripts/clipboard.sh"; }
+        Super+W { spawn "sh" "-c" "$HOME/.config/niri/scripts/wallpaper.sh"; }
+        Super+V { spawn "sh" "-c" "$HOME/.config/niri/scripts/clipboard.sh"; }
 
         // Exit niri
-        Mod+Shift+E { quit; }
-    }
-
-    window-rule {
-        geometry-corner-radius 10
-        clip-to-geometry true
+        Super+Shift+E { quit; }
     }
   '';
 
@@ -309,14 +237,16 @@
         "modules-center": ["clock", "clock#sofia"],
 
         "modules-right": [
+          "custom/music",
+          "pulseaudio",
           "bluetooth",
           "network",
           "battery",
-          "niri/language",
+          "niri/language"
         ],
 
         "niri/workspaces": {
-          "format": "{name}",
+          "format": "{index}",
         },
 
         "niri/language": {
@@ -350,13 +280,13 @@
         "clock": {
           "timezone": "Europe/Zurich",
           "tooltip": false,
-          "format": "{:%H:%M:%S  -  %A, %d}",
+          "format": "Zurich: {:%H:%M:%S  -  %A, %d}",
           "interval": 1
         },
         "clock#sofia": {
           "timezone": "Europe/Sofia",
           "tooltip": false,
-          "format": "{:%H:%M:%S  -  %A, %d}",
+          "format": "Sofia: {:%H:%M:%S  -  %A, %d}",
           "interval": 1
         },
 
@@ -384,11 +314,19 @@
 
         "pulseaudio": {
           "format": "{icon}  {volume}%",
-          "format-muted": "",
+          "format-muted": "  {volume}%",
           "format-icons": {
-            "default": ["", "", " "]
+            "headphone": "",
+            "hands-free": "",
+            "headset": "",
+            "phone": "",
+            "portable": "",
+            "car": "",
+            "default": ["", "", ""]
           },
-          "on-click": "pavucontrol"
+          "on-click": "pavucontrol",
+          "scroll-step": 1,
+          "ignored-sinks": []
         },
 
         "battery": {
