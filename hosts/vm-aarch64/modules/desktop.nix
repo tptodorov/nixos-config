@@ -70,7 +70,7 @@
       # VMware specific
       open-vm-tools
       # Debug tools
-      glxinfo
+      mesa-demos
       vulkan-tools
     ];
   };

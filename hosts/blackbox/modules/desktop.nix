@@ -9,6 +9,13 @@
     displayManager.gdm.enable = true;
     desktopManager.gnome.enable = true;
 
+    # Enable COSMIC Desktop Environment
+    desktopManager.cosmic.enable = true;
+    displayManager.cosmic-greeter.enable = true;
+
+    # Enable Flatpak for COSMIC Store
+    flatpak.enable = true;
+
     # Configure keymap in X11
     xserver.xkb = {
       layout = "us";

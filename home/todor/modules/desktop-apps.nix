@@ -14,7 +14,7 @@
       # Messenger applications (available on both VM and blackbox)
       telegram-desktop
       signal-desktop
-      whatsapp-for-linux
+      wasistlos
     ]
     ++ lib.optionals (!vm || pkgs.stdenv.system != "aarch64-linux") [
       # Discord not available on aarch64-linux
