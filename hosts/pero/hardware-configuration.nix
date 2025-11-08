@@ -9,7 +9,13 @@
 #
 # Then copy it to: hosts/pero/hardware-configuration.nix
 
-{ config, lib, pkgs, modulesPath, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  modulesPath,
+  ...
+}:
 
 {
   imports = [
@@ -27,12 +33,12 @@
   # - Intel Iris Plus Graphics 640/650
 
   boot.initrd.availableKernelModules = [
-    "xhci_pci"      # USB 3.0
-    "ahci"          # SATA
-    "nvme"          # NVMe SSD
-    "usb_storage"   # USB storage
-    "sd_mod"        # SD card
-    "sdhci_pci"     # SD host controller
+    "xhci_pci" # USB 3.0
+    "ahci" # SATA
+    "nvme" # NVMe SSD
+    "usb_storage" # USB storage
+    "sd_mod" # SD card
+    "sdhci_pci" # SD host controller
   ];
 
   boot.initrd.kernelModules = [ ];
@@ -44,19 +50,19 @@
   # Placeholder filesystem configuration
   # REPLACE THIS with actual partition layout from nixos-generate-config
   fileSystems."/" = {
-    device = "/dev/disk/by-label/nixos";
+    device = "/dev/disk/by-label/nixos-graphical-25.05-x86_64";
     fsType = "ext4";
   };
 
   fileSystems."/boot" = {
-    device = "/dev/disk/by-label/boot";
+    device = "/dev/disk/by-label/EFIBOOT";
     fsType = "vfat";
   };
 
   # Enable swap if you create a swap partition
-  # swapDevices = [
-  #   { device = "/dev/disk/by-label/swap"; }
-  # ];
+  swapDevices = [
+    { device = "/dev/disk/by-label/swap"; }
+  ];
 
   # CPU microcode updates for Intel
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
@@ -65,10 +71,10 @@
   hardware.graphics = {
     enable = true;
     extraPackages = with pkgs; [
-      intel-media-driver      # For hardware acceleration
-      intel-vaapi-driver      # VA-API driver for Intel
-      libva-vdpau-driver      # VDPAU driver
-      libvdpau-va-gl          # VDPAU backend for VA-GL
+      intel-media-driver # For hardware acceleration
+      intel-vaapi-driver # VA-API driver for Intel
+      libva-vdpau-driver # VDPAU driver
+      libvdpau-va-gl # VDPAU backend for VA-GL
     ];
   };
 
