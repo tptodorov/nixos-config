@@ -28,8 +28,14 @@
       SOUND_POWER_SAVE_ON_BAT = 1;
 
       # Runtime power management for PCI(e) devices
+      # Note: "on" means runtime PM is disabled, "auto" means enabled
+      # For MacBook Pro 2017, keep devices active to prevent suspend issues
       RUNTIME_PM_ON_AC = "on";
-      RUNTIME_PM_ON_BAT = "auto";
+      RUNTIME_PM_ON_BAT = "on";  # Changed from "auto" to fix MacBook suspend issues
+
+      # Exclude specific devices from runtime PM to prevent suspend issues
+      # Particularly important for NVMe and Thunderbolt on MacBook Pro 2017
+      RUNTIME_PM_BLACKLIST = "01:00.0";  # Typically NVMe controller
 
       # WiFi power saving
       WIFI_PWR_ON_AC = "off";

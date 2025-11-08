@@ -11,6 +11,15 @@
   boot.kernelParams = [
     # Make function keys work as function keys by default (not media keys)
     "hid_apple.fnmode=2"
+
+    # Fix suspend/resume issues on MacBook Pro 2017
+    # Force proper ACPI behavior and enable S3 sleep state
+    "acpi=strict"
+    "mem_sleep_default=deep"
+
+    # Additional ACPI tweaks for better compatibility
+    "acpi_osi=Linux"
+    "acpi_backlight=video"
   ];
 
   # Load Apple-specific kernel modules
@@ -53,5 +62,65 @@
   services.libinput.touchpad = {
     accelSpeed = "0.3";
     accelProfile = "adaptive";
+  };
+
+  # Fix suspend/resume issues specific to MacBook Pro 2017
+  # Disable problematic ACPI wakeup sources that cause immediate wakeup
+  systemd.services.disable-acpi-wakeup = {
+    description = "Disable problematic ACPI wakeup sources (XHC1, LID0)";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "multi-user.target" ];
+    script = ''
+      # Disable XHC1 (USB 3.0) wakeup - causes immediate resume
+      if grep -q "^XHC1.*enabled" /proc/acpi/wakeup; then
+        echo XHC1 > /proc/acpi/wakeup
+      fi
+
+      # Optionally disable LID0 if it causes issues
+      # Note: This means only power button can wake from suspend
+      # Uncomment if needed:
+      # if grep -q "^LID0.*enabled" /proc/acpi/wakeup; then
+      #   echo LID0 > /proc/acpi/wakeup
+      # fi
+    '';
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+    };
+  };
+
+  # Disable D3 Cold power state for NVMe and Thunderbolt to fix slow resume
+  systemd.services.disable-d3cold = {
+    description = "Disable D3 Cold power state for NVMe and Thunderbolt devices";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "multi-user.target" ];
+    script = ''
+      # Find and disable d3cold for all PCI devices
+      # This fixes "Unable to change power state" errors on resume
+      for device in /sys/bus/pci/devices/*/d3cold_allowed; do
+        if [ -f "$device" ]; then
+          echo 0 > "$device" || true
+        fi
+      done
+    '';
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+    };
+  };
+
+  # Re-apply settings after resume from suspend
+  systemd.services.fix-resume = {
+    description = "Fix devices after resume from suspend";
+    wantedBy = [ "suspend.target" ];
+    after = [ "suspend.target" ];
+    script = ''
+      # Reload WiFi driver if needed (Broadcom WiFi fix)
+      ${pkgs.kmod}/bin/modprobe -r brcmfmac || true
+      ${pkgs.kmod}/bin/modprobe brcmfmac || true
+    '';
+    serviceConfig = {
+      Type = "oneshot";
+    };
   };
 }

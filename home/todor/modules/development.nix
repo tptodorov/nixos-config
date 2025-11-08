@@ -15,6 +15,7 @@
     nixd
     zig
     zls
+    gnumake
   ];
 
   programs = {
