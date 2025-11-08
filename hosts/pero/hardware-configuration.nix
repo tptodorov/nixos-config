@@ -50,7 +50,7 @@
   # Placeholder filesystem configuration
   # REPLACE THIS with actual partition layout from nixos-generate-config
   fileSystems."/" = {
-    device = "/dev/disk/by-label/nixos-graphical-25.05-x86_64";
+    device = "/dev/disk/by-label/nixos";
     fsType = "ext4";
   };
 
