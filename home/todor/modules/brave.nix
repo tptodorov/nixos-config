@@ -120,8 +120,26 @@
     brave-sync = "brave --new-window brave://settings/syncSetup";
   };
 
-  # Activation script for initial setup hints only
+  # Activation script to set session restore preference
   home.activation.braveSetup = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    BRAVE_PREFS="$HOME/.config/BraveSoftware/Brave-Browser/Default/Preferences"
+
+    # Only modify if Brave profile exists and Preferences file exists
+    if [ -f "$BRAVE_PREFS" ]; then
+      echo "Configuring Brave to auto-restore previous session..."
+
+      # Use jq to modify the Preferences file if available, otherwise create a backup
+      if command -v ${pkgs.jq}/bin/jq &> /dev/null; then
+        # Create backup
+        cp "$BRAVE_PREFS" "$BRAVE_PREFS.bak"
+
+        # Set restore_on_startup to 1 (restore last session)
+        ${pkgs.jq}/bin/jq '.session.restore_on_startup = 1' "$BRAVE_PREFS.bak" > "$BRAVE_PREFS"
+
+        echo "✓ Brave configured to restore previous session automatically"
+      fi
+    fi
+
     echo "🦁 Brave Browser Setup Complete!"
     echo "================================"
     echo ""
@@ -129,6 +147,7 @@
     echo "  • Privacy-focused extensions pre-installed"
     echo "  • Hardware acceleration enabled"
     echo "  • Wayland support enabled"
+    echo "  • Auto-restore previous session enabled"
     echo "  • Sync support ready for todor@peychev.com"
     echo ""
     echo "To complete sync setup:"
