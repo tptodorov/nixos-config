@@ -95,6 +95,20 @@
 
     prefer-no-csd
 
+    // Screen idle and power management
+    // After 10 minutes of inactivity, turn off the screen
+    idle {
+        timeout 600 {
+            spawn "${pkgs.systemd}/bin/systemctl" "suspend"
+        }
+        timeout 300 {
+            spawn "${pkgs.brightnessctl}/bin/brightnessctl" "set" "10%"
+        }
+        resume {
+            spawn "${pkgs.brightnessctl}/bin/brightnessctl" "set" "100%"
+        }
+    }
+
     // Startup applications
     spawn-at-startup "sh" "-c" "${pkgs.waybar}/bin/waybar -c $HOME/.config/waybar/config-niri -s $HOME/.config/waybar/style-niri.css"
     spawn-at-startup "${pkgs.mako}/bin/mako"
