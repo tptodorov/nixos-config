@@ -14,6 +14,7 @@
       # Messenger applications (available on both VM and blackbox)
       telegram-desktop
       signal-desktop
+      viber
       wasistlos
     ]
     ++ lib.optionals (!vm || pkgs.stdenv.system != "aarch64-linux") [
