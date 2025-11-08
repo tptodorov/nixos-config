@@ -19,8 +19,12 @@
     # Version control
     git = {
       enable = true;
-      userName = "Todor Todorov";
-      userEmail = "98095+tptodorov@users.noreply.github.com";
+      settings = {
+        user = {
+          name = "Todor Todorov";
+          email = "98095+tptodorov@users.noreply.github.com";
+        };
+      };
     };
 
     gh = {
@@ -63,7 +67,6 @@
       nix-direnv.enable = true;
       silent = true;
     };
-
 
     claude-code.enable = true;
   };

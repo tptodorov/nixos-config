@@ -52,7 +52,7 @@
     age
     sops
     efibootmgr
-    inputs.home-manager.packages.${pkgs.system}.default
+    inputs.home-manager.packages.${pkgs.stdenv.hostPlatform.system}.default
 
     # Rust toolchain via fenix
     (fenix.complete.withComponents [
