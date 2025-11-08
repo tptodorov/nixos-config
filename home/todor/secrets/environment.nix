@@ -35,6 +35,7 @@
       # Examples of aliases that might need secrets
       # "deploy" = "cd ~/projects && ./deploy.sh";
       # "backup" = "rclone sync ~/Documents remote:backup";
+      zed = "zeditor";
     };
 
     # Custom shell functions that might use environment variables

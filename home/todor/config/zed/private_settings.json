@@ -5,15 +5,11 @@
     "play_sound_when_agent_done": true
   },
   "edit_predictions": {
-    "disabled_globs": [
-      ".env",
-      "main.js"
-    ]
+    "disabled_globs": [".env", "main.js"]
   },
   "features": {
     "edit_prediction_provider": "supermaven"
   },
-  "format_on_save": "language_server",
   "autosave": "on_focus_change",
   "buffer_line_height": "comfortable",
   "soft_wrap": "none",
@@ -36,7 +32,13 @@
   },
   "languages": {
     "Nix": {
-      "formatter": "language_server"
+      "format_on_save": "on",
+      "formatter": {
+        "external": {
+          "command": "nixfmt",
+          "arguments": []
+        }
+      }
     },
     "TypeScript": {
       "inlay_hints": {
@@ -54,10 +56,7 @@
       }
     },
     "Python": {
-      "language_servers": [
-        "ruff"
-      ],
-      "format_on_save": "on",
+      "language_servers": ["ruff"],
       "formatter": [
         {
           "language_server": {
@@ -79,15 +78,8 @@
     }
   },
   "file_types": {
-    "Dockerfile": [
-      "Dockerfile",
-      "Dockerfile.*"
-    ],
-    "JSON": [
-      "json",
-      "jsonc",
-      "*.code-snippets"
-    ]
+    "Dockerfile": ["Dockerfile", "Dockerfile.*"],
+    "JSON": ["json", "jsonc", "*.code-snippets"]
   },
   "telemetry": {
     "diagnostics": false,

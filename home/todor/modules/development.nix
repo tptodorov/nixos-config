@@ -11,6 +11,8 @@
     git-town
     nil
     gopass
+    zed-editor
+    nixd
   ];
 
   programs = {
@@ -63,25 +65,11 @@
     };
 
 
-    zed-editor = {
-      enable = true;
-      package = pkgs.zed-editor;
-      extraPackages = [
-        pkgs.nixd
-        pkgs.nil
-      ];
-      extensions = [
-        "nix"
-        "tokyo-night"
-        "php"
-        "log"
-        "rust"
-      ];
-      userSettings = builtins.fromJSON (builtins.readFile ../config/zed/private_settings.json);
-    };
-
     claude-code.enable = true;
   };
+
+  # Zed Editor settings file
+  home.file.".config/zed/settings.json".source = ../config/zed/private_settings.json;
 
   # Environment variables
   home.sessionVariables = {

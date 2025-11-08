@@ -16,7 +16,6 @@
     "bluetooth",
     "network",
     "battery",
-    "sway/language",
   ],
 
   "hyprland/workspaces": {
@@ -25,11 +24,6 @@
       "active": "",
       "default": ""
     }
-  },
-
-
-  "sway/language": {
-    "format": "{short} {variant}",
   },
 
   "bluetooth": {
