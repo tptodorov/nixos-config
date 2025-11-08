@@ -14,6 +14,7 @@
     ./modules/desktop-apps.nix
     ./modules/brave.nix
     ./modules/hyprland.nix
+    ./modules/niri.nix
     ./modules/media.nix
     # Secrets (now enabled for both VM and blackbox)
   ] ++ lib.optionals vm [

@@ -30,6 +30,10 @@
       enable = true;
       xwayland.enable = true;
     };
+    # Enable Niri window manager
+    niri = {
+      enable = true;
+    };
     # Brave browser is configured via Home Manager
   };
 

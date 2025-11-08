@@ -45,14 +45,32 @@ rg <pattern>  # ripgrep for content search
 - **`hosts/blackbox/`**: Host-specific NixOS system configuration
   - `default.nix`: System packages, services, and settings
   - `hardware-configuration.nix`: Hardware-specific configuration
+  - `modules/desktop.nix`: Desktop environment configuration (GNOME, COSMIC, Hyprland, Niri)
+  - `modules/`: Other system modules (boot, networking, services, nix)
 - **`home/todor/`**: User-specific Home Manager configuration
   - `default.nix`: User packages, dotfiles, and application configs
-  - `config/`: Application-specific configuration files
+  - `modules/`: Modular user configurations
+    - `niri.nix`: Niri window manager configuration
+    - `hyprland.nix`: Hyprland window manager configuration
+    - `terminal.nix`: Terminal emulator configurations
+    - `development.nix`: Development tools and settings
+    - `nixvim.nix`: Neovim configuration
+    - `brave.nix`: Browser configuration
+    - Other module files
+  - `config/`: Static configuration files
+    - `hypr/`: Hyprland scripts and configs
+    - `waybar/`: Waybar styling and configurations
+    - `wofi/`: Wofi launcher styling
+    - `nvim/`: Neovim configs
 
 ### Technology Stack
 - **OS**: NixOS 25.05
 - **Package Manager**: Nix with Flakes
-- **Desktop**: Hyprland (Wayland) with GNOME fallback
+- **Desktop**: Multiple Wayland compositors available:
+  - **Niri** - Scrollable-tiling Wayland compositor (primary)
+  - **Hyprland** - Dynamic tiling Wayland compositor
+  - **GNOME** - Traditional desktop environment
+  - **COSMIC** - System76's Rust-based desktop
 - **Shell**: Zsh with Oh My Zsh
 - **Editors**: Neovim (LazyVim), Zed Editor
 - **Terminal**: Ghostty, Kitty, Rio
@@ -68,14 +86,20 @@ rg <pattern>  # ripgrep for content search
 
 ### Making Changes
 1. Edit relevant `.nix` files in `hosts/blackbox/` or `home/todor/`
-2. For system changes: `sudo nixos-rebuild switch --flake .#blackbox`
-3. For user changes: `home-manager switch --flake .`
+2. Add new files to git (Nix flakes require files to be tracked): `git add <file>`
+3. Rebuild system (includes Home Manager): `sudo nixos-rebuild switch --flake .#blackbox`
+   - Note: Home Manager is integrated into NixOS config, so one rebuild applies both system and user changes
 4. Commit changes to git after testing
+
+**Important:** Nix flakes only see files tracked by git, so new files must be added before rebuilding.
 
 ### Key Configuration Areas
 - **System packages**: `hosts/blackbox/default.nix`
 - **User packages**: `home/todor/default.nix`
-- **Desktop environment**: Hyprland config in `home/todor/config/hypr/`
+- **Window managers**:
+  - Niri config in `home/todor/modules/niri.nix`
+  - Hyprland config in `home/todor/modules/hyprland.nix`
+  - Desktop services in `hosts/blackbox/modules/desktop.nix`
 - **Shell config**: Zsh and Oh My Zsh setup in user configuration
 - **Editor config**: Neovim LazyVim in `home/todor/config/nvim/`
 
@@ -83,3 +107,73 @@ rg <pattern>  # ripgrep for content search
 - Use `nixos-rebuild test` for system changes without permanent switch
 - Nix provides build-time validation of configuration syntax
 - Generation rollback available if issues occur
+- Validate niri config: `niri validate -c ~/.config/niri/config.kdl`
+
+## Window Managers
+
+### Niri (Primary)
+Niri is a scrollable-tiling Wayland compositor with a unique horizontal workspace model.
+
+**Configuration Files:**
+- **Main config**: `~/.config/niri/config.kdl` (generated from `home/todor/modules/niri.nix`)
+- **Waybar config**: `~/.config/waybar/config-niri` (niri-specific)
+- **Waybar style**: `~/.config/waybar/style-niri.css`
+- **Scripts**: `~/.config/niri/scripts/`
+  - `wallpaper.sh` - Wallpaper picker with pywal integration
+  - `clipboard.sh` - Clipboard history manager
+
+**Key Features:**
+- Horizontal scrolling workspaces
+- Column-based tiling layout
+- Shared applications and scripts with Hyprland
+- Integrated waybar, mako, clipboard management, wallpaper handling
+
+**Startup Applications:**
+- Waybar (status bar)
+- Mako (notifications)
+- swww-daemon (wallpaper)
+- Clipboard history watchers
+- Blueman & NetworkManager applets
+- Ghostty, Brave, Spotify
+
+**Essential Keybindings:**
+- `Mod+Return` / `Mod+T` - Terminal (Ghostty)
+- `Mod+Q` - Close window
+- `Mod+Space` - Application launcher (Wofi)
+- `Mod+E` - File manager (Nautilus)
+- `Mod+S` - Browser (Brave)
+- `Mod+W` - Wallpaper selector
+- `Mod+V` - Clipboard history
+- `Mod+F` - Fullscreen
+- `Mod+1-9` - Switch workspace
+- `Mod+Shift+1-9` - Move window to workspace
+- `Mod+H/J/K/L` - Focus window (vim-style)
+- `Mod+Shift+H/J/K/L` - Move window
+- `Mod+Shift+E` - Exit niri
+
+**Screenshots:**
+- `Print` - Screenshot
+- `Mod+Shift+S` - Screenshot entire screen
+- `Mod+Print` - Screenshot window
+
+### Hyprland (Alternative)
+Dynamic tiling Wayland compositor with advanced animations and effects.
+
+**Configuration:**
+- Main config in `home/todor/modules/hyprland.nix`
+- Uses separate waybar config (`~/.config/waybar/config`)
+- Shares wofi, scripts, and most applications with niri
+
+**Switching Between Window Managers:**
+1. Log out of current session
+2. At login screen (GDM/COSMIC greeter), select session:
+   - Choose "niri" for niri session
+   - Choose "Hyprland" for Hyprland session
+3. Log in
+
+Both window managers share:
+- Application packages
+- Wofi configuration
+- Custom scripts (wallpaper, clipboard)
+- Theming and fonts
+- Terminal and editor configs
