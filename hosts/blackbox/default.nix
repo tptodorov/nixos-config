@@ -14,12 +14,13 @@
     # Home Manager integration
     inputs.home-manager.nixosModules.home-manager
 
-    # System modules
-    ./modules/boot.nix
+    # Configuration profiles
+    ../../modules/profiles/base.nix
+    ../../modules/profiles/desktop.nix
+
+    # Host-specific modules
     ./modules/networking.nix
-    ./modules/desktop.nix
     ./modules/services.nix
-    ./modules/nix.nix
 
     # Shared modules
     ../../modules/common/fonts.nix
@@ -28,9 +29,6 @@
     # Secrets
     ../../secrets/ssh-keys.nix
   ];
-
-  # Add fenix overlay for Rust toolchain
-  nixpkgs.overlays = [ inputs.fenix.overlays.default ];
 
   # Home Manager configuration
   home-manager = {
@@ -41,29 +39,6 @@
     ];
     users.todor = ../../home/todor;
   };
-
-  # Essential system packages
-  environment.systemPackages = with pkgs; [
-    vim
-    wget
-    git
-    tree
-    ripgrep
-    age
-    sops
-    efibootmgr
-    inputs.home-manager.packages.${pkgs.system}.default
-
-    # Rust toolchain via fenix
-    (fenix.complete.withComponents [
-      "cargo"
-      "clippy"
-      "rust-src"
-      "rustc"
-      "rustfmt"
-    ])
-    rust-analyzer-nightly
-  ];
 
   # System version
   system.stateVersion = "25.05";

@@ -4,14 +4,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a NixOS system configuration repository using Nix Flakes for declarative system and user environment management. It manages both system-level configuration for the "blackbox" host and user-level configuration for user "todor" via Home Manager.
+This is a NixOS system configuration repository using Nix Flakes for declarative system and user environment management. It supports **multiple hosts** (blackbox, pero, vm-aarch64) and **multiple users** with reusable configuration profiles. The modular structure makes it easy to add new machines and user accounts.
 
 ## Common Commands
 
 ### System Management
 ```bash
 # Rebuild and switch NixOS system configuration
-sudo nixos-rebuild switch --flake .#blackbox
+sudo nixos-rebuild switch --flake .#blackbox  # On blackbox
+sudo nixos-rebuild switch --flake .#pero      # On pero (MacBook Pro)
 
 # Test system configuration without switching
 sudo nixos-rebuild test --flake .#blackbox
@@ -24,6 +25,9 @@ nix flake update
 
 # Check flake configuration
 nix flake check
+
+# Build a specific host configuration without switching
+nixos-rebuild build --flake .#pero
 ```
 
 ### Development
@@ -41,13 +45,33 @@ rg <pattern>  # ripgrep for content search
 ## Architecture
 
 ### Configuration Structure
-- **`flake.nix`**: Main flake configuration defining inputs and outputs
-- **`hosts/blackbox/`**: Host-specific NixOS system configuration
-  - `default.nix`: System packages, services, and settings
+
+This repository is structured to support **multiple NixOS hosts** and **multiple users**.
+
+#### Core Files
+- **`flake.nix`**: Main flake configuration defining inputs and outputs for all hosts
+
+#### Configuration Profiles (Reusable)
+- **`modules/profiles/`**: Shared configuration profiles that can be imported by any host
+  - `base.nix`: Essential system configuration (Nix settings, SSH, basic packages, garbage collection)
+  - `desktop.nix`: Full desktop environment (GNOME, COSMIC, Hyprland, Niri, hardware acceleration)
+  - `laptop.nix`: Laptop-specific features (power management, TLP, touchpad, lid switch handling)
+
+#### Host Configurations
+- **`hosts/blackbox/`**: Desktop workstation configuration
+  - `default.nix`: Host configuration (imports base + desktop profiles)
   - `hardware-configuration.nix`: Hardware-specific configuration
-  - `modules/desktop.nix`: Desktop environment configuration (GNOME, COSMIC, Hyprland, Niri)
-  - `modules/`: Other system modules (boot, networking, services, nix)
-- **`home/todor/`**: User-specific Home Manager configuration
+  - `modules/`: Host-specific modules (networking, services)
+- **`hosts/pero/`**: MacBook Pro 13" 2017 configuration
+  - `default.nix`: Host configuration (imports base + laptop + desktop profiles)
+  - `hardware-configuration.nix`: Hardware-specific configuration (placeholder until NixOS is installed)
+  - `modules/macbook.nix`: Apple hardware-specific settings (keyboard, trackpad, display scaling)
+- **`hosts/vm-aarch64/`**: ARM64 VM configuration
+
+#### User Configurations
+- **`modules/users/`**: User account definitions (can be reused across hosts)
+  - `todor.nix`: User account configuration with default password "todor"
+- **`home/todor/`**: Home Manager configuration for user todor
   - `default.nix`: User packages, dotfiles, and application configs
   - `modules/`: Modular user configurations
     - `niri.nix`: Niri window manager configuration
@@ -62,6 +86,9 @@ rg <pattern>  # ripgrep for content search
     - `waybar/`: Waybar styling and configurations
     - `wofi/`: Wofi launcher styling
     - `nvim/`: Neovim configs
+
+#### Shared Modules
+- **`modules/common/`**: Truly common modules (fonts, etc.)
 
 ### Technology Stack
 - **OS**: NixOS 25.05
@@ -85,21 +112,42 @@ rg <pattern>  # ripgrep for content search
 ## Configuration Management
 
 ### Making Changes
-1. Edit relevant `.nix` files in `hosts/blackbox/` or `home/todor/`
+1. Edit relevant `.nix` files:
+   - Host-specific: `hosts/<hostname>/`
+   - User-specific: `home/<username>/`
+   - Shared profiles: `modules/profiles/`
+   - User accounts: `modules/users/`
 2. Add new files to git (Nix flakes require files to be tracked): `git add <file>`
-3. Rebuild system (includes Home Manager): `sudo nixos-rebuild switch --flake .#blackbox`
-   - Note: Home Manager is integrated into NixOS config, so one rebuild applies both system and user changes
+3. Rebuild system (includes Home Manager):
+   - **On blackbox**: `sudo nixos-rebuild switch --flake .#blackbox`
+   - **On pero**: `sudo nixos-rebuild switch --flake .#pero`
+   - **On vm-aarch64**: `sudo nixos-rebuild switch --flake .#vm-aarch64`
 4. Commit changes to git after testing
 
 **Important:** Nix flakes only see files tracked by git, so new files must be added before rebuilding.
 
+### Adding New Hosts
+1. Create new directory: `mkdir -p hosts/<hostname>/modules`
+2. Create `hosts/<hostname>/default.nix` importing desired profiles
+3. Generate hardware config on target machine: `nixos-generate-config --show-hardware-config > hosts/<hostname>/hardware-configuration.nix`
+4. Add host to `flake.nix` in `nixosConfigurations`
+5. Import user accounts from `modules/users/`
+
+### Adding New Users
+1. Create user definition in `modules/users/<username>.nix`
+2. Create Home Manager config in `home/<username>/`
+3. Import user module in host's `default.nix`
+4. Add to `home-manager.users` in host config
+
 ### Key Configuration Areas
-- **System packages**: `hosts/blackbox/default.nix`
-- **User packages**: `home/todor/default.nix`
+- **System profiles**: `modules/profiles/` (base, desktop, laptop)
+- **Host-specific settings**: `hosts/<hostname>/default.nix` and `hosts/<hostname>/modules/`
+- **User accounts**: `modules/users/` (reusable across hosts)
+- **User packages & configs**: `home/<username>/`
 - **Window managers**:
   - Niri config in `home/todor/modules/niri.nix`
   - Hyprland config in `home/todor/modules/hyprland.nix`
-  - Desktop services in `hosts/blackbox/modules/desktop.nix`
+  - Desktop services in `modules/profiles/desktop.nix`
 - **Shell config**: Zsh and Oh My Zsh setup in user configuration
 - **Editor config**: Neovim LazyVim in `home/todor/config/nvim/`
 - **iCloud integration**: `home/todor/modules/icloud.nix` - See `docs/ICLOUD-SETUP.md` for setup instructions

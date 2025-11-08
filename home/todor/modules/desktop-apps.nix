@@ -23,6 +23,9 @@
     ++ lib.optionals (!vm) [
       # Audio applications (blackbox only, no audio in VM)
       spotify
+
+      # Productivity applications (blackbox only)
+      obsidian
     ];
 
   # XDG configuration
@@ -43,6 +46,9 @@
             "code.desktop"
             "code-insiders.desktop"
           ];
+          markdown = lib.optionals (!vm) [
+            "obsidian.desktop"
+          ] ++ editor;
         in
         {
           "application/json" = browser;
@@ -50,6 +56,7 @@
           "text/html" = browser;
           "text/xml" = browser;
           "text/plain" = editor;
+          "text/markdown" = markdown;
           "application/xml" = browser;
           "application/xhtml+xml" = browser;
           "application/xhtml_xml" = browser;

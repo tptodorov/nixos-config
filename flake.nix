@@ -51,8 +51,16 @@
             inputs.home-manager.nixosModules.home-manager
             ./hosts/blackbox
           ];
-
         };
+
+        pero = nixpkgs.lib.nixosSystem {
+          specialArgs = { inherit inputs outputs; vm = false; };
+          modules = [
+            inputs.home-manager.nixosModules.home-manager
+            ./hosts/pero
+          ];
+        };
+
         vm-aarch64 = nixpkgs.lib.nixosSystem {
           system = "aarch64-linux";
           specialArgs = { inherit inputs outputs; vm = true; };
@@ -61,7 +69,6 @@
             ./hosts/vm-aarch64
           ];
         };
-
       };
     };
 
