@@ -43,19 +43,36 @@
 
     in
     {
-      overlays = import ./overlays { inherit inputs; };
       nixosConfigurations = {
         blackbox = nixpkgs.lib.nixosSystem {
-          specialArgs = { inherit inputs outputs; vm = false; };
+          specialArgs = {
+            inherit inputs outputs;
+            vm = false;
+          };
           modules = [
+            (
+              { pkgs, ... }:
+              {
+                nixpkgs.overlays = [ inputs.zig.overlays.default ];
+              }
+            )
             inputs.home-manager.nixosModules.home-manager
             ./hosts/blackbox
           ];
         };
 
         pero = nixpkgs.lib.nixosSystem {
-          specialArgs = { inherit inputs outputs; vm = false; };
+          specialArgs = {
+            inherit inputs outputs;
+            vm = false;
+          };
           modules = [
+            (
+              { pkgs, ... }:
+              {
+                nixpkgs.overlays = [ inputs.zig.overlays.default ];
+              }
+            )
             inputs.home-manager.nixosModules.home-manager
             ./hosts/pero
           ];
@@ -63,8 +80,17 @@
 
         vm-aarch64 = nixpkgs.lib.nixosSystem {
           system = "aarch64-linux";
-          specialArgs = { inherit inputs outputs; vm = true; };
+          specialArgs = {
+            inherit inputs outputs;
+            vm = true;
+          };
           modules = [
+            (
+              { pkgs, ... }:
+              {
+                nixpkgs.overlays = [ inputs.zig.overlays.default ];
+              }
+            )
             inputs.home-manager.nixosModules.home-manager
             ./hosts/vm-aarch64
           ];

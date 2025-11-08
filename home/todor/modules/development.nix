@@ -13,6 +13,8 @@
     gopass
     zed-editor
     nixd
+    zig
+    zls
   ];
 
   programs = {
