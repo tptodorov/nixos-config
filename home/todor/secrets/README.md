@@ -12,7 +12,24 @@ This directory provides **encrypted secrets management** using `sops-nix` for us
 
 ## 🚀 Quick Setup
 
-### 1. Ensure Tools Are Available
+### 1. Ensure Age Key is in Place
+
+For `sops-nix` to decrypt secrets, your `age` private key must be present at the location specified in `secrets.nix`. By default, this is:
+
+`~/.config/sops/age/keys.txt`
+
+If you are setting up a new machine or user, **you must manually copy your existing key to this path**.
+
+```bash
+# Example:
+mkdir -p ~/.config/sops/age
+cp /path/to/your/backup/keys.txt ~/.config/sops/age/keys.txt
+chmod 600 ~/.config/sops/age/keys.txt
+```
+
+Without the key in the correct location, `nixos-rebuild switch` will fail with a D-Bus or decryption error.
+
+### 2. Ensure Tools Are Available
 
 The `age` and `sops` tools are included in your system packages. If they're not available, rebuild your system:
 
