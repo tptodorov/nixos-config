@@ -1,26 +1,26 @@
-/* Wofi Clipboard Manager Custom Styling */
+/* Wofi -- Tokyo Night Storm */
 
 window {
     margin: 0px;
-    border: 2px solid #33ccff;
+    border: 2px solid #7aa2f7;
     border-radius: 15px;
-    background-color: rgba(40, 42, 54, 0.95);
+    background-color: #24283b;
     font-family: "JetBrains Mono", monospace;
     font-size: 14px;
 }
 
 #input {
     margin: 10px;
-    border: 2px solid #6272a4;
+    border: 2px solid #414868;
     border-radius: 8px;
-    color: #f8f8f2;
-    background-color: rgba(68, 71, 90, 0.8);
+    color: #c0caf5;
+    background-color: #1f2335;
     padding: 8px 12px;
     font-size: 14px;
 }
 
 #input:focus {
-    border-color: #33ccff;
+    border-color: #7aa2f7;
     outline: none;
 }
 
@@ -44,7 +44,7 @@ window {
 #text {
     margin: 5px;
     border: none;
-    color: #f8f8f2;
+    color: #c0caf5;
     font-size: 13px;
     padding: 8px 12px;
 }
@@ -58,31 +58,31 @@ window {
 }
 
 #entry:selected {
-    background-color: rgba(51, 204, 255, 0.2);
-    border: 1px solid #33ccff;
+    background-color: rgba(122, 162, 247, 0.15);
+    border: 1px solid #7aa2f7;
 }
 
 #entry:hover {
-    background-color: rgba(98, 114, 164, 0.3);
+    background-color: #292e42;
 }
 
 /* Style for long text entries */
 #text:first-line {
     font-weight: bold;
-    color: #50fa7b;
+    color: #9ece6a;
 }
 
 /* Custom scrollbar */
 scrollbar {
-    background-color: rgba(68, 71, 90, 0.3);
+    background-color: #1f2335;
     border-radius: 5px;
 }
 
 scrollbar slider {
-    background-color: rgba(98, 114, 164, 0.8);
+    background-color: #414868;
     border-radius: 5px;
 }
 
 scrollbar slider:hover {
-    background-color: rgba(139, 233, 253, 0.8);
+    background-color: #7aa2f7;
 }

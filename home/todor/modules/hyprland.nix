@@ -14,7 +14,6 @@
       gnome-terminal # Backup terminal
       # Core packages for both VM and blackbox
       waybar
-      mako
       nautilus
       nemo
       grim
@@ -59,27 +58,6 @@
     hyprsunset.enable = true;
     hyprpaper.enable = true;
     playerctld.enable = true;
-
-    # Notification daemon
-    mako = {
-      enable = true;
-      settings = {
-        sort = "-time";
-        layer = "top";
-        background-color = "#22348e";
-        width = "300";
-        height = "150";
-        "border-size" = "0";
-        "border-color" = "#72B2FE";
-        "border-radius" = "15";
-        padding = "20";
-        icons = "1";
-        "max-icon-size" = "64";
-        "default-timeout" = "5000";
-        "ignore-timeout" = "1";
-        font = "Millimetre 10";
-      };
-    };
   };
 
   # Hyprland window manager

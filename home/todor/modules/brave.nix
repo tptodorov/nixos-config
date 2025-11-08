@@ -48,10 +48,12 @@
       "--enable-sync"
 
       # Better user experience
+      "--restore-last-session"
       "--no-default-browser-check"
       "--disable-features=TranslateUI"
       "--enable-smooth-scrolling"
-    ] ++ lib.optionals (!vm) [
+    ]
+    ++ lib.optionals (!vm) [
       # GPU acceleration and performance (only on physical machines)
       "--enable-gpu-rasterization"
       "--enable-zero-copy"
@@ -59,7 +61,8 @@
       "--max_old_space_size=4096"
       # Audio/Video codec support
       "--enable-features=VaapiVideoDecoder"
-    ] ++ lib.optionals vm [
+    ]
+    ++ lib.optionals vm [
       # VM-specific flags - optimized for ARM64 VMs
       # ARM64 VMware VMs don't have full 3D acceleration
       "--disable-gpu"

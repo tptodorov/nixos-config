@@ -23,8 +23,6 @@
 
     # Wallpaper and theming
     swww # Wayland wallpaper daemon
-    pywal # Color scheme generator
-    imagemagick # Image processing for pywal
 
     # Clipboard management
     cliphist # Clipboard history manager
@@ -83,11 +81,15 @@
         gaps 8
 
         focus-ring {
-            active-color "#33ccff"
+            width 2
+            active-color "#7aa2f7"
+            inactive-color "#414868"
         }
 
         border {
-            active-color "#33ccff"
+            width 2
+            active-color "#7aa2f7"
+            inactive-color "#1f2335"
         }
     }
 
@@ -211,10 +213,19 @@
   # Niri-specific configuration files and scripts
   home.file = {
     # Copy scripts from Hyprland config
-    ".config/niri/scripts/wallpaper.sh" = {
-      source = ../config/hypr/wallpaper.sh;
-      executable = true;
-    };
+    ".config/niri/scripts/wallpaper.sh".text = ''
+      #!/bin/bash
+      # Please place your wallpaper at ~/.config/niri/wallpaper.png
+      WALLPAPER_PATH="$HOME/.config/niri/wallpaper.png"
+
+      if [ -f "$WALLPAPER_PATH" ]; then
+          swww img "$WALLPAPER_PATH" --transition-type any --transition-fps 60 --transition-duration .5
+      else
+          # You can add a fallback wallpaper here
+          # For example, you can set a solid color background
+          swww img "#24283b" --transition-type any --transition-fps 60 --transition-duration .5
+      fi
+    '';
     ".config/niri/scripts/clipboard.sh" = {
       source = ../config/hypr/clipboard.sh;
       executable = true;
@@ -345,10 +356,207 @@
       }
     '';
 
-    # Use the same waybar style from Hyprland
-    ".config/waybar/style-niri.css" = {
-      source = ../config/waybar/style.css;
-    };
+    # Tokyo Night Storm themed waybar style
+    ".config/waybar/style-niri.css".text = ''
+      /* Tokyo Night Storm Theme for Waybar */
+      * {
+        font-family: "JetBrainsMono Nerd Font", sans-serif;
+        font-size: 13px;
+        min-height: 0;
+        padding-right: 0px;
+        padding-left: 0px;
+        padding-bottom: 0px;
+      }
+
+      #waybar {
+        background: transparent;
+        color: #c0caf5;
+        margin: 0px;
+        font-weight: 500;
+      }
+
+      /* Left Modules */
+      #workspaces,
+      #cpu,
+      #memory {
+        background-color: #24283b;
+        padding: 0.3rem 0.7rem;
+        margin: 5px 0px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        min-width: 0;
+        border: 1px solid #414868;
+        transition: all 0.2s ease-in-out;
+      }
+
+      #workspaces {
+        padding: 2px;
+        margin-left: 7px;
+        margin-right: 5px;
+      }
+
+      #cpu:hover,
+      #memory:hover {
+        background-color: #292e42;
+        border-color: #7aa2f7;
+      }
+
+      #workspaces button {
+        color: #a9b1d6;
+        border-radius: 6px;
+        padding: 0.3rem 0.6rem;
+        background: transparent;
+        transition: all 0.2s ease-in-out;
+        border: none;
+        outline: none;
+      }
+
+      #workspaces button.active {
+        color: #7aa2f7;
+        background-color: rgba(122, 162, 247, 0.15);
+        box-shadow: inset 0 0 0 1px rgba(122, 162, 247, 0.3);
+      }
+
+      #workspaces button:hover {
+        background: #292e42;
+        color: #c0caf5;
+      }
+
+      /* Center Modules */
+      #clock {
+        background-color: #24283b;
+        padding: 0.3rem 0.7rem;
+        margin: 5px 5px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(122, 162, 247, 0.2);
+        min-width: 0;
+        border: 1px solid #414868;
+        transition: all 0.2s ease-in-out;
+        color: #7aa2f7;
+        font-weight: 600;
+      }
+
+      #clock:hover {
+        background-color: rgba(122, 162, 247, 0.15);
+        border-color: #7aa2f7;
+      }
+
+      /* Right Modules - Seamless Bar */
+      #custom-music,
+      #pulseaudio,
+      #bluetooth,
+      #network,
+      #battery,
+      #language {
+        background-color: #24283b;
+        padding: 0.3rem 0.7rem;
+        margin: 5px 0px;
+        border-radius: 0;
+        box-shadow: none;
+        min-width: 0;
+        border-top: 1px solid #414868;
+        border-bottom: 1px solid #414868;
+        transition: all 0.2s ease-in-out;
+      }
+
+      #custom-music:hover,
+      #pulseaudio:hover,
+      #bluetooth:hover,
+      #network:hover,
+      #battery:hover,
+      #language:hover {
+        background-color: #292e42;
+      }
+
+      #custom-music {
+        margin-left: 5px;
+        border-left: 1px solid #414868;
+        border-top-left-radius: 8px;
+        border-bottom-left-radius: 8px;
+        color: #bb9af7;
+      }
+
+      #language {
+        border-right: 1px solid #414868;
+        border-top-right-radius: 8px;
+        border-bottom-right-radius: 8px;
+        margin-right: 7px;
+        color: #7dcfff;
+      }
+
+      #cpu {
+        color: #f7768e;
+      }
+
+      #memory {
+        color: #9ece6a;
+      }
+
+      #pulseaudio {
+        color: #7dcfff;
+      }
+
+      #bluetooth {
+        color: #565f89;
+        font-size: 16px;
+      }
+
+      #bluetooth.on {
+        color: #7aa2f7;
+      }
+
+      #bluetooth.connected {
+        color: #7dcfff;
+      }
+
+      #network {
+        color: #c0caf5;
+      }
+
+      #network.disconnected {
+        color: #f7768e;
+      }
+
+      #battery {
+        color: #9ece6a;
+      }
+
+      #battery.charging {
+        color: #73daca;
+      }
+
+      #battery.warning:not(.charging) {
+        color: #e0af68;
+      }
+
+      #battery.critical:not(.charging) {
+        color: #f7768e;
+      }
+
+      /* Tooltip */
+      tooltip {
+        background-color: #1f2335;
+        color: #c0caf5;
+        padding: 8px 14px;
+        margin: 5px 0px;
+        border-radius: 8px;
+        border: 1px solid #414868;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        font-size: 12px;
+      }
+    '';
+
+    # Mako configuration for niri
+    ".config/mako/config".text = ''
+      font=JetBrainsMono Nerd Font 10
+      background-color=#24283b
+      text-color=#c0caf5
+      border-color=#7aa2f7
+      border-size=2
+      border-radius=8
+      default-timeout=5000
+      layer=overlay
+    '';
 
     # Share wofi config with Hyprland
     ".config/wofi" = {
