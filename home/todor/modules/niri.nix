@@ -58,13 +58,15 @@
   # Niri configuration
   xdg.configFile."niri/config.kdl".text = ''
     // Niri configuration for user todor
-    workspace "chat"
+    workspace "chat" {}
+    workspace "browse" {}
+    workspace "dev" {}
 
     input {
         keyboard {
             xkb {
                 layout "us,bg"
-                variant "basic,bas_phonetic"
+                variant "basic,phonetic"
                 options "grp:win_space_toggle"
             }
         }
@@ -102,14 +104,21 @@
 
     // Window rules
     window-rule {
+      match app-id="brave-browser"
+      match app-id="spotify"
+      match at-startup=true
+      open-on-workspace "browse"
     }
+
 
     window-rule {
         match app-id="com.viber.Viber"
+        match app-id="wasistlos"
         match title="WasIstLos"
         match title="viber"
 
         open-on-workspace "chat"
+        open-focused false
     }
 
 
@@ -380,7 +389,7 @@
         ],
 
         "niri/workspaces": {
-          "format": "{index}",
+          "format": "{index}{index}",
         },
 
         "niri/language": {
