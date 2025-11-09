@@ -3,6 +3,29 @@
 # Clipboard Manager Script for Hyprland
 # Uses cliphist and wofi to provide a nice clipboard history interface
 
+# Lock file to prevent multiple instances
+LOCK_FILE="/tmp/clipboard_manager.lock"
+
+# Check if another instance is running
+if [[ -f "$LOCK_FILE" ]]; then
+    # Check if the process is still running
+    if ps -p $(cat "$LOCK_FILE") > /dev/null 2>&1; then
+        exit 0
+    else
+        # Stale lock file, remove it
+        rm -f "$LOCK_FILE"
+    fi
+fi
+
+# Create lock file with current PID
+echo $$ > "$LOCK_FILE"
+
+# Cleanup function to remove lock file on exit
+cleanup() {
+    rm -f "$LOCK_FILE"
+}
+trap cleanup EXIT
+
 # Check if cliphist is available
 if ! command -v cliphist &> /dev/null; then
     notify-send "Clipboard Manager" "cliphist is not installed" -u critical
@@ -18,27 +41,31 @@ fi
 # Function to show clipboard history
 show_clipboard_history() {
     local selected
-    selected=$(cliphist list | wofi \
-        --dmenu \
-        --prompt "Clipboard History" \
-        --width 800 \
-        --height 400 \
-        --lines 10 \
-        --cache-file /dev/null \
-        --parse-search \
-        --matching contains \
-        --insensitive \
-        --style ~/.config/wofi/clipboard.css 2>/dev/null || \
-        cliphist list | wofi \
-        --dmenu \
-        --prompt "Clipboard History" \
-        --width 800 \
-        --height 400 \
-        --lines 10 \
-        --cache-file /dev/null \
-        --parse-search \
-        --matching contains \
-        --insensitive)
+    # Use custom styling if available, otherwise use default wofi styling
+    if [[ -f ~/.config/wofi/clipboard.css ]]; then
+        selected=$(cliphist list | wofi \
+            --dmenu \
+            --prompt "Clipboard History" \
+            --width 800 \
+            --height 400 \
+            --lines 10 \
+            --cache-file /dev/null \
+            --parse-search \
+            --matching contains \
+            --insensitive \
+            --style ~/.config/wofi/clipboard.css)
+    else
+        selected=$(cliphist list | wofi \
+            --dmenu \
+            --prompt "Clipboard History" \
+            --width 800 \
+            --height 400 \
+            --lines 10 \
+            --cache-file /dev/null \
+            --parse-search \
+            --matching contains \
+            --insensitive)
+    fi
 
     if [[ -n "$selected" ]]; then
         # Decode and copy to clipboard

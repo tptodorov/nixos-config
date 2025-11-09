@@ -18,6 +18,7 @@
     ../../modules/profiles/base.nix
     ../../modules/profiles/laptop.nix
     ../../modules/profiles/desktop.nix  # Include full desktop environment
+    ../../modules/profiles/apfs.nix
 
     # Host-specific modules
     ./modules/macbook.nix

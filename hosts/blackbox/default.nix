@@ -17,6 +17,7 @@
     # Configuration profiles
     ../../modules/profiles/base.nix
     ../../modules/profiles/desktop.nix
+    ../../modules/profiles/apfs.nix
 
     # Host-specific modules
     ./modules/networking.nix

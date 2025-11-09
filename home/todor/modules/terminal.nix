@@ -196,6 +196,9 @@
         "b" = "bun";
         "cs" = "coursier";
         "bb" = "ssh blackbox";
+
+        # File search
+        "ff" = "fd";  # Fast find alias
       };
     };
 
