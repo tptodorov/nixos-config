@@ -67,21 +67,15 @@
   # Fix suspend/resume issues specific to MacBook Pro 2017
   # Disable problematic ACPI wakeup sources that cause immediate wakeup
   systemd.services.disable-acpi-wakeup = {
-    description = "Disable problematic ACPI wakeup sources (XHC1, LID0)";
+    description = "Disable problematic ACPI wakeup sources (XHC1)";
     wantedBy = [ "multi-user.target" ];
     after = [ "multi-user.target" ];
     script = ''
       # Disable XHC1 (USB 3.0) wakeup - causes immediate resume
-      if grep -q "^XHC1.*enabled" /proc/acpi/wakeup; then
+      if ${pkgs.gnugrep}/bin/grep -q "^XHC1.*enabled" /proc/acpi/wakeup 2>/dev/null; then
         echo XHC1 > /proc/acpi/wakeup
+        echo "Disabled XHC1 wakeup source"
       fi
-
-      # Optionally disable LID0 if it causes issues
-      # Note: This means only power button can wake from suspend
-      # Uncomment if needed:
-      # if grep -q "^LID0.*enabled" /proc/acpi/wakeup; then
-      #   echo LID0 > /proc/acpi/wakeup
-      # fi
     '';
     serviceConfig = {
       Type = "oneshot";
@@ -109,14 +103,33 @@
     };
   };
 
-  # Re-apply settings after resume from suspend
-  systemd.services.fix-resume = {
-    description = "Fix devices after resume from suspend";
+  # Unload WiFi driver before suspend to prevent suspend failure
+  # The brcmfmac driver on MacBook Pro 2017 fails to suspend (error -5)
+  # so we unload it before suspend and reload it after resume
+  systemd.services.wifi-pre-suspend = {
+    description = "Unload Broadcom WiFi driver before suspend";
+    wantedBy = [ "sleep.target" ];
+    before = [ "sleep.target" ];
+    script = ''
+      # Unload the brcmfmac driver to prevent suspend failure
+      echo "Unloading brcmfmac WiFi driver before suspend..."
+      ${pkgs.kmod}/bin/modprobe -r brcmfmac_wcc || true
+      ${pkgs.kmod}/bin/modprobe -r brcmfmac || true
+      ${pkgs.kmod}/bin/modprobe -r brcmutil || true
+    '';
+    serviceConfig = {
+      Type = "oneshot";
+    };
+  };
+
+  # Reload WiFi driver after resume from suspend
+  systemd.services.wifi-post-resume = {
+    description = "Reload Broadcom WiFi driver after resume";
     wantedBy = [ "suspend.target" ];
     after = [ "suspend.target" ];
     script = ''
-      # Reload WiFi driver if needed (Broadcom WiFi fix)
-      ${pkgs.kmod}/bin/modprobe -r brcmfmac || true
+      # Reload the brcmfmac driver after resume
+      echo "Reloading brcmfmac WiFi driver after resume..."
       ${pkgs.kmod}/bin/modprobe brcmfmac || true
     '';
     serviceConfig = {

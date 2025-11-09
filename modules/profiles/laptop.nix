@@ -37,9 +37,9 @@
       # Particularly important for NVMe and Thunderbolt on MacBook Pro 2017
       RUNTIME_PM_BLACKLIST = "01:00.0";  # Typically NVMe controller
 
-      # WiFi power saving
+      # WiFi power saving (disabled for MacBook Pro 2017 Broadcom WiFi stability)
       WIFI_PWR_ON_AC = "off";
-      WIFI_PWR_ON_BAT = "on";
+      WIFI_PWR_ON_BAT = "off";
     };
   };
 
