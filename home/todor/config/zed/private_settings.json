@@ -53,7 +53,28 @@
     "Rust": {
       "inlay_hints": {
         "enabled": true
-      }
+      },
+      "format_on_save": "on"
+    },
+    "Go": {
+      "inlay_hints": {
+        "enabled": true
+      },
+      "format_on_save": "on",
+      "language_servers": ["gopls"]
+    },
+    "Zig": {
+      "inlay_hints": {
+        "enabled": true
+      },
+      "format_on_save": "on",
+      "language_servers": ["zls"]
+    },
+    "PHP": {
+      "inlay_hints": {
+        "enabled": true
+      },
+      "format_on_save": "on"
     },
     "Python": {
       "language_servers": ["ruff"],

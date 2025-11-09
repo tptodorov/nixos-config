@@ -13,8 +13,28 @@
     gopass
     zed-editor
     nixd
+
+    # Zig development
     zig
     zls
+
+    # Go development
+    go
+    gopls
+    gotools
+
+    # Rust development
+    rustc
+    cargo
+    rust-analyzer
+    rustfmt
+    clippy
+
+    # PHP development
+    php
+    phpactor
+
+    # Build tools
     gnumake
   ];
 

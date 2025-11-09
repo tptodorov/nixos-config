@@ -27,6 +27,11 @@
 
       # Productivity applications (blackbox only)
       obsidian
+      libreoffice-fresh  # LibreOffice suite (Writer, Calc, Impress, Draw, etc.)
+
+      # Email clients
+      thunderbird  # Mozilla Thunderbird email client
+      mailspring   # Modern email client with unified inbox
     ];
 
   # XDG configuration
@@ -94,6 +99,31 @@
           "image/webp" = [ "imv-dir.desktop" ];
 
           "inode/directory" = [ "yazi.desktop" ];
+
+          # LibreOffice document types (only on non-VM)
+        }
+        // lib.optionalAttrs (!vm) {
+          # Writer documents
+          "application/vnd.oasis.opendocument.text" = [ "writer.desktop" ];
+          "application/vnd.oasis.opendocument.text-template" = [ "writer.desktop" ];
+          "application/msword" = [ "writer.desktop" ];
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document" = [ "writer.desktop" ];
+
+          # Calc spreadsheets
+          "application/vnd.oasis.opendocument.spreadsheet" = [ "calc.desktop" ];
+          "application/vnd.oasis.opendocument.spreadsheet-template" = [ "calc.desktop" ];
+          "application/vnd.ms-excel" = [ "calc.desktop" ];
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" = [ "calc.desktop" ];
+
+          # Impress presentations
+          "application/vnd.oasis.opendocument.presentation" = [ "impress.desktop" ];
+          "application/vnd.oasis.opendocument.presentation-template" = [ "impress.desktop" ];
+          "application/vnd.ms-powerpoint" = [ "impress.desktop" ];
+          "application/vnd.openxmlformats-officedocument.presentationml.presentation" = [ "impress.desktop" ];
+
+          # Email handling
+          "x-scheme-handler/mailto" = [ "thunderbird.desktop" ];
+          "message/rfc822" = [ "thunderbird.desktop" ];
         }
         // lib.optionalAttrs (!vm) {
           "x-scheme-handler/tg" = [ "org.telegram.desktop.desktop " ];

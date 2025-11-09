@@ -42,11 +42,13 @@
     swayidle # Idle timeout manager
     swaylock # Screen locker
 
-    # GNOME dependencies for Nautilus
+    # GNOME dependencies for Nautilus and secrets management
     gnome-themes-extra
     gsettings-desktop-schemas
     glib
     dconf
+    gnome-keyring # Keyring daemon
+    libsecret # Secret storage library
   ];
 
   programs = {
@@ -56,6 +58,7 @@
   # Niri configuration
   xdg.configFile."niri/config.kdl".text = ''
     // Niri configuration for user todor
+    workspace "chat"
 
     input {
         keyboard {
@@ -97,7 +100,22 @@
 
     prefer-no-csd
 
+    // Window rules
+    window-rule {
+    }
+
+    window-rule {
+        match app-id="com.viber.Viber"
+        match title="WasIstLos"
+        match title="viber"
+
+        open-on-workspace "chat"
+    }
+
+
     // Startup applications
+    spawn-at-startup "sh" "-c" "dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
+    spawn-at-startup "sh" "-c" "$HOME/.config/niri/scripts/keyring-init.sh"
     spawn-at-startup "sh" "-c" "${pkgs.waybar}/bin/waybar -c $HOME/.config/waybar/config-niri -s $HOME/.config/waybar/style-niri.css"
     spawn-at-startup "${pkgs.mako}/bin/mako"
     spawn-at-startup "${pkgs.swww}/bin/swww-daemon"
@@ -108,6 +126,8 @@
     spawn-at-startup "${pkgs.ghostty}/bin/ghostty"
     spawn-at-startup "${pkgs.brave}/bin/brave"
     spawn-at-startup "${pkgs.spotify}/bin/spotify"
+    spawn-at-startup "${pkgs.viber}/bin/viber"
+    spawn-at-startup "${pkgs.wasistlos}/bin/wasistlos"
 
     // Idle management: dim screen after 5min, suspend after 10min
     spawn-at-startup "${pkgs.swayidle}/bin/swayidle" "-w" "timeout" "300" "${pkgs.brightnessctl}/bin/brightnessctl set 10%" "resume" "${pkgs.brightnessctl}/bin/brightnessctl set 100%" "timeout" "600" "${pkgs.systemd}/bin/systemctl suspend"
@@ -137,6 +157,7 @@
         Super+Q { close-window; }
         Super+E { spawn "${pkgs.nautilus}/bin/nautilus"; }
         Super+S { spawn "${pkgs.brave}/bin/brave"; }
+        Super+Shift+A { spawn "${pkgs.mailspring}/bin/mailspring" "--password-store=gnome-libsecret" "--disable-gpu"; }
 
         // Application launcher
         Super+D { spawn "${pkgs.wofi}/bin/wofi" "--show" "drun"; }
@@ -165,6 +186,32 @@
         Super+Shift+Up { move-window-up; }
         Super+Shift+Down { move-window-down; }
 
+        // Consume/expel windows (merge/unmerge columns)
+        Super+Ctrl+H { consume-or-expel-window-left; }
+        Super+Ctrl+L { consume-or-expel-window-right; }
+        Super+Ctrl+Left { consume-or-expel-window-left; }
+        Super+Ctrl+Right { consume-or-expel-window-right; }
+        Super+BracketLeft { consume-window-into-column; }
+        Super+BracketRight { expel-window-from-column; }
+
+        // Center windows/columns
+        Super+C { center-column; }
+        Super+Shift+C { center-window; }
+        Super+Alt+C { center-visible-columns; }
+
+        // Column width management
+        Super+R { switch-preset-column-width; }
+        Super+Ctrl+R { switch-preset-column-width-back; }
+        Super+M { maximize-column; }
+        Super+Shift+M { expand-column-to-available-width; }
+        Super+Equal { set-column-width "+10%"; }
+        Super+Minus { set-column-width "-10%"; }
+
+        // Window width/height management
+        Super+Ctrl+Equal { set-window-height "+10%"; }
+        Super+Ctrl+Minus { set-window-height "-10%"; }
+        Super+Shift+Equal { reset-window-height; }
+
         // Workspaces
         Super+1 { focus-workspace 1; }
         Super+2 { focus-workspace 2; }
@@ -176,7 +223,14 @@
         Super+8 { focus-workspace 8; }
         Super+9 { focus-workspace 9; }
 
-        // Move to workspace
+        // Workspace navigation
+        Super+Page_Down { focus-workspace-down; }
+        Super+Page_Up { focus-workspace-up; }
+        Super+U { focus-workspace-down; }
+        Super+I { focus-workspace-up; }
+        Super+Tab { focus-workspace-previous; }
+
+        // Move window to workspace
         Super+Shift+1 { move-column-to-workspace 1; }
         Super+Shift+2 { move-column-to-workspace 2; }
         Super+Shift+3 { move-column-to-workspace 3; }
@@ -186,12 +240,33 @@
         Super+Shift+7 { move-column-to-workspace 7; }
         Super+Shift+8 { move-column-to-workspace 8; }
         Super+Shift+9 { move-column-to-workspace 9; }
+        Super+Shift+Page_Down { move-column-to-workspace-down; }
+        Super+Shift+Page_Up { move-column-to-workspace-up; }
+        Super+Shift+U { move-column-to-workspace-down; }
+        Super+Shift+I { move-column-to-workspace-up; }
 
-        // Fullscreen
+        // Move entire workspace between monitors (multi-monitor setups)
+        Super+Ctrl+Shift+Left { move-workspace-to-monitor-left; }
+        Super+Ctrl+Shift+Right { move-workspace-to-monitor-right; }
+        Super+Ctrl+Shift+Up { move-workspace-to-monitor-up; }
+        Super+Ctrl+Shift+Down { move-workspace-to-monitor-down; }
+
+        // Fullscreen and tabbed mode
         Super+F { fullscreen-window; }
+        Super+Shift+F { toggle-windowed-fullscreen; }
+        Super+Alt+T { toggle-column-tabbed-display; }
+
+        // Floating windows
+        Super+Shift+F10 { toggle-window-floating; }
+        Super+Alt+F { focus-floating; }
+        Super+Alt+Shift+F { focus-tiling; }
+        Super+Ctrl+Space { switch-focus-between-floating-and-tiling; }
 
         // Screenshots
+        Print { screenshot; }
+        Super+Print { screenshot-screen; }
         Super+Shift+S { screenshot-screen; }
+        Alt+Print { screenshot-window; }
 
         // Media keys
         XF86AudioRaiseVolume { spawn "${pkgs.wireplumber}/bin/wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%+"; }
@@ -210,16 +285,56 @@
         Super+W { spawn "sh" "-c" "$HOME/.config/niri/scripts/wallpaper.sh"; }
         Super+V { spawn "sh" "-c" "$HOME/.config/niri/scripts/clipboard.sh"; }
 
+        // Overview mode
+        Super+O { toggle-overview; }
+
+        // Power management
+        Super+Shift+P { spawn "${pkgs.systemd}/bin/systemctl" "suspend"; }
+        Super+Alt+P { power-off-monitors; }
+
+        // Screen lock
+        Super+Escape { spawn "${pkgs.swaylock}/bin/swaylock"; }
+
+        // Switch keyboard layout
+        Super+Shift+Space { switch-layout "next"; }
+
         // Show hotkey overlay
+        Super+Slash { show-hotkey-overlay; }
         Super+Shift+Slash { show-hotkey-overlay; }
 
         // Exit niri
         Super+Shift+E { quit; }
+
+        // Reload config
+        Super+Ctrl+Shift+R { spawn "sh" "-c" "niri msg action load-config-file"; }
     }
   '';
 
   # Niri-specific configuration files and scripts
   home.file = {
+    # Gnome keyring initialization script
+    ".config/niri/scripts/keyring-init.sh" = {
+      text = ''
+        #!/bin/sh
+        # Kill any existing gnome-keyring-daemon instances
+        ${pkgs.procps}/bin/pkill -f gnome-keyring-daemon 2>/dev/null
+        sleep 0.5
+
+        # Start gnome-keyring-daemon and export the environment variables
+        eval $(${pkgs.gnome-keyring}/bin/gnome-keyring-daemon --start --components=pkcs11,secrets,ssh 2>/dev/null)
+        export SSH_AUTH_SOCK
+        export GNOME_KEYRING_CONTROL
+        export GNOME_KEYRING_PID
+
+        # Update systemd and dbus environments
+        ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd SSH_AUTH_SOCK GNOME_KEYRING_CONTROL GNOME_KEYRING_PID
+
+        # Log for debugging
+        echo "Keyring initialized: GNOME_KEYRING_CONTROL=$GNOME_KEYRING_CONTROL SSH_AUTH_SOCK=$SSH_AUTH_SOCK"
+      '';
+      executable = true;
+    };
+
     # Copy scripts from Hyprland config
     ".config/niri/scripts/wallpaper.sh".text = ''
       #!/bin/bash

@@ -18,11 +18,13 @@
       nemo
       grim
       slurp
-      # GNOME dependencies for Nautilus
+      # GNOME dependencies for Nautilus and secrets management
       gnome-themes-extra
       gsettings-desktop-schemas
       glib
       dconf
+      gnome-keyring # Keyring daemon
+      libsecret # Secret storage library
     ]
     ++ lib.optionals vm [
       foot # VM-specific terminal
@@ -86,6 +88,8 @@
           $menu = wofi --show drun
 
           # VM-optimized exec-once (minimal startup)
+          exec-once = dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
+          exec-once = $HOME/.config/hypr/scripts/keyring-init.sh
           exec-once = sleep 1 && waybar
           exec-once = sleep 1 && mako
           exec-once = sleep 1 && pypr
@@ -182,6 +186,8 @@
                 $fileManager = env -u WAYLAND_DISPLAY nautilus
                 $browser = brave
                 $menu = wofi --show drun
+          exec-once = dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
+          exec-once = $HOME/.config/hypr/scripts/keyring-init.sh
           exec-once = sleep 1 && hypridle
           exec-once = sleep 2 && waybar
           exec-once = sleep 1 && mako
@@ -277,6 +283,7 @@
           bind = $mainMod, Q, killactive
           bind = $mainMod, E, exec, $fileManager
           bind = $mainMod, S, exec, $browser
+          bind = $mainMod SHIFT, A, exec, ${pkgs.mailspring}/bin/mailspring --password-store=gnome-libsecret --disable-gpu
           bind = $mainMod, V, exec, cliphist list | wofi --dmenu --pre-display-cmd "echo '%s' | cut -f 2" | cliphist decode | wl-copy
           bind = $mainMod, F11, togglefloating
           bind = $mainMod ALT, Space, exec, $menu
