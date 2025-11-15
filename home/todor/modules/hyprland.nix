@@ -3,6 +3,7 @@
   lib,
   pkgs,
   vm ? false,
+  laptop ? false,
   ...
 }:
 {
@@ -10,7 +11,7 @@
   home.packages =
     with pkgs;
     [
-      wofi
+      tofi # Modern Wayland-native application launcher
       gnome-terminal # Backup terminal
       # Core packages for both VM and blackbox
       waybar
@@ -46,7 +47,7 @@
     ];
 
   programs = {
-    wofi.enable = true;
+    tofi.enable = true;
     waybar.enable = true; # Enable waybar for both VM and blackbox
   }
   // lib.optionalAttrs (!vm) {
@@ -85,7 +86,7 @@
           $terminal = foot
           $fileManager = env -u WAYLAND_DISPLAY nautilus
           $browser = brave
-          $menu = wofi --show drun
+          $menu = tofi-drun --drun-launch=true
 
           # VM-optimized exec-once (minimal startup)
           exec-once = dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
@@ -153,7 +154,8 @@
           bind = $mainMod SHIFT, Return, exec, alacritty
           bind = $mainMod SHIFT, T, exec, gnome-terminal
           bind = $mainMod, Q, killactive
-          bind = $mainMod, Space, exec, wofi --show drun
+          bind = $mainMod, Space, exec, tofi-drun --drun-launch=true
+          bind = $mainMod, D, exec, tofi-drun --drun-launch=true
           bind = $mainMod, M, exit
 
           # Basic window management
@@ -177,7 +179,7 @@
       else
         ''
           # Full Configuration for Physical Machines
-          monitor =,preferred,auto,1.5
+          monitor =,preferred,auto,2
 
           #colors
                 $color9=rgba(33ccffee)
@@ -185,7 +187,7 @@
                 $terminal = ghostty
                 $fileManager = env -u WAYLAND_DISPLAY nautilus
                 $browser = brave
-                $menu = wofi --show drun
+                $menu = tofi-drun --drun-launch=true
           exec-once = dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
           exec-once = $HOME/.config/hypr/scripts/keyring-init.sh
           exec-once = sleep 1 && hypridle
@@ -261,7 +263,7 @@
               	kb_layout = us,bg
           	kb_variant = basic,bas_phonetic
           	kb_options = grp:win_space_toggle
-                  follow_mouse = 2
+                  follow_mouse = ${if laptop then "0" else "2"}
                   sensitivity = 0
                   touchpad {
                       natural_scroll = false
@@ -284,7 +286,7 @@
           bind = $mainMod, E, exec, $fileManager
           bind = $mainMod, S, exec, $browser
           bind = $mainMod SHIFT, A, exec, ${pkgs.mailspring}/bin/mailspring --password-store=gnome-libsecret --disable-gpu
-          bind = $mainMod, V, exec, cliphist list | wofi --dmenu --pre-display-cmd "echo '%s' | cut -f 2" | cliphist decode | wl-copy
+          bind = $mainMod, V, exec, cliphist list | tofi --prompt-text "Clipboard: " | cliphist decode | wl-copy
           bind = $mainMod, F11, togglefloating
           bind = $mainMod ALT, Space, exec, $menu
           bind = $mainMod, P, pseudo
@@ -349,6 +351,13 @@
 
   # Dotfiles for Hyprland configuration
   home.file = {
+    # Electron flags for proper HiDPI scaling on Wayland
+    ".config/electron-flags.conf".text = ''
+      --enable-features=UseOzonePlatform,WaylandWindowDecorations
+      --ozone-platform=wayland
+      ${lib.optionalString laptop "--force-device-scale-factor=2.0"}
+    '';
+
     ".config/waybar" = {
       source = ../config/waybar;
       recursive = true;
@@ -391,10 +400,98 @@
     ".config/hypr/hyprpaper.conf" = {
       source = ../config/hypr/hyprpaper.conf;
     };
-    ".config/wofi" = {
-      source = ../config/wofi;
-      recursive = true;
-    };
+    # Tofi configuration shared with niri
+    # Based on official tofi documentation
+    ".config/tofi/config".text = ''
+      # Font configuration
+      font = JetBrainsMono Nerd Font
+      font-size = 20
+      hint-font = true
+
+      # Window positioning
+      anchor = center
+      width = 800
+      height = 600
+      scale = true
+
+      # Margins (for fine-tuning position)
+      margin-top = 0
+      margin-bottom = 0
+      margin-left = 0
+      margin-right = 0
+
+      # Window appearance
+      outline-width = 0
+      border-width = 3
+      border-color = #7aa2f7
+      corner-radius = 12
+
+      # Padding
+      padding-top = 12
+      padding-bottom = 12
+      padding-left = 16
+      padding-right = 16
+      clip-to-padding = true
+
+      # Tokyo Night Storm colors
+      background-color = #24283b
+      text-color = #c0caf5
+
+      # Prompt styling
+      prompt-text = " "
+      prompt-color = #7aa2f7
+      prompt-background = #1f2335
+      prompt-background-padding = 8
+      prompt-background-corner-radius = 8
+      prompt-padding = 8
+
+      # Placeholder text
+      placeholder-text = "Type to search..."
+      placeholder-color = #565f89
+
+      # Input field styling
+      input-background = #1f2335
+      input-background-padding = 8
+      input-background-corner-radius = 8
+
+      # Selection styling
+      selection-color = #1f2335
+      selection-background = #7aa2f7
+      selection-background-padding = 8
+      selection-background-corner-radius = 8
+      selection-match-color = #f7768e
+
+      # Default result styling
+      default-result-background = #00000000
+      default-result-background-padding = 4
+      default-result-background-corner-radius = 6
+
+      # Text cursor
+      text-cursor = true
+      text-cursor-style = bar
+      text-cursor-corner-radius = 2
+
+      # Text layout
+      result-spacing = 12
+      num-results = 10
+      horizontal = false
+      min-input-width = 120
+
+      # Behavior
+      hide-cursor = false
+      history = true
+      matching-algorithm = fuzzy
+      require-match = true
+      auto-accept-single = false
+      hide-input = false
+      drun-launch = true
+      terminal = ghostty
+      late-keyboard-init = false
+      multi-instance = false
+
+      # Exclusive zone
+      exclusive-zone = -1
+    '';
   }
   // lib.optionalAttrs (!vm) {
     ".config/hypr/pyprland.toml" = {
@@ -434,6 +531,10 @@
     # GNOME/GTK settings for Nautilus
     GTK_USE_PORTAL = "1";
     GSETTINGS_SCHEMA_DIR = "${pkgs.gsettings-desktop-schemas}/share/gsettings-schemas/${pkgs.gsettings-desktop-schemas.name}/glib-2.0/schemas:${pkgs.gtk3}/share/gsettings-schemas/${pkgs.gtk3.name}/glib-2.0/schemas";
+  } // lib.optionalAttrs laptop {
+    # HiDPI scaling for GTK apps on laptop (2x scaling = GDK_SCALE 2 * GDK_DPI_SCALE 1.0)
+    GDK_SCALE = "2";
+    GDK_DPI_SCALE = "1.0";
   };
 
   # Enable dconf for GNOME apps

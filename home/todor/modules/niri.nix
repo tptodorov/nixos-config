@@ -3,13 +3,14 @@
   lib,
   pkgs,
   vm ? false,
+  laptop ? false,
   ...
 }:
 {
   # Niri window manager configuration
   home.packages = with pkgs; [
     # Core packages for niri
-    wofi # Application launcher
+    tofi # Modern Wayland-native application launcher
     waybar # Status bar
     mako # Notification daemon
     nautilus # File manager
@@ -52,7 +53,7 @@
   ];
 
   programs = {
-    wofi.enable = true;
+    tofi.enable = true;
   };
 
   # Niri configuration
@@ -73,15 +74,13 @@
 
         touchpad {
             tap
-            natural-scroll
         }
-
-        focus-follows-mouse
+        ${lib.optionalString (!laptop) "focus-follows-mouse"}
     }
 
     output "eDP-1" {
         mode "2560x1600@60.001"
-        scale 1.5
+        scale 2.0
     }
 
     layout {
@@ -169,7 +168,8 @@
         Super+Shift+A { spawn "${pkgs.mailspring}/bin/mailspring" "--password-store=gnome-libsecret" "--disable-gpu"; }
 
         // Application launcher
-        Super+D { spawn "${pkgs.wofi}/bin/wofi" "--show" "drun"; }
+        Super+D { spawn "${pkgs.tofi}/bin/tofi-drun" "--drun-launch=true"; }
+        Super+Space { spawn "${pkgs.tofi}/bin/tofi-drun" "--drun-launch=true"; }
 
         // Window management (vim-style)
         Super+H { focus-column-left; }
@@ -321,6 +321,13 @@
 
   # Niri-specific configuration files and scripts
   home.file = {
+    # Electron flags for proper HiDPI scaling on Wayland
+    ".config/electron-flags.conf".text = ''
+      --enable-features=UseOzonePlatform,WaylandWindowDecorations
+      --ozone-platform=wayland
+      ${lib.optionalString laptop "--force-device-scale-factor=2.0"}
+    '';
+
     # Gnome keyring initialization script
     ".config/niri/scripts/keyring-init.sh" = {
       text = ''
@@ -690,11 +697,89 @@
       layer=overlay
     '';
 
-    # Share wofi config with Hyprland
-    ".config/wofi" = {
-      source = ../config/wofi;
-      recursive = true;
-    };
+    # Tofi configuration with Tokyo Night Storm theme
+    # Based on official tofi documentation
+    ".config/tofi/config".text = ''
+      # Font configuration
+      hint-font = true
+
+      # Window positioning
+      anchor = center
+      scale = true
+
+
+      # Window appearance
+      outline-width = 0
+      border-width = 3
+      border-color = #7aa2f7
+      corner-radius = 12
+
+      # Padding
+      padding-top = 12
+      padding-bottom = 12
+      padding-left = 16
+      padding-right = 16
+      clip-to-padding = true
+
+      # Tokyo Night Storm colors
+      background-color = #24283b
+      text-color = #c0caf5
+
+      # Prompt styling
+      prompt-text = " "
+      prompt-color = #7aa2f7
+      prompt-background = #1f2335
+      prompt-background-padding = 8
+      prompt-background-corner-radius = 8
+      prompt-padding = 8
+
+      # Placeholder text
+      placeholder-text = "Type to search..."
+      placeholder-color = #565f89
+
+      # Input field styling
+      input-background = #1f2335
+      input-background-padding = 8
+      input-background-corner-radius = 8
+
+      # Selection styling
+      selection-color = #1f2335
+      selection-background = #7aa2f7
+      selection-background-padding = 8
+      selection-background-corner-radius = 8
+      selection-match-color = #f7768e
+
+      # Default result styling
+      default-result-background = #00000000
+      default-result-background-padding = 4
+      default-result-background-corner-radius = 6
+
+      # Text cursor
+      text-cursor = true
+      text-cursor-style = bar
+      text-cursor-corner-radius = 2
+
+      # Text layout
+      result-spacing = 12
+      num-results = 10
+      horizontal = false
+      min-input-width = 120
+
+      # Behavior
+      hide-cursor = false
+      history = true
+      matching-algorithm = fuzzy
+      require-match = true
+      auto-accept-single = false
+      hide-input = false
+      drun-launch = true
+      terminal = ghostty
+      late-keyboard-init = false
+      multi-instance = false
+
+      # Exclusive zone
+      exclusive-zone = -1
+    '';
   };
 
   # Wayland and GNOME environment variables
@@ -703,6 +788,10 @@
     # GNOME/GTK settings for Nautilus
     GTK_USE_PORTAL = "1";
     GSETTINGS_SCHEMA_DIR = "${pkgs.gsettings-desktop-schemas}/share/gsettings-schemas/${pkgs.gsettings-desktop-schemas.name}/glib-2.0/schemas:${pkgs.gtk3}/share/gsettings-schemas/${pkgs.gtk3.name}/glib-2.0/schemas";
+  } // lib.optionalAttrs laptop {
+    # HiDPI scaling for GTK apps on laptop (2x scaling = GDK_SCALE 2 * GDK_DPI_SCALE 1.0)
+    GDK_SCALE = "2";
+    GDK_DPI_SCALE = "1.0";
   };
 
   # Enable dconf for GNOME apps

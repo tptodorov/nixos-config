@@ -22,6 +22,7 @@
 
     # Host-specific modules
     ./modules/macbook.nix
+    # ./modules/cs8409-audio  # Temporarily disabled - driver build failing
 
     # Shared modules
     ../../modules/common/fonts.nix
@@ -37,7 +38,7 @@
   # Home Manager configuration
   home-manager = {
     backupFileExtension = "backup";
-    extraSpecialArgs = { inherit inputs outputs vm; };
+    extraSpecialArgs = { inherit inputs outputs vm; laptop = true; };
     sharedModules = [
       inputs.nixvim.homeModules.nixvim
     ];

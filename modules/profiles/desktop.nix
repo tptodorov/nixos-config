@@ -61,6 +61,19 @@
     enable = true;
   };
 
+  # Audio support with PipeWire
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+    jack.enable = true;
+  };
+
+  # Disable PulseAudio (using PipeWire instead)
+  hardware.pulseaudio.enable = false;
+
   # Add fenix overlay for Rust toolchain
   nixpkgs.overlays = [ inputs.fenix.overlays.default ];
 }

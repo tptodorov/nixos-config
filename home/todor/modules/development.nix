@@ -13,6 +13,8 @@
     gopass
     zed-editor
     nixd
+    warp-terminal
+    amp-cli
 
     # Zig development
     zig

@@ -16,6 +16,7 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixvim = {
       url = "github:nix-community/nixvim";
@@ -33,6 +34,7 @@
       self,
       fenix,
       home-manager,
+      nixos-hardware,
       nixpkgs,
       nixvim,
       sops-nix,

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# Clipboard Manager Script for Hyprland
-# Uses cliphist and wofi to provide a nice clipboard history interface
+# Clipboard Manager Script for Hyprland/Niri
+# Uses cliphist and tofi to provide a nice clipboard history interface
 
 # Lock file to prevent multiple instances
 LOCK_FILE="/tmp/clipboard_manager.lock"
@@ -32,40 +32,20 @@ if ! command -v cliphist &> /dev/null; then
     exit 1
 fi
 
-# Check if wofi is available
-if ! command -v wofi &> /dev/null; then
-    notify-send "Clipboard Manager" "wofi is not installed" -u critical
+# Check if tofi is available
+if ! command -v tofi &> /dev/null; then
+    notify-send "Clipboard Manager" "tofi is not installed" -u critical
     exit 1
 fi
 
 # Function to show clipboard history
 show_clipboard_history() {
     local selected
-    # Use custom styling if available, otherwise use default wofi styling
-    if [[ -f ~/.config/wofi/clipboard.css ]]; then
-        selected=$(cliphist list | wofi \
-            --dmenu \
-            --prompt "Clipboard History" \
-            --width 800 \
-            --height 400 \
-            --lines 10 \
-            --cache-file /dev/null \
-            --parse-search \
-            --matching contains \
-            --insensitive \
-            --style ~/.config/wofi/clipboard.css)
-    else
-        selected=$(cliphist list | wofi \
-            --dmenu \
-            --prompt "Clipboard History" \
-            --width 800 \
-            --height 400 \
-            --lines 10 \
-            --cache-file /dev/null \
-            --parse-search \
-            --matching contains \
-            --insensitive)
-    fi
+    # Use tofi for clipboard history selection
+    selected=$(cliphist list | tofi \
+        --prompt-text "Clipboard History: " \
+        --fuzzy-match=true \
+        --require-match=false)
 
     if [[ -n "$selected" ]]; then
         # Decode and copy to clipboard
@@ -77,13 +57,8 @@ show_clipboard_history() {
 # Function to clear clipboard history
 clear_clipboard_history() {
     local confirm
-    confirm=$(echo -e "Yes\nNo" | wofi \
-        --dmenu \
-        --prompt "Clear clipboard history?" \
-        --width 300 \
-        --height 150 \
-        --lines 2 \
-        --cache-file /dev/null)
+    confirm=$(echo -e "Yes\nNo" | tofi \
+        --prompt-text "Clear clipboard history? ")
 
     if [[ "$confirm" == "Yes" ]]; then
         cliphist wipe
@@ -94,16 +69,10 @@ clear_clipboard_history() {
 # Function to delete a specific item
 delete_clipboard_item() {
     local selected
-    selected=$(cliphist list | wofi \
-        --dmenu \
-        --prompt "Select item to delete" \
-        --width 800 \
-        --height 400 \
-        --lines 10 \
-        --cache-file /dev/null \
-        --parse-search \
-        --matching contains \
-        --insensitive)
+    selected=$(cliphist list | tofi \
+        --prompt-text "Select item to delete: " \
+        --fuzzy-match=true \
+        --require-match=false)
 
     if [[ -n "$selected" ]]; then
         echo "$selected" | cliphist delete
@@ -114,13 +83,8 @@ delete_clipboard_item() {
 # Main function with action menu
 main_menu() {
     local action
-    action=$(echo -e "📋 Show History\n🗑️  Clear All\n❌ Delete Item" | wofi \
-        --dmenu \
-        --prompt "Clipboard Manager" \
-        --width 250 \
-        --height 180 \
-        --lines 3 \
-        --cache-file /dev/null)
+    action=$(echo -e "📋 Show History\n🗑️  Clear All\n❌ Delete Item" | tofi \
+        --prompt-text "Clipboard Manager: ")
 
     case "$action" in
         "📋 Show History")

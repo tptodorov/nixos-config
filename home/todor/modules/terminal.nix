@@ -38,7 +38,7 @@
       enableZshIntegration = !vm;
       settings = {
         theme = "TokyoNight Storm";
-        font-size = 24;
+        font-size = 12;
         font-family = "ZedMono Nerd Font";
       };
     };
@@ -63,7 +63,7 @@
         };
         font = {
           normal = { family = "ZedMono Nerd Font"; };
-          size = 24;
+          size = 12;
         };
         colors = {
           primary = {
@@ -80,7 +80,7 @@
       settings = {
         main = {
           # Match Ghostty font configuration
-          font = "ZedMono Nerd Font:size=24";
+          font = "ZedMono Nerd Font:size=12";
           dpi-aware = "yes";
           pad = "10x10";
         };

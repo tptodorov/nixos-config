@@ -25,10 +25,6 @@
   # Load Apple-specific kernel modules
   boot.kernelModules = [ "applesmc" ];
 
-  # Facetimehd camera support (for older MacBooks)
-  # Note: May require additional setup for 2017 model
-  hardware.facetimehd.enable = lib.mkDefault false;
-
   # Better power management for Apple hardware
   powerManagement = {
     enable = true;
