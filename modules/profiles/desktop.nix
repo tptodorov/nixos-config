@@ -7,6 +7,10 @@
   ...
 }:
 {
+  imports = [
+    # Mac-style keyboard remapping
+    ./keyd-mac.nix
+  ];
   # Desktop environment configuration
   services = {
     # Enable the GNOME Desktop Environment

@@ -54,8 +54,9 @@ This repository is structured to support **multiple NixOS hosts** and **multiple
 #### Configuration Profiles (Reusable)
 - **`modules/profiles/`**: Shared configuration profiles that can be imported by any host
   - `base.nix`: Essential system configuration (Nix settings, SSH, basic packages, garbage collection)
-  - `desktop.nix`: Full desktop environment (GNOME, COSMIC, Hyprland, Niri, hardware acceleration)
+  - `desktop.nix`: Full desktop environment (GNOME, COSMIC, Hyprland, Niri, hardware acceleration, Mac-style keyboard remapping)
   - `laptop.nix`: Laptop-specific features (power management, TLP, touchpad, lid switch handling)
+  - `keyd-mac.nix`: Mac-style keyboard remapping (auto-imported by desktop.nix)
 
 #### Host Configurations
 - **`hosts/blackbox/`**: Desktop workstation configuration
@@ -140,7 +141,7 @@ This repository is structured to support **multiple NixOS hosts** and **multiple
 4. Add to `home-manager.users` in host config
 
 ### Key Configuration Areas
-- **System profiles**: `modules/profiles/` (base, desktop, laptop)
+- **System profiles**: `modules/profiles/` (base, desktop, laptop, keyd-mac)
 - **Host-specific settings**: `hosts/<hostname>/default.nix` and `hosts/<hostname>/modules/`
 - **User accounts**: `modules/users/` (reusable across hosts)
 - **User packages & configs**: `home/<username>/`
@@ -148,6 +149,7 @@ This repository is structured to support **multiple NixOS hosts** and **multiple
   - Niri config in `home/todor/modules/niri.nix`
   - Hyprland config in `home/todor/modules/hyprland.nix`
   - Desktop services in `modules/profiles/desktop.nix`
+- **Keyboard remapping**: `modules/profiles/keyd-mac.nix` - Mac-style keyboard shortcuts (automatically enabled on desktop systems)
 - **Shell config**: Zsh and Oh My Zsh setup in user configuration
 - **Editor config**: Neovim LazyVim in `home/todor/config/nvim/`
 - **iCloud integration**: `home/todor/modules/icloud.nix` - See `docs/ICLOUD-SETUP.md` for setup instructions
@@ -226,6 +228,76 @@ Both window managers share:
 - Custom scripts (wallpaper, clipboard)
 - Theming and fonts
 - Terminal and editor configs
+
+## Keyboard Remapping
+
+### Mac-Style Shortcuts with keyd
+The system includes Mac-style keyboard remapping via keyd, providing a kinto.sh-like experience that works seamlessly with NixOS.
+
+**Configuration:** `modules/profiles/keyd-mac.nix` (automatically enabled on all desktop systems)
+
+**Key Features:**
+- Swaps Alt and Super (Command) keys for Mac-like modifier key layout
+- Caps Lock acts as Escape when tapped, Control when held
+- Common shortcuts work like macOS (Cmd+C/V/X for copy/paste/cut)
+- Application switching with Cmd+Tab
+- Browser navigation with Cmd+Left/Right (back/forward)
+- Intelligent terminal handling - Ctrl works normally in terminal apps
+
+**Mac-Style Shortcuts (System-wide):**
+- `Cmd+C/V/X` - Copy/Paste/Cut
+- `Cmd+Z/Y` - Undo/Redo
+- `Cmd+A` - Select all
+- `Cmd+F` - Find
+- `Cmd+S/O/N` - Save/Open/New
+- `Cmd+W` - Close tab/window
+- `Cmd+T` - New tab
+- `Cmd+Tab` - Application switcher
+- `Cmd+Q` - Quit application
+- `Cmd+R` - Refresh (browser)
+- `Cmd+L` - Focus address bar (browser)
+
+**Terminal Behavior:**
+In terminal applications (Ghostty, Kitty, Rio, Alacritty, etc.), standard terminal shortcuts are preserved:
+- `Ctrl+C` - Interrupt
+- `Ctrl+D` - EOF
+- `Ctrl+Z` - Suspend
+- `Ctrl+R` - Reverse search
+- `Ctrl+A/E` - Beginning/End of line
+- And other standard readline shortcuts
+
+**Service Management:**
+```bash
+# Check keyd status
+systemctl status keyd.service
+
+# View keyd configuration
+cat /etc/keyd/default.conf
+
+# Restart keyd (after manual config changes)
+sudo systemctl restart keyd.service
+
+# View keyd logs
+journalctl -u keyd.service
+```
+
+**Custom Configuration:**
+To modify the keyd configuration, edit `modules/profiles/keyd-mac.nix` and rebuild:
+```bash
+# Edit configuration
+vim modules/profiles/keyd-mac.nix
+
+# Add to git and rebuild
+git add modules/profiles/keyd-mac.nix
+sudo nixos-rebuild switch --flake .#blackbox
+```
+
+**Disabling keyd:**
+To disable Mac-style remapping on a specific host, override the setting:
+```nix
+# In your host's default.nix
+services.keyd.enable = lib.mkForce false;
+```
 
 ## Cloud Services Integration
 
