@@ -25,6 +25,7 @@
       # Productivity applications (blackbox only)
       obsidian
       libreoffice-fresh # LibreOffice suite (Writer, Calc, Impress, Draw, etc.)
+      geary # Email client
 
     ];
 

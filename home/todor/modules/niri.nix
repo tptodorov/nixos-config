@@ -18,7 +18,6 @@
     networkmanagerapplet # Network manager GUI
     htop # System monitor
     swayidle # Idle timeout manager
-    swaylock # Screen locker
 
     # GNOME dependencies for Nautilus and secrets management
     gnome-themes-extra
@@ -27,6 +26,8 @@
     dconf
     gnome-keyring # Keyring daemon
     libsecret # Secret storage library
+
+    swappy # screenshot editor
   ];
 
   # Niri configuration
@@ -67,6 +68,7 @@
     window-rule {
       match app-id="brave-browser"
       match app-id="spotify"
+      match app-id="geary"
       match at-startup=true
       open-on-workspace "browse"
     }
@@ -108,6 +110,7 @@
     }
 
     // Startup applications
+    spawn-at-startup "sh" "-c" "dms ipc wallpaper set ~/.config/asset/3.jpg"
     spawn-at-startup "sh" "-c" "$HOME/.config/niri/scripts/keyring-init.sh"
     spawn-at-startup "sh" "-c" "${pkgs.wl-clipboard}/bin/wl-paste --type text --watch ${pkgs.cliphist}/bin/cliphist store"
     spawn-at-startup "sh" "-c" "${pkgs.wl-clipboard}/bin/wl-paste --type image --watch ${pkgs.cliphist}/bin/cliphist store"
@@ -118,8 +121,6 @@
     spawn-at-startup "${pkgs.wasistlos}/bin/wasistlos"
     // (Optional) replace with a polkit agent for escalation prompts
     // spawn-at-startup "{{POLKIT_AGENT_PATH}}"
-    // Idle management: dim screen after 5min, suspend after 10min
-    spawn-at-startup "${pkgs.swayidle}/bin/swayidle" "-w" "timeout" "300" "${pkgs.brightnessctl}/bin/brightnessctl set 10%" "resume" "${pkgs.brightnessctl}/bin/brightnessctl set 100%" "timeout" "600" "${pkgs.systemd}/bin/systemctl suspend"
 
     environment {
         XCURSOR_THEME "Bibata-Modern-Classic"
@@ -130,6 +131,7 @@
           ELECTRON_OZONE_PLATFORM_HINT "auto"
           QT_QPA_PLATFORMTHEME "gtk3"
           QT_QPA_PLATFORMTHEME_QT6 "gtk3"
+          DMS_SCREENSHOT_EDITOR "swappy"
     }
 
     cursor {
@@ -146,6 +148,7 @@
         Super+Q { close-window; }
         Super+E { spawn "${pkgs.nautilus}/bin/nautilus"; }
         Super+S { spawn "${pkgs.brave}/bin/brave"; }
+        Super+A { spawn "${pkgs.geary}/bin/geary"; }
 
         // Window management (vim-style)
         Super+H { focus-column-left; }
@@ -248,19 +251,16 @@
         Super+Ctrl+Space { switch-focus-between-floating-and-tiling; }
 
         // Screenshots
-        Print { screenshot; }
-        Super+Print { screenshot-screen; }
-        Super+Shift+S { screenshot-screen; }
-        Alt+Print { screenshot-window; }
+        Print { spawn "dms" "ipc" "niri" "screenshot"; }
+        Super+Print { spawn "dms" "ipc" "niri" "screenshotScreen"; }
+        Alt+Print { spawn "dms" "ipc" "niri" "screenshotWindow"; }
+
         // Overview mode
         Super+O { toggle-overview; }
 
         // Power management
         Super+Shift+P { spawn "${pkgs.systemd}/bin/systemctl" "suspend"; }
         Super+Alt+P { power-off-monitors; }
-
-        // Screen lock
-        Super+Escape { spawn "${pkgs.swaylock}/bin/swaylock"; }
 
         // Switch keyboard layout
         Super+Shift+Space { switch-layout "next"; }
@@ -313,6 +313,10 @@
       '';
       executable = true;
     };
+
+    # Asset folder for desktop access
+    ".config/asset".source = ../config/asset;
+
 
   };
   # Wayland and GNOME environment variables
