@@ -15,6 +15,7 @@
     nixd
     warp-terminal
     amp-cli
+    crush  # AI coding agent for terminal
 
     # Zig development
     zig

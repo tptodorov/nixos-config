@@ -27,6 +27,20 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    niri = {
+      url = "github:sodiboo/niri-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    dms = {
+      url = "github:AvengeMedia/DankMaterialShell";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.dgop.follows = "dgop";
+    };
+    dgop = {
+      url = "github:AvengeMedia/dgop";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
   };
 
   outputs =
@@ -38,6 +52,8 @@
       nixpkgs,
       nixvim,
       sops-nix,
+      dms,
+      dgop,
       ...
     }@inputs:
     let
@@ -55,7 +71,10 @@
             (
               { pkgs, ... }:
               {
-                nixpkgs.overlays = [ inputs.zig.overlays.default ];
+                nixpkgs.overlays = [
+                  inputs.zig.overlays.default
+                  inputs.niri.overlays.niri
+                ];
               }
             )
             inputs.home-manager.nixosModules.home-manager
@@ -72,7 +91,10 @@
             (
               { pkgs, ... }:
               {
-                nixpkgs.overlays = [ inputs.zig.overlays.default ];
+                nixpkgs.overlays = [
+                  inputs.zig.overlays.default
+                  inputs.niri.overlays.niri
+                ];
               }
             )
             inputs.home-manager.nixosModules.home-manager
@@ -90,7 +112,10 @@
             (
               { pkgs, ... }:
               {
-                nixpkgs.overlays = [ inputs.zig.overlays.default ];
+                nixpkgs.overlays = [
+                  inputs.zig.overlays.default
+                  inputs.niri.overlays.niri
+                ];
               }
             )
             inputs.home-manager.nixosModules.home-manager

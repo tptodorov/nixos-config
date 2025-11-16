@@ -17,21 +17,15 @@
       viber
       wasistlos
     ]
-    ++ lib.optionals (!vm || pkgs.stdenv.system != "aarch64-linux") [
-      # Discord not available on aarch64-linux
-      discord
-    ]
     ++ lib.optionals (!vm) [
       # Audio applications (blackbox only, no audio in VM)
       spotify
+      discord
 
       # Productivity applications (blackbox only)
       obsidian
-      libreoffice-fresh  # LibreOffice suite (Writer, Calc, Impress, Draw, etc.)
+      libreoffice-fresh # LibreOffice suite (Writer, Calc, Impress, Draw, etc.)
 
-      # Email clients
-      thunderbird  # Mozilla Thunderbird email client
-      mailspring   # Modern email client with unified inbox
     ];
 
   # XDG configuration
@@ -52,9 +46,11 @@
             "code.desktop"
             "code-insiders.desktop"
           ];
-          markdown = lib.optionals (!vm) [
-            "obsidian.desktop"
-          ] ++ editor;
+          markdown =
+            lib.optionals (!vm) [
+              "obsidian.desktop"
+            ]
+            ++ editor;
         in
         {
           "application/json" = browser;
@@ -120,10 +116,6 @@
           "application/vnd.oasis.opendocument.presentation-template" = [ "impress.desktop" ];
           "application/vnd.ms-powerpoint" = [ "impress.desktop" ];
           "application/vnd.openxmlformats-officedocument.presentationml.presentation" = [ "impress.desktop" ];
-
-          # Email handling
-          "x-scheme-handler/mailto" = [ "thunderbird.desktop" ];
-          "message/rfc822" = [ "thunderbird.desktop" ];
         }
         // lib.optionalAttrs (!vm) {
           "x-scheme-handler/tg" = [ "org.telegram.desktop.desktop " ];

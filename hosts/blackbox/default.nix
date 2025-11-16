@@ -14,6 +14,9 @@
     # Home Manager integration
     inputs.home-manager.nixosModules.home-manager
 
+    # Niri window manager module
+    inputs.niri.nixosModules.niri
+
     # Configuration profiles
     ../../modules/profiles/base.nix
     ../../modules/profiles/desktop.nix
@@ -34,7 +37,7 @@
   # Home Manager configuration
   home-manager = {
     backupFileExtension = "backup";
-    extraSpecialArgs = { inherit inputs outputs vm; };
+    extraSpecialArgs = { inherit inputs outputs vm; laptop = false; };
     sharedModules = [
       inputs.nixvim.homeModules.nixvim
     ];

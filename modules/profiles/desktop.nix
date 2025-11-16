@@ -13,9 +13,9 @@
   ];
   # Desktop environment configuration
   services = {
-    # Enable the GNOME Desktop Environment
-    displayManager.gdm.enable = lib.mkDefault true;
-    desktopManager.gnome.enable = lib.mkDefault true;
+    # GNOME Desktop Environment - DISABLED
+    # displayManager.gdm.enable = lib.mkDefault false;
+    # desktopManager.gnome.enable = lib.mkDefault false;
 
     # Enable COSMIC Desktop Environment
     desktopManager.cosmic.enable = lib.mkDefault true;
@@ -24,7 +24,7 @@
     # Enable Flatpak for COSMIC Store
     flatpak.enable = lib.mkDefault true;
 
-    # GNOME services for online accounts and keyring
+    # GNOME services for online accounts and keyring (keep for compatibility)
     gnome = {
       gnome-keyring.enable = true;
       gnome-online-accounts.enable = true;
@@ -34,12 +34,9 @@
   # Enable Hyprland and Niri window managers
   programs = {
     xwayland.enable = true;
-    hyprland = {
-      enable = lib.mkDefault true;
-      xwayland.enable = true;
-    };
     niri = {
       enable = lib.mkDefault true;
+      package = pkgs.niri-unstable; # Use latest niri build from main branch
     };
   };
 
@@ -48,6 +45,9 @@
     # Browser support packages
     libva
     libva-utils
+
+    # Disk management
+    gparted
 
     # Rust toolchain (needed for COSMIC and other Rust apps)
     (fenix.complete.withComponents [

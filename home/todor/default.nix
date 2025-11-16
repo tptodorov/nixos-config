@@ -2,6 +2,7 @@
 {
   config,
   lib,
+  inputs,
   vm ? false,
   ...
 }:
@@ -13,10 +14,9 @@
     ./modules/terminal.nix
     ./modules/desktop-apps.nix
     ./modules/brave.nix
-    ./modules/hyprland.nix
     ./modules/niri.nix
+    ./modules/dankmaterialshell.nix
     ./modules/media.nix
-    ./modules/icloud.nix
     ./secrets/secrets.nix
     ./secrets/environment.nix
   ];

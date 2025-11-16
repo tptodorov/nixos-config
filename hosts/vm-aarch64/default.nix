@@ -35,7 +35,7 @@
   # Home Manager configuration
   home-manager = {
     backupFileExtension = "backup";
-    extraSpecialArgs = { inherit inputs outputs vm; };
+    extraSpecialArgs = { inherit inputs outputs vm; laptop = false; };
     sharedModules = [
       inputs.nixvim.homeModules.nixvim
     ];
