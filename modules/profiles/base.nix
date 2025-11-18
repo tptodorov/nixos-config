@@ -12,6 +12,9 @@
   boot.loader.systemd-boot.enable = lib.mkDefault true;
   boot.loader.efi.canTouchEfiVariables = lib.mkDefault true;
 
+  # Use latest Linux kernel
+  boot.kernelPackages = lib.mkDefault pkgs.linuxPackages_latest;
+
   # Nix settings
   nix = {
     # Enable flakes and new command line interface

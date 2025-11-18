@@ -14,6 +14,9 @@
     # Home Manager integration
     inputs.home-manager.nixosModules.home-manager
 
+    # Niri window manager module
+    inputs.niri.nixosModules.niri
+
     # Configuration profiles
     ../../modules/profiles/base.nix
     ../../modules/profiles/laptop.nix
