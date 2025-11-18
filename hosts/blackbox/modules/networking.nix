@@ -28,6 +28,32 @@
     mode = "0600";
   };
 
+  # Create NetworkManager connection file for Thunderbolt bridge
+  environment.etc."NetworkManager/system-connections/thunderbolt-bridge.nmconnection" = {
+    text = ''
+      [connection]
+      id=thunderbolt-bridge
+      type=ethernet
+      interface-name=thunderbolt0
+      autoconnect=true
+      autoconnect-priority=90
+
+      [ethernet]
+
+      [ipv4]
+      address1=192.168.20.1/24
+      address2=169.254.20.1/16
+      method=manual
+
+      [ipv6]
+      addr-gen-mode=stable-privacy
+      method=auto
+
+      [proxy]
+    '';
+    mode = "0600";
+  };
+
   # Load USB gadget module at boot
   systemd.services.usb-gadget-module = {
     description = "Load USB Gadget Module";

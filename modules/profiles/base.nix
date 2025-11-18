@@ -129,9 +129,14 @@
     age
     sops
     efibootmgr
+    ventoy
+    ventoy-full-qt
     inputs.home-manager.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
-
+  nixpkgs.config.permittedInsecurePackages = [
+    "ventoy-qt5-1.1.07"
+    "ventoy-1.1.07"
+  ];
   # Configure keymap
   services.xserver.xkb = {
     layout = lib.mkDefault "us";

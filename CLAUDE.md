@@ -6,6 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a NixOS system configuration repository using Nix Flakes for declarative system and user environment management. It supports **multiple hosts** (blackbox, pero, vm-aarch64) and **multiple users** with reusable configuration profiles. The modular structure makes it easy to add new machines and user accounts.
 
+**Standalone Home Manager Support**: This repository also includes `flake-home.nix`, a standalone Home Manager configuration that can be used on **non-NixOS systems** (like Omarchy, Ubuntu, etc.). See `docs/OMARCHY-SETUP.md` for setup instructions.
+
 ## Common Commands
 
 ### System Management
@@ -19,6 +21,10 @@ sudo nixos-rebuild test --flake .#blackbox
 
 # Rebuild user environment with Home Manager
 home-manager switch --flake .
+
+# Standalone Home Manager (for non-NixOS systems like Omarchy)
+home-manager switch --flake .#todor        # x86_64
+home-manager switch --flake .#todor-aarch64  # ARM64
 
 # Update flake inputs
 nix flake update
