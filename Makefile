@@ -7,7 +7,12 @@ NIXUSER ?= todor
 MAKEFILE_DIR := $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
 
 # The name of the nixosConfiguration in the flake
+# Available NixOS hosts: blackbox, pero, vm-aarch64
 NIXNAME ?= vm
+
+# The name of the homeConfiguration for standalone Home Manager
+# Available: todor (x86_64), todor-aarch64 (ARM64)
+HMNAME ?= todor
 
 # SSH options that are used. These aren't meant to be overridden but are
 # reused a lot so we just store them up here.
@@ -15,7 +20,57 @@ SSH_OPTIONS=-o PubkeyAuthentication=yes -o UserKnownHostsFile=/dev/null -o Stric
 
 # We need to do some OS switching below.
 UNAME := $(shell uname)
+ARCH := $(shell uname -m)
 
+# Default target
+.DEFAULT_GOAL := help
+
+.PHONY: help
+help:
+	@echo "════════════════════════════════════════════════════════════════════════"
+	@echo "  Nix Configuration Management"
+	@echo "════════════════════════════════════════════════════════════════════════"
+	@echo ""
+	@echo "NixOS System Configurations (requires NixOS):"
+	@echo "  make switch NIXNAME=<host>    - Apply NixOS system configuration"
+	@echo "  make test NIXNAME=<host>      - Test NixOS configuration (no switch)"
+	@echo "  make blackbox                 - Apply blackbox configuration"
+	@echo "  make pero                     - Apply pero configuration"
+	@echo "  make vm                       - Apply vm-aarch64 configuration"
+	@echo ""
+	@echo "Standalone Home Manager (Arch, Ubuntu, etc.):"
+	@echo "  make home-switch              - Apply Home Manager (x86_64)"
+	@echo "  make home-switch-backup       - Apply with backup (x86_64)"
+	@echo "  make home                     - Shortcut for home-switch"
+	@echo "  make home-aarch64             - Apply Home Manager (ARM64)"
+	@echo "  make home-switch HMNAME=<cfg> - Apply specific configuration"
+	@echo ""
+	@echo "Available Configurations:"
+	@echo "  NixOS hosts:     blackbox, pero, vm-aarch64"
+	@echo "  Home Manager:    todor (x86_64), todor-aarch64 (ARM64)"
+	@echo ""
+	@echo "VM Management:"
+	@echo "  make vm/bootstrap0            - Initial VM bootstrap"
+	@echo "  make vm/bootstrap             - Finalize VM setup"
+	@echo "  make vm/copy                  - Copy config to VM"
+	@echo "  make vm/switch                - Switch VM configuration"
+	@echo "  make vm/login                 - SSH into VM"
+	@echo ""
+	@echo "Secrets Management:"
+	@echo "  make secrets/backup           - Backup SSH/GPG keys"
+	@echo "  make secrets/restore          - Restore from backup"
+	@echo ""
+	@echo "Flake Management:"
+	@echo "  make check                    - Validate flake configuration"
+	@echo "  make update                   - Update flake inputs"
+	@echo ""
+	@echo "Other:"
+	@echo "  make cache                    - Build and cache configuration"
+	@echo "  make wsl                      - Build WSL installer"
+	@echo ""
+	@echo "════════════════════════════════════════════════════════════════════════"
+
+# NixOS system configuration switch
 switch:
 ifeq ($(UNAME), Darwin)
 	NIXPKGS_ALLOW_UNFREE=1 nix build --impure --extra-experimental-features nix-command --extra-experimental-features flakes ".#darwinConfigurations.${NIXNAME}.system"
@@ -24,6 +79,7 @@ else
 	sudo NIXPKGS_ALLOW_UNFREE=1 NIXPKGS_ALLOW_UNSUPPORTED_SYSTEM=1 nixos-rebuild switch --impure --flake ".#${NIXNAME}"
 endif
 
+# NixOS system configuration test
 test:
 ifeq ($(UNAME), Darwin)
 	NIXPKGS_ALLOW_UNFREE=1 nix build --impure ".#darwinConfigurations.${NIXNAME}.system"
@@ -31,6 +87,41 @@ ifeq ($(UNAME), Darwin)
 else
 	sudo NIXPKGS_ALLOW_UNFREE=1 NIXPKGS_ALLOW_UNSUPPORTED_SYSTEM=1 nixos-rebuild test --impure --flake ".#$(NIXNAME)"
 endif
+
+# Standalone Home Manager switch (non-NixOS systems like Arch, Ubuntu, etc.)
+.PHONY: home-switch
+home-switch:
+	home-manager switch --flake ".#${HMNAME}"
+
+# Standalone Home Manager switch with backup
+.PHONY: home-switch-backup
+home-switch-backup:
+	home-manager switch --flake ".#${HMNAME}" -b backup
+
+# Quick shortcuts for specific hosts
+.PHONY: blackbox pero vm home home-aarch64
+blackbox:
+	$(MAKE) switch NIXNAME=blackbox
+
+pero:
+	$(MAKE) switch NIXNAME=pero
+
+vm:
+	$(MAKE) switch NIXNAME=vm-aarch64
+
+home:
+	$(MAKE) home-switch HMNAME=todor
+
+home-aarch64:
+	$(MAKE) home-switch HMNAME=todor-aarch64
+
+# Flake management
+.PHONY: check flake-check update flake-update
+check flake-check:
+	nix flake check
+
+update flake-update:
+	nix flake update
 
 # This builds the given NixOS configuration and pushes the results to the
 # cache. This does not alter the current running system. This requires

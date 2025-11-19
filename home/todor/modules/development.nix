@@ -2,6 +2,7 @@
   pkgs,
   lib,
   vm ? false,
+  standalone ? false,
   ...
 }:
 {
@@ -39,12 +40,17 @@
 
     # Build tools
     gnumake
+  ] ++ lib.optionals standalone [
+    # Install without Home Manager managing configs in standalone mode
+    git
+    gh
+    lazygit
   ];
 
   programs = {
     # Version control
     git = {
-      enable = true;
+      enable = !standalone;  # Disable in standalone mode to avoid managing config
       settings = {
         user = {
           name = "Todor Todorov";
@@ -54,7 +60,7 @@
     };
 
     gh = {
-      enable = true;
+      enable = !standalone;  # Disable in standalone mode to avoid managing config
       gitCredentialHelper.enable = true;
       hosts = {
         "github.com" = {
@@ -72,7 +78,7 @@
     };
 
     lazygit = {
-      enable = true;
+      enable = !standalone;  # Disable in standalone mode to avoid managing config
       settings = {
         gui.theme = {
           lightTheme = true;
@@ -97,8 +103,18 @@
     claude-code.enable = true;
   };
 
-  # Zed Editor settings file
-  home.file.".config/zed/settings.json".source = ../config/zed/private_settings.json;
+  # File configurations
+  home.file = {
+    # Zed Editor settings file
+    ".config/zed/settings.json".source = ../config/zed/private_settings.json;
+  } // lib.optionalAttrs standalone {
+    # Git identity for standalone mode (managed by Home Manager)
+    ".config/git/config.d/identity".text = ''
+      [user]
+        name = Todor Todorov
+        email = 98095+tptodorov@users.noreply.github.com
+    '';
+  };
 
   # Environment variables
   home.sessionVariables = {

@@ -1,8 +1,10 @@
 {
+  lib,
+  standalone ? false,
   ...
 }:
 {
-  programs.nixvim = {
+  programs.nixvim = lib.mkIf (!standalone) {
     enable = true;
     defaultEditor = true;
     viAlias = true;

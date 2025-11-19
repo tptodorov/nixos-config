@@ -2,6 +2,7 @@
   pkgs,
   lib,
   vm ? false,
+  standalone ? false,
   ...
 }:
 {
@@ -29,13 +30,18 @@
     bun # for bun plugin
 
     fd
+  ] ++ lib.optionals standalone [
+    # Install terminal emulators without Home Manager managing configs in standalone mode
+    ghostty
+    kitty
+    alacritty
   ];
 
   programs = {
     # Terminal emulators
     ghostty = {
-      enable = !vm;  # Use ghostty on blackbox, not in VMs
-      enableZshIntegration = !vm;
+      enable = !vm && !standalone;  # Disable in standalone mode to avoid managing config
+      enableZshIntegration = !vm && !standalone;
       settings = {
         theme = "TokyoNight Storm";
         font-size = 12;
@@ -46,7 +52,7 @@
     rio.enable = !vm;  # Enable on blackbox, disable in VMs
 
     kitty = {
-      enable = !vm;  # Enable on blackbox, disable in VMs
+      enable = !vm && !standalone;  # Disable in standalone mode to avoid managing config
       settings = {
         linux_display_server = "wayland";
         wayland_titlebar_color = "system";
@@ -55,7 +61,7 @@
 
     # Enable alacritty on both VM and blackbox
     alacritty = {
-      enable = true;
+      enable = !standalone;  # Disable in standalone mode to avoid managing config
       settings = {
         window = {
           padding = { x = 10; y = 10; };
@@ -210,7 +216,7 @@
     eza.enable = true;
     starship = {
       enable = true;
-      settings = {
+      settings = lib.mkIf (!standalone) {
         # Inserts a blank line between shell prompts
         add_newline = true;
         command_timeout = 1000;

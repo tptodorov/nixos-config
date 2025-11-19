@@ -2,6 +2,7 @@
   pkgs,
   lib,
   vm ? false,
+  standalone ? false,
   ...
 }:
 {
@@ -32,11 +33,10 @@
   # XDG configuration
   xdg = {
     enable = true;
-    configFile."mimeapps.list".force = true;
 
     # MIME type associations
     mimeApps = {
-      enable = true;
+      enable = !standalone;
       defaultApplications =
         let
           browser = [
@@ -126,8 +126,8 @@
     };
 
     userDirs = {
-      enable = true;
-      createDirectories = true;
+      enable = !standalone;
+      createDirectories = !standalone;
     };
   };
 
