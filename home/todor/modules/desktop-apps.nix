@@ -30,6 +30,38 @@
 
     ];
 
+  # Set Brave as default browser in standalone mode using activation script
+  home.activation = lib.mkIf standalone {
+    setBraveAsDefault = lib.hm.dag.entryAfter ["writeBoundary"] ''
+      # Unset BROWSER temporarily to allow xdg-settings to work on Omarchy
+      OLD_BROWSER="$BROWSER"
+      unset BROWSER
+      $DRY_RUN_CMD ${pkgs.xdg-utils}/bin/xdg-settings set default-web-browser brave-browser.desktop || true
+      export BROWSER="$OLD_BROWSER"
+
+      # Also update mimeapps.list directly for browser-related MIME types
+      # This forcefully overrides Omarchy's managed mimeapps.list
+      MIMEAPPS="$HOME/.config/mimeapps.list"
+      if [ -f "$MIMEAPPS" ]; then
+        $DRY_RUN_CMD sed -i \
+          -e 's|^text/html=.*|text/html=brave-browser.desktop|' \
+          -e 's|^x-scheme-handler/http=.*|x-scheme-handler/http=brave-browser.desktop|' \
+          -e 's|^x-scheme-handler/https=.*|x-scheme-handler/https=brave-browser.desktop|' \
+          -e 's|^x-scheme-handler/about=.*|x-scheme-handler/about=brave-browser.desktop|' \
+          -e 's|^x-scheme-handler/unknown=.*|x-scheme-handler/unknown=brave-browser.desktop|' \
+          -e 's|^x-scheme-handler/ftp=.*|x-scheme-handler/ftp=brave-browser.desktop|' \
+          "$MIMEAPPS"
+      fi
+
+      # Verify the changes were applied
+      if grep -q "brave-browser.desktop" "$MIMEAPPS"; then
+        echo "✓ Brave set as default browser in mimeapps.list"
+      else
+        echo "⚠ Warning: Failed to set Brave as default browser"
+      fi
+    '';
+  };
+
   # XDG configuration
   xdg = {
     enable = true;

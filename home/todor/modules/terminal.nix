@@ -206,6 +206,23 @@
         # File search
         "ff" = "fd";  # Fast find alias
       };
+
+      # Initialize shell environment for standalone mode (Omarchy)
+      initExtra = lib.mkIf standalone ''
+        # Source Nix daemon profile for proper PATH setup
+        if [ -e /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]; then
+          . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+        fi
+
+        # Ensure Home Manager profile is in PATH
+        export PATH="$HOME/.nix-profile/bin:$PATH"
+        export PATH="$HOME/.local/bin:$PATH"
+
+        # Source Home Manager session variables
+        if [ -e "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
+          . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+        fi
+      '';
     };
 
     # CLI tools
