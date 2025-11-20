@@ -18,6 +18,9 @@
     amp-cli
     crush  # AI coding agent for terminal
 
+    # Askpass helper for sudo (used by Claude Code)
+    zenity
+
     # Zig development
     zig
     zls
@@ -119,5 +122,10 @@
   # Environment variables
   home.sessionVariables = {
     EDITOR = "nvim";
+
+    # Askpass configuration for sudo (used by Claude Code)
+    SUDO_ASKPASS = "${pkgs.writeShellScript "askpass" ''
+      ${pkgs.zenity}/bin/zenity --password --title="sudo password prompt"
+    ''}";
   };
 }
