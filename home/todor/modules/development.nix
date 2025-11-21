@@ -1,22 +1,21 @@
 {
   pkgs,
   lib,
-  vm ? false,
-  standalone ? false,
   ...
 }:
 {
   # Development tools and environment
   home.packages = with pkgs; [
+    # shell productivity
     devenv
-    git-town
     nil
     gopass
-    zed-editor
     nixd
+    zed-editor
     warp-terminal
     amp-cli
     crush  # AI coding agent for terminal
+    jq # for jsontools plugin
 
     # Askpass helper for sudo (used by Claude Code)
     zenity
@@ -29,6 +28,13 @@
     go
     gopls
     gotools
+
+    # ops
+    awscli2 # for aws plugin
+    kubectl # for kubectl plugin
+    python3 # for python plugin
+    bun # for bun plugin
+    nodejs # for npm plugin
 
     # Rust development
     rustc
@@ -43,17 +49,16 @@
 
     # Build tools
     gnumake
-  ] ++ lib.optionals standalone [
-    # Install without Home Manager managing configs in standalone mode
     git
     gh
     lazygit
+    git-town
   ];
 
   programs = {
     # Version control
     git = {
-      enable = !standalone;  # Disable in standalone mode to avoid managing config
+      enable = true;
       settings = {
         user = {
           name = "Todor Todorov";
@@ -63,7 +68,7 @@
     };
 
     gh = {
-      enable = !standalone;  # Disable in standalone mode to avoid managing config
+      enable = true;
       gitCredentialHelper.enable = true;
       hosts = {
         "github.com" = {
@@ -81,7 +86,7 @@
     };
 
     lazygit = {
-      enable = !standalone;  # Disable in standalone mode to avoid managing config
+      enable = true;
       settings = {
         gui.theme = {
           lightTheme = true;
@@ -110,7 +115,6 @@
   home.file = {
     # Zed Editor settings file
     ".config/zed/settings.json".source = ../config/zed/private_settings.json;
-  } // lib.optionalAttrs standalone {
     # Git identity for standalone mode (managed by Home Manager)
     ".config/git/config.d/identity".text = ''
       [user]

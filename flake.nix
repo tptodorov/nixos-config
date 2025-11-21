@@ -233,7 +233,7 @@
                 # List packages installed in system profile. To search by name, run:
                 # $ nix-env -qaP | grep wget
                 environment.systemPackages =
-                  [ pkgs.vim
+                  [
                   ];
 
                 # nix is already installed
@@ -257,6 +257,16 @@
               })
           home-manager.darwinModules.home-manager
           sops-nix.darwinModules.sops
+          {
+            # home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.extraSpecialArgs = { inherit inputs; };
+            home-manager.users."todor.todorov" = import ./home/todor/mac.nix;
+            users.users."todor.todorov" = {
+              name = "todor.todorov";
+              home = "/Users/todor.todorov";
+            };
+          }
         ];
         specialArgs = {
           inherit inputs;
