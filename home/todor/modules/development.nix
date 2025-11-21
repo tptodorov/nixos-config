@@ -16,6 +16,7 @@
     amp-cli
     crush  # AI coding agent for terminal
     jq # for jsontools plugin
+    neovim
 
     # Askpass helper for sudo (used by Claude Code)
     zenity
@@ -131,5 +132,10 @@
     SUDO_ASKPASS = "${pkgs.writeShellScript "askpass" ''
       ${pkgs.zenity}/bin/zenity --password --title="sudo password prompt"
     ''}";
+  };
+
+  services = {
+      # Container services
+      podman.enable = !pkgs.stdenv.isDarwin;
   };
 }

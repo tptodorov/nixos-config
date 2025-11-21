@@ -9,13 +9,9 @@
   imports = [
     # User modules
     ./modules/development.nix
-    # ./modules/nixvim.nix
+    ./modules/shell.nix
     ./modules/terminal.nix
-    # ./modules/desktop-apps.nix
-    # ./modules/brave.nix
-    # ./modules/media.nix
     ./secrets/secrets.nix
-    # ./secrets/environment.nix
   ];
 
   # Nixpkgs configuration

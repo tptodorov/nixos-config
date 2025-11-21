@@ -1,4 +1,4 @@
-{ config, lib, pkgs, vm ? false, ... }:
+{ config, lib, pkgs, ... }:
 {
   # Media and entertainment applications
   home.packages = with pkgs; [
@@ -7,12 +7,7 @@
   ];
 
   programs = {
-    spotify-player.enable = !vm;
-  };
-
-  services = {
-    # Container services
-    podman.enable = true;
+    spotify-player.enable = true;
   };
 
   # XDG MIME associations for magnet links

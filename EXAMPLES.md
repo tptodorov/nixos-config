@@ -43,7 +43,6 @@ mkdir -p home/alice/{modules,secrets,config}
 {
   imports = [
     # Import alice's user-specific secrets
-    ../secrets/environment.nix
   ] ++ lib.optionals (builtins.pathExists ../secrets/local.nix) [
     ../secrets/local.nix
   ];
@@ -62,7 +61,6 @@ mkdir -p home/alice/{modules,secrets,config}
 
 ```bash
 # Copy templates
-cp home/todor/secrets/environment.nix home/alice/secrets/
 cp home/todor/secrets/local.nix.example home/alice/secrets/
 ```
 

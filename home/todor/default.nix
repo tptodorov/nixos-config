@@ -14,14 +14,6 @@
     ./modules/nixvim.nix
     ./modules/terminal.nix
     ./secrets/secrets.nix
-    ./secrets/environment.nix
-  ] ++ lib.optionals (!standalone) [
-    # Desktop modules (only for NixOS, not for standalone Home Manager)
-    ./modules/niri.nix
-    ./modules/desktop-apps.nix
-    ./modules/brave.nix
-    ./modules/media.nix
-    ./modules/dankmaterialshell.nix
   ];
 
   # Nixpkgs configuration

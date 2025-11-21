@@ -1,13 +1,10 @@
 {
   pkgs,
   lib,
-  vm ? false,
-  standalone ? false,
   ...
 }:
 {
   imports = [
-    ../secrets/environment.nix
     ../secrets/secrets.nix
   ];
 
@@ -32,8 +29,6 @@
           "git"
           "brew"
           "docker"
-          "npm"
-          "python"
           "history"
           "pass"
           "z"
@@ -41,6 +36,8 @@
           "aws"
           "kubectl"
           "bun"
+          "colorize"
+          "common-aliases"
         ];
       };
 
@@ -72,7 +69,6 @@
         "bc" = "bc -l";
         "mkdir" = "mkdir -pv";
         "j" = "jobs -l";
-        "path" = "echo -e ${PATH//:/\\n}";
         "now" = "date +\"%T\"";
         "nowtime" = "date +\"%T\"";
         "nowdate" = "date +\"%d-%m-%Y\"";
@@ -99,23 +95,21 @@
         # Download utilities
         "wget" = "wget -c";
 
-        # AWS/EC2 shortcuts
-        "ssh2ec2" =
-          "ssh -oStrictHostKeyChecking=no -i ~/.ec2/laptop-${AWS_DEFAULT_REGION}.pem -l ec2-user";
-        "scp2ec2" = "scp -i ~/.ec2/laptop.pem";
-
         # Development tools
         "lg" = "lazygit";
         "b" = "bun";
-        "cs" = "coursier";
-        "bb" = "ssh blackbox";
 
-        # File search
-        "ff" = "fd";  # Fast find alias
+        "gt"="git-town";
+        "gts"="git-town switch";
+        "gtc"="git-town continue";
+        "gty"="git-town sync";
+
+        "zed" = "zeditor";
+
       };
 
       # Initialize shell environment for standalone mode (Omarchy)
-      initExtra = lib.mkIf standalone ''
+      initContent = ''
         # Source Nix daemon profile for proper PATH setup
         if [ -e /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]; then
           . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
@@ -140,7 +134,7 @@
     eza.enable = true;
     starship = {
       enable = true;
-      settings = lib.mkIf (!standalone) {
+      settings = {
         # Inserts a blank line between shell prompts
         add_newline = true;
         command_timeout = 1000;
@@ -170,6 +164,12 @@
     ssh = {
       enable = true;
       enableDefaultConfig = false;
+      extraConfig = ''
+        MACs hmac-sha2-256,hmac-sha1,hmac-sha2-512,hmac-sha2-512-etm@openssh.com,umac-128-etm@openssh.com
+      '';
+      includes = [
+        "~/.orbstack/ssh/config"
+      ];
       matchBlocks = {
         "*" = {
           addKeysToAgent = "yes";
@@ -189,5 +189,13 @@
   # Session variables for SSH agent
   home.sessionVariables = {
     SSH_AUTH_SOCK = "$XDG_RUNTIME_DIR/ssh-agent";
+
+    # Non-sensitive environment variables for todor
+    BROWSER = "brave";
+    TERMINAL = "ghostty";
+
+    # User-specific preferences
+    EDITOR = "nvim";
+    PAGER = "less";
   };
 }

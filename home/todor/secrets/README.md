@@ -64,7 +64,6 @@ Uncomment the import in `home/todor/modules/terminal.nix`:
 
 ```nix
 imports = [
-  ../secrets/environment.nix
   ../secrets/secrets.nix  # Uncomment this line
 ];
 ```
@@ -81,7 +80,6 @@ home-manager switch --flake .
 - `setup-sops.sh` - Setup script for initial configuration
 - `secrets.yaml` - Encrypted secrets file (safe to commit)
 - `.sops.yaml` - Sops configuration (safe to commit)
-- `environment.nix` - Non-sensitive environment variables
 - `README.md` - This documentation
 
 ## 🔑 Available Secrets
