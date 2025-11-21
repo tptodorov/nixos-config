@@ -80,42 +80,6 @@
       };
     };
 
-    # Foot terminal - VM-specific (matches Ghostty config)
-    foot = lib.mkIf vm {
-      enable = true;
-      settings = {
-        main = {
-          # Match Ghostty font configuration
-          font = "ZedMono Nerd Font:size=12";
-          dpi-aware = "yes";
-          pad = "10x10";
-        };
-        # TokyoNight Storm colors (matching Ghostty theme)
-        colors = {
-          background = "1a1b26";
-          foreground = "c0caf5";
-          # Regular colors
-          regular0 = "15161e";
-          regular1 = "f7768e";
-          regular2 = "9ece6a";
-          regular3 = "e0af68";
-          regular4 = "7aa2f7";
-          regular5 = "bb9af7";
-          regular6 = "7dcfff";
-          regular7 = "a9b1d6";
-          # Bright colors
-          bright0 = "414868";
-          bright1 = "f7768e";
-          bright2 = "9ece6a";
-          bright3 = "e0af68";
-          bright4 = "7aa2f7";
-          bright5 = "bb9af7";
-          bright6 = "7dcfff";
-          bright7 = "c0caf5";
-        };
-      };
-    };
-
     # Shell and utilities
     zsh = {
       enable = true;
