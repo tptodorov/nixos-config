@@ -46,6 +46,11 @@
       url = "github:AvengeMedia/dgop";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Mac darwin
+    nix-darwin.url = "github:nix-darwin/nix-darwin";
+    nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
+
   };
 
   outputs = {
@@ -61,6 +66,7 @@
     dms,
     dgop,
     jujutsu,
+    nix-darwin,
     ...
   }@inputs:
   let
@@ -216,5 +222,50 @@
         };
       };
     };
+
+    darwinConfigurations = {
+      # my redis mac book pro
+      "DR94XJ1435-Todor-Peychev-Todorov" = nix-darwin.lib.darwinSystem {
+        system = "aarch64-darwin";
+        modules = [
+          ({ pkgs, ... }:
+          {
+                # List packages installed in system profile. To search by name, run:
+                # $ nix-env -qaP | grep wget
+                environment.systemPackages =
+                  [ pkgs.vim
+                  ];
+
+                # nix is already installed
+                nix.enable = false;
+
+                # Necessary for using flakes on this system.
+                nix.settings.experimental-features = "nix-command flakes";
+
+                # Enable alternative shell support in nix-darwin.
+                programs.zsh.enable = true;
+
+                # Set Git commit hash for darwin-version.
+                system.configurationRevision = self.rev or self.dirtyRev or null;
+
+                # Used for backwards compatibility, please read the changelog before changing.
+                # $ darwin-rebuild changelog
+                system.stateVersion = 6;
+
+                # The platform the configuration will be used on.
+                nixpkgs.hostPlatform = "aarch64-darwin";
+              })
+          home-manager.darwinModules.home-manager
+          sops-nix.darwinModules.sops
+        ];
+        specialArgs = {
+          inherit inputs;
+          # vm = false;  # Not a VM, full desktop features
+          # laptop = true;  # Not a laptop (change to true if on laptop)
+          # standalone = true;  # Standalone Home Manager (protect certain files)
+        };
+      };
+    };
+
   };
 }
