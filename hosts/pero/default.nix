@@ -3,7 +3,6 @@
   inputs,
   outputs,
   pkgs,
-  vm ? false,
   ...
 }:
 {
@@ -25,7 +24,6 @@
 
     # Host-specific modules
     ./modules/macbook.nix
-    # ./modules/cs8409-audio  # Temporarily disabled - driver build failing
 
     # Shared modules
     ../../modules/common/fonts.nix
@@ -40,8 +38,10 @@
   home-manager = {
     backupFileExtension = "backup";
     extraSpecialArgs = {
-      inherit inputs outputs vm;
+      inherit inputs outputs;
       laptop = true;
+      vm = false;
+      standalone = true;
     };
     sharedModules = [
       inputs.nixvim.homeModules.nixvim

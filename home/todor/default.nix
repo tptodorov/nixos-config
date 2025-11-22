@@ -11,9 +11,12 @@
     # Core user modules (always included)
     ./modules/development.nix
     ./modules/nixvim.nix
-    ./modules/terminal.nix
+    ./modules/shell.nix
     ./secrets/secrets.nix
-  ];
+  ] ++ lib.optionals (!standalone) [
+
+    ./modules/terminal.nix
+  ] ;
 
   # Nixpkgs configuration
   nixpkgs = {
