@@ -1,4 +1,10 @@
-{ config, lib, pkgs, inputs, vm ? false, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  inputs,
+  ...
+}:
 {
   # Encrypted secrets management using sops-nix
   imports = [ inputs.sops-nix.homeManagerModules.sops ];

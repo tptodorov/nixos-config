@@ -3,7 +3,6 @@
   config,
   lib,
   inputs,
-  vm ? false,
   standalone ? false,
   ...
 }:

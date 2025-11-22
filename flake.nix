@@ -82,7 +82,6 @@
         blackbox = nixpkgs.lib.nixosSystem {
           specialArgs = {
             inherit inputs outputs;
-            vm = false;
           };
           modules = [
             (
@@ -103,7 +102,6 @@
         pero = nixpkgs.lib.nixosSystem {
           specialArgs = {
             inherit inputs outputs;
-            vm = false;
           };
           modules = [
             (
@@ -117,28 +115,6 @@
             )
             inputs.home-manager.nixosModules.home-manager
             ./hosts/pero
-          ];
-        };
-
-        # ARM64 VM
-        vm-aarch64 = nixpkgs.lib.nixosSystem {
-          system = "aarch64-linux";
-          specialArgs = {
-            inherit inputs outputs;
-            vm = true;
-          };
-          modules = [
-            (
-              { pkgs, ... }:
-              {
-                nixpkgs.overlays = [
-                  inputs.zig.overlays.default
-                  inputs.niri.overlays.niri
-                ];
-              }
-            )
-            inputs.home-manager.nixosModules.home-manager
-            ./hosts/vm-aarch64
           ];
         };
       };
@@ -177,7 +153,6 @@
 
           extraSpecialArgs = {
             inherit inputs;
-            vm = false; # Not a VM, full desktop features
             laptop = false; # Not a laptop (change to true if on laptop)
             standalone = true; # Standalone Home Manager (protect certain files)
           };
@@ -215,7 +190,6 @@
 
           extraSpecialArgs = {
             inherit inputs;
-            vm = false; # Not a VM, full desktop features
             laptop = false; # Not a laptop (change to true if on ARM laptop)
             standalone = true; # Standalone Home Manager (protect certain files)
           };
