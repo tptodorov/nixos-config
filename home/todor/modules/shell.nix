@@ -17,6 +17,12 @@
     # Supporting packages for Oh My Zsh plugins
     gopass # for pass plugin
     fd
+
+    wget
+    tree
+    ripgrep
+    age
+    sops
   ];
 
   programs = {
@@ -99,10 +105,10 @@
         "lg" = "lazygit";
         "b" = "bun";
 
-        "gt"="git-town";
-        "gts"="git-town switch";
-        "gtc"="git-town continue";
-        "gty"="git-town sync";
+        "gt" = "git-town";
+        "gts" = "git-town switch";
+        "gtc" = "git-town continue";
+        "gty" = "git-town sync";
 
         "zed" = "zeditor";
 
@@ -162,7 +168,7 @@
 
     # SSH
     ssh = {
-      enable = true;
+      enable = !pkgs.stdenv.isDarwin;
       enableDefaultConfig = false;
       extraConfig = ''
         MACs hmac-sha2-256,hmac-sha1,hmac-sha2-512,hmac-sha2-512-etm@openssh.com,umac-128-etm@openssh.com

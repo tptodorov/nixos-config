@@ -30,14 +30,15 @@
     ../../modules/common/fonts.nix
     ../../modules/users/todor.nix
 
-    # Secrets
-    ../../secrets/ssh-keys.nix
   ];
 
   # Home Manager configuration
   home-manager = {
     backupFileExtension = "backup";
-    extraSpecialArgs = { inherit inputs outputs vm; laptop = false; };
+    extraSpecialArgs = {
+      inherit inputs outputs vm;
+      laptop = false;
+    };
     sharedModules = [
       inputs.nixvim.homeModules.nixvim
     ];

@@ -20,7 +20,7 @@
     # Configuration profiles
     ../../modules/profiles/base.nix
     ../../modules/profiles/laptop.nix
-    ../../modules/profiles/desktop.nix  # Include full desktop environment
+    ../../modules/profiles/desktop.nix # Include full desktop environment
     ../../modules/profiles/apfs.nix
 
     # Host-specific modules
@@ -31,8 +31,6 @@
     ../../modules/common/fonts.nix
     ../../modules/users/todor.nix
 
-    # Secrets
-    ../../secrets/ssh-keys.nix
   ];
 
   # Hostname
@@ -41,7 +39,10 @@
   # Home Manager configuration
   home-manager = {
     backupFileExtension = "backup";
-    extraSpecialArgs = { inherit inputs outputs vm; laptop = true; };
+    extraSpecialArgs = {
+      inherit inputs outputs vm;
+      laptop = true;
+    };
     sharedModules = [
       inputs.nixvim.homeModules.nixvim
     ];
