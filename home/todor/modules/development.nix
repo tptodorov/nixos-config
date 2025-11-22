@@ -1,6 +1,5 @@
 {
   pkgs,
-  lib,
   ...
 }:
 {
@@ -14,7 +13,7 @@
     zed-editor
     warp-terminal
     amp-cli
-    crush  # AI coding agent for terminal
+    crush # AI coding agent for terminal
     jq # for jsontools plugin
     neovim
 
@@ -135,7 +134,7 @@
   };
 
   services = {
-      # Container services
-      podman.enable = !pkgs.stdenv.isDarwin;
+    # Container services
+    podman.enable = !pkgs.stdenv.isDarwin;
   };
 }

@@ -1,7 +1,5 @@
 {
-  config,
   pkgs,
-  lib,
   ...
 }:
 {
@@ -14,7 +12,6 @@
       "networkmanager"
       "wheel"
     ];
-    packages = with pkgs; [ ];
     shell = pkgs.zsh;
     initialPassword = "todor";
   };

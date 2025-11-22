@@ -1,8 +1,5 @@
 # Home Manager configuration for user todor
 {
-  config,
-  lib,
-  inputs,
   ...
 }:
 {

@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ pkgs, ... }:
 {
   networking.hostName = "blackbox";
   networking.networkmanager.enable = true;

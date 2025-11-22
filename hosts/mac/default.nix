@@ -1,9 +1,5 @@
 {
   inputs,
-  config,
-  outputs,
-  pkgs,
-  vm,
   ...
 }:
 {
@@ -35,5 +31,9 @@
 
   homebrew.enable = true;
   system.tools.darwin-rebuild.enable = true;
+
+  # reduce distrations
+  system.defaults.universalaccess.reduceMotion = true;
+  system.startup.chime = false;
 
 }

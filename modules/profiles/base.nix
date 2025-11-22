@@ -1,7 +1,6 @@
 # Base system configuration profile
 # This profile provides essential configuration for all NixOS hosts
 {
-  config,
   pkgs,
   lib,
   inputs,

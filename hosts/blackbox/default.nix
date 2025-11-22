@@ -2,7 +2,6 @@
 {
   inputs,
   outputs,
-  pkgs,
   ...
 }:
 {
@@ -35,7 +34,7 @@
   home-manager = {
     backupFileExtension = "backup";
     extraSpecialArgs = {
-      inherit inputs outputs vm;
+      inherit inputs outputs;
       laptop = false;
     };
     sharedModules = [

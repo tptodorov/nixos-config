@@ -84,15 +84,12 @@
             inherit inputs outputs;
           };
           modules = [
-            (
-              { pkgs, ... }:
-              {
-                nixpkgs.overlays = [
-                  inputs.zig.overlays.default
-                  inputs.niri.overlays.niri
-                ];
-              }
-            )
+            {
+              nixpkgs.overlays = [
+                inputs.zig.overlays.default
+                inputs.niri.overlays.niri
+              ];
+            }
             inputs.home-manager.nixosModules.home-manager
             ./hosts/blackbox
           ];
@@ -104,15 +101,12 @@
             inherit inputs outputs;
           };
           modules = [
-            (
-              { pkgs, ... }:
-              {
-                nixpkgs.overlays = [
-                  inputs.zig.overlays.default
-                  inputs.niri.overlays.niri
-                ];
-              }
-            )
+            {
+              nixpkgs.overlays = [
+                inputs.zig.overlays.default
+                inputs.niri.overlays.niri
+              ];
+            }
             inputs.home-manager.nixosModules.home-manager
             ./hosts/pero
           ];
