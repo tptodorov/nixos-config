@@ -33,7 +33,6 @@
   system.tools.darwin-rebuild.enable = true;
 
   # reduce distrations
-  system.defaults.universalaccess.reduceMotion = true;
   system.startup.chime = false;
 
 }
