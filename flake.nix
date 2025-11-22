@@ -236,7 +236,6 @@
               users.users."todor.todorov" = {
                 name = "todor.todorov";
                 home = "/Users/todor.todorov";
-                openssh = import ./secrets/ssh-keys.nix;
               };
             }
           ];
