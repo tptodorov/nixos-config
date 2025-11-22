@@ -34,5 +34,6 @@
   system.primaryUser = "todor.todorov"; # This option does not appear to be a valid nix-darwin option
 
   homebrew.enable = true;
+  system.tools.darwin-rebuild.enable = true;
 
 }
