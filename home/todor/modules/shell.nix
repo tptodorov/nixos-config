@@ -9,6 +9,7 @@
 
   # Shell configuration
   home.packages = with pkgs; [
+    home-manager # CLI for managing home-manager
     dua
     nixfmt-rfc-style
     nixfmt-tree
@@ -16,6 +17,7 @@
     # Supporting packages for Oh My Zsh plugins
     gopass # for pass plugin
     fd
+    fzf
 
     wget
     tree
@@ -43,7 +45,6 @@
           "kubectl"
           "bun"
           "colorize"
-          "common-aliases"
         ];
       };
 
@@ -111,17 +112,21 @@
         "gty" = "git-town sync";
 
         "zed" = "zeditor";
+        "t" = "task";
 
       };
 
-      # Initialize shell environment for standalone mode (Omarchy)
+      # Initialize shell environment
       initContent = ''
         # Source Nix daemon profile for proper PATH setup
         if [ -e /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]; then
           . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
         fi
 
-        # Ensure Home Manager profile is in PATH
+        # Prioritize nix-darwin per-user profile and Home Manager paths over Homebrew
+        # This ensures nix-managed packages take precedence
+        export PATH="/etc/profiles/per-user/$USER/bin:$PATH"
+        export PATH="/run/current-system/sw/bin:$PATH"
         export PATH="$HOME/.nix-profile/bin:$PATH"
         export PATH="$HOME/.local/bin:$PATH"
 
@@ -137,7 +142,7 @@
     htop.enable = true;
     zoxide.enable = true;
     fzf.enable = true;
-    eza.enable = true;
+    eza.enable = false;
     starship = {
       enable = true;
       settings = {
