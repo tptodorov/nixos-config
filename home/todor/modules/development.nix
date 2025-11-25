@@ -30,6 +30,7 @@
     gotools
 
     # ops
+    flyctl # Fly.io CLI
     awscli2 # for aws plugin
     kubectl # for kubectl plugin
     python3 # for python plugin
@@ -53,6 +54,7 @@
     gh
     lazygit
     git-town
+    pre-commit
   ];
 
   programs = {
