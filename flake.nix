@@ -135,7 +135,7 @@
               # Import the existing home configuration
               imports = [
                 inputs.niri.homeModules.niri
-                inputs.nixvim.homeManagerModules.nixvim
+                inputs.nixvim.homeModules.nixvim
                 ./home/todor/default.nix
               ];
 
@@ -173,7 +173,7 @@
 
               imports = [
                 inputs.niri.homeModules.niri
-                inputs.nixvim.homeManagerModules.nixvim
+                inputs.nixvim.homeModules.nixvim
                 ./home/todor/default.nix
               ];
 

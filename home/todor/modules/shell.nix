@@ -9,7 +9,6 @@
 
   # Shell configuration
   home.packages = with pkgs; [
-    home-manager # CLI for managing home-manager
     dua
     nixfmt-rfc-style
     nixfmt-tree
