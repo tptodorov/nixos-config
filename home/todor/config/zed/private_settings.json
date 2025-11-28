@@ -1,11 +1,31 @@
 {
   "icon_theme": "Warm Charmed Icons",
+  "agent_servers": {
+    "Cursor": {
+      "command": "npx",
+      "args": [
+        "@blowmage/cursor-agent-acp"
+      ],
+      "env": {}
+    },
+    "Augment": {
+      "type": "custom",
+      "command": "auggie",
+      "args": [
+        "--acp"
+      ],
+      "env": {}
+    }
+  },
   "agent": {
     "always_allow_tool_actions": true,
     "play_sound_when_agent_done": true
   },
   "edit_predictions": {
-    "disabled_globs": [".env", "main.js"]
+    "disabled_globs": [
+      ".env",
+      "main.js"
+    ]
   },
   "features": {
     "edit_prediction_provider": "supermaven"
@@ -61,14 +81,18 @@
         "enabled": true
       },
       "format_on_save": "on",
-      "language_servers": ["gopls"]
+      "language_servers": [
+        "gopls"
+      ]
     },
     "Zig": {
       "inlay_hints": {
         "enabled": true
       },
       "format_on_save": "on",
-      "language_servers": ["zls"]
+      "language_servers": [
+        "zls"
+      ]
     },
     "PHP": {
       "inlay_hints": {
@@ -77,7 +101,9 @@
       "format_on_save": "on"
     },
     "Python": {
-      "language_servers": ["ruff"],
+      "language_servers": [
+        "ruff"
+      ],
       "formatter": [
         {
           "language_server": {
@@ -99,8 +125,15 @@
     }
   },
   "file_types": {
-    "Dockerfile": ["Dockerfile", "Dockerfile.*"],
-    "JSON": ["json", "jsonc", "*.code-snippets"]
+    "Dockerfile": [
+      "Dockerfile",
+      "Dockerfile.*"
+    ],
+    "JSON": [
+      "json",
+      "jsonc",
+      "*.code-snippets"
+    ]
   },
   "telemetry": {
     "diagnostics": false,
