@@ -25,6 +25,7 @@
     age
     sops
     starship
+    tmux # Terminal multiplexer
   ];
 
   programs = {
@@ -45,6 +46,7 @@
           "kubectl"
           "bun"
           "colorize"
+          "tmux"
         ];
       };
 
@@ -114,6 +116,13 @@
         "zed" = "zeditor";
         "t" = "task";
 
+        # Tmux aliases
+        "tm" = "tmux";
+        "tma" = "tmux attach-session -t";
+        "tmn" = "tmux new-session -s";
+        "tml" = "tmux list-sessions";
+        "tmk" = "tmux kill-session -t";
+
       };
 
       # Initialize shell environment
@@ -170,6 +179,98 @@
       };
     };
     fastfetch.enable = true;
+
+    # Tmux terminal multiplexer
+    tmux = {
+      enable = true;
+      clock24 = true;
+      keyMode = "vi";
+      customPaneNavigationAndResize = true;
+
+      # Vim-friendly prefix key (Ctrl-a instead of Ctrl-b)
+      prefix = "C-a";
+
+      # Additional tmux configuration
+      extraConfig = ''
+        # Vim-style pane switching
+        bind h select-pane -L
+        bind j select-pane -D
+        bind k select-pane -U
+        bind l select-pane -R
+
+        # Vim-style pane resizing
+        bind -r H resize-pane -L 5
+        bind -r J resize-pane -D 5
+        bind -r K resize-pane -U 5
+        bind -r L resize-pane -R 5
+
+        # Split panes using | and -
+        bind | split-window -h
+        bind - split-window -v
+        unbind '"'
+        unbind %
+
+        # Reload config file
+        bind r source-file ~/.config/tmux/tmux.conf \; display-message "Config reloaded!"
+
+        # Enable mouse mode
+        set -g mouse on
+
+        # Start windows and panes at 1, not 0
+        set -g base-index 1
+        setw -g pane-base-index 1
+
+        # Renumber windows when a window is closed
+        set -g renumber-windows on
+
+        # Increase scrollback buffer size
+        set -g history-limit 10000
+
+        # Enable vi mode for copy mode
+        setw -g mode-keys vi
+
+        # Vim-style copy mode bindings
+        bind-key -T copy-mode-vi v send-keys -X begin-selection
+        bind-key -T copy-mode-vi y send-keys -X copy-selection-and-cancel
+        bind-key -T copy-mode-vi r send-keys -X rectangle-toggle
+
+        # Paste with prefix + p
+        bind p paste-buffer
+
+        # Don't exit copy mode when dragging with mouse
+        unbind -T copy-mode-vi MouseDragEnd1Pane
+
+        # Status bar styling
+        set -g status-bg colour235
+        set -g status-fg colour136
+        set -g status-left-length 20
+        set -g status-left '#[fg=colour166]#S #[fg=colour245]| '
+        set -g status-right '#[fg=colour245]%d %b %R'
+
+        # Window status styling
+        setw -g window-status-current-style 'fg=colour81 bg=colour238 bold'
+        setw -g window-status-current-format ' #I#[fg=colour250]:#[fg=colour255]#W#[fg=colour50]#F '
+        setw -g window-status-style 'fg=colour138 bg=colour235 none'
+        setw -g window-status-format ' #I#[fg=colour237]:#[fg=colour250]#W#[fg=colour244]#F '
+
+        # Pane border styling
+        set -g pane-border-style 'fg=colour238'
+        set -g pane-active-border-style 'fg=colour81'
+
+        # Message styling
+        set -g message-style 'fg=colour232 bg=colour166 bold'
+
+        # Reduce escape time for better vim experience
+        set -sg escape-time 0
+
+        # Enable focus events for vim
+        set -g focus-events on
+
+        # Enable true color support
+        set -g default-terminal "screen-256color"
+        set -ga terminal-overrides ",*256col*:Tc"
+      '';
+    };
 
     # SSH
     ssh = {
