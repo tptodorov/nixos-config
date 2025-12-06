@@ -24,7 +24,8 @@
     age
     sops
     starship
-    tmux # Terminal multiplexer
+
+    yazi
   ];
 
   programs = {
@@ -115,12 +116,8 @@
         "zed" = "zeditor";
         "t" = "task";
 
-        # Tmux aliases
-        "tm" = "tmux";
-        "tma" = "tmux attach-session -t";
-        "tmn" = "tmux new-session -s";
-        "tml" = "tmux list-sessions";
-        "tmk" = "tmux kill-session -t";
+        "nixvi" = "nvim ~/mycfg";
+        "nixsw" = "sudo darwin-rebuild switch --flake ~/mycfg";
 
       };
 
@@ -137,6 +134,7 @@
         export PATH="/run/current-system/sw/bin:$PATH"
         export PATH="$HOME/.nix-profile/bin:$PATH"
         export PATH="$HOME/.local/bin:$PATH"
+        export PATH="$HOME/go/bin:$PATH"
 
         # Source Home Manager session variables
         if [ -e "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then

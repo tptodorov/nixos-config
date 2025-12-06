@@ -113,13 +113,13 @@
       ]
     }
   },
-  "buffer_font_family": "ZedMono Nerd Font",
+  "buffer_font_family": "ZedMono Nerd Font Mono",
   "ui_font_family": ".SystemUIFont",
   "ui_font_size": 16,
   "buffer_font_size": 16,
   "scroll_beyond_last_line": "off",
   "terminal": {
-    "font_family": "ZedMono Nerd Font",
+    "font_family": "ZedMono Nerd Font Mono",
     "env": {
       "EDITOR": "zed --wait"
     }
