@@ -98,6 +98,8 @@
       macos_option_as_alt = true;
       macos_thicken_font = 0;
 
+      tab_title_template = "{session_name} {title}";
+
       # Keyboard shortcuts
       # kitty_mod = "ctrl+shift";
 
@@ -150,6 +152,10 @@
       "kitty_mod+]" = "next_window";
       "kitty_mod+[" = "previous_window";
       "kitty_mod+l" = "next_layout";
+      "f7>/" = "goto_session";
+      "f7>l" = "goto_session langcache";
+      "f7>n" = "goto_session nixos";
+      "f7>-" = "goto_session -1";
     };
   };
 }
