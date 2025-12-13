@@ -26,6 +26,7 @@
     starship
 
     yazi
+    dysk
   ];
 
   programs = {

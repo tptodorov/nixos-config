@@ -2,6 +2,19 @@
   pkgs,
   ...
 }:
+let
+  # Custom cline wrapper that installs and runs cline via npm
+  cline = pkgs.writeShellScriptBin "cline" ''
+    # Ensure cline is installed globally
+    if ! command -v ${pkgs.nodejs}/bin/npm list -g cline &> /dev/null; then
+      echo "Installing cline globally..."
+      ${pkgs.nodejs}/bin/npm install -g cline
+    fi
+
+    # Run cline with all arguments
+    exec ${pkgs.nodejs}/bin/npx cline "$@"
+  '';
+in
 {
   # Development tools and environment
   home.packages = with pkgs; [
@@ -16,6 +29,7 @@
     crush # AI coding agent for terminal
     jq # for jsontools plugin
     neovim
+    jiratui
 
     # Askpass helper for sudo (used by Claude Code)
     zenity
@@ -35,6 +49,7 @@
     kubectl # for kubectl plugin
     bun # for bun plugin
     nodejs # for npm plugin
+    cline # AI coding agent
 
     # Rust development
     rustc
