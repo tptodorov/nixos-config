@@ -113,6 +113,7 @@
       ]
     }
   },
+  "load_direnv": "shell_hook",
   "buffer_font_family": "ZedMono Nerd Font Mono",
   "ui_font_family": ".SystemUIFont",
   "ui_font_size": 16,
