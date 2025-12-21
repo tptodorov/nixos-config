@@ -115,7 +115,7 @@
         "gty" = "git-town sync";
 
         "zed" = "zeditor";
-        "t" = "task";
+        "t" = "~/go/bin/task";
 
         "nixvi" = "nvim ~/mycfg";
         "nixsw" = "sudo darwin-rebuild switch --flake ~/mycfg";
