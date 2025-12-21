@@ -1,4 +1,5 @@
-# NixOS system configuration for blackbox host
+# NixOS system configuration for blade host
+# Laptop for development, business, and personal work
 {
   inputs,
   outputs,
@@ -18,7 +19,7 @@
     # Configuration profiles
     ../../modules/profiles/base.nix
     ../../modules/profiles/desktop.nix
-    ../../modules/profiles/apfs.nix
+    ../../modules/profiles/laptop.nix
 
     # Host-specific modules
     ./modules/networking.nix
@@ -35,7 +36,7 @@
     backupFileExtension = "backup";
     extraSpecialArgs = {
       inherit inputs outputs;
-      laptop = false;
+      laptop = true;  # This is a laptop
       standalone = false;  # Not standalone Home Manager
     };
     sharedModules = [
@@ -47,3 +48,4 @@
   # System version
   system.stateVersion = "25.05";
 }
+

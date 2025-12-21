@@ -41,7 +41,7 @@
       inherit inputs outputs;
       laptop = true;
       vm = false;
-      standalone = true;
+      standalone = false;  # Not standalone Home Manager
     };
     sharedModules = [
       inputs.nixvim.homeModules.nixvim
