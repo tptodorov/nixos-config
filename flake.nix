@@ -197,7 +197,7 @@
         blade = nixpkgs.lib.nixosSystem {
           specialArgs = {
             inherit inputs outputs;
-            laptop = true; # Not a laptop (change to true if on laptop)
+            laptop = true;
             standalone = false;
           };
           modules = [

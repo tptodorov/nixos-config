@@ -10,6 +10,9 @@
     # Hardware configuration
     ./hardware-configuration.nix
 
+    # NixOS hardware optimizations for Lenovo IdeaPad 5 Pro 14IMH9
+    inputs.nixos-hardware.nixosModules.lenovo-ideapad-14imh9
+
     # Home Manager integration
     inputs.home-manager.nixosModules.home-manager
 
