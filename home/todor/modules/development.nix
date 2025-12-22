@@ -28,7 +28,7 @@ in
     amp-cli
     crush # AI coding agent for terminal
     jq # for jsontools plugin
-    neovim
+    # neovim is provided by programs.nixvim
     jiratui
 
     # Askpass helper for sudo (used by Claude Code)

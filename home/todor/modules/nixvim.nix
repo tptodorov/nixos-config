@@ -1,5 +1,6 @@
 {
   lib,
+  pkgs,
   standalone ? false,
   ...
 }:
@@ -169,14 +170,10 @@
       }
     ];
 
-    # Colorscheme
-    colorschemes.tokyonight = {
-      enable = true;
-      settings = {
-        style = "night";
-        transparent = false;
-      };
-    };
+    # Extra plugins (not available as built-in options)
+    extraPlugins = with pkgs.vimPlugins; [
+      tokyonight-nvim
+    ];
 
     # Plugins
     plugins = {
@@ -342,6 +339,15 @@
     extraConfigLua = ''
       -- Additional Lua configuration can go here
       vim.opt.fillchars = { eob = " " }
+
+      -- Configure tokyonight colorscheme
+      require("tokyonight").setup({
+        style = "night",
+        transparent = false,
+      })
+
+      -- Set colorscheme
+      vim.cmd.colorscheme("tokyonight")
     '';
   };
 }

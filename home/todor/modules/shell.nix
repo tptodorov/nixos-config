@@ -129,12 +129,7 @@
           . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
         fi
 
-        # Prioritize nix-darwin per-user profile and Home Manager paths over Homebrew
-        # This ensures nix-managed packages take precedence
-        export PATH="/etc/profiles/per-user/$USER/bin:$PATH"
-        export PATH="/run/current-system/sw/bin:$PATH"
-        export PATH="$HOME/.nix-profile/bin:$PATH"
-        export PATH="$HOME/.local/bin:$PATH"
+        # Add custom paths (standard Nix paths are handled automatically)
         export PATH="$HOME/go/bin:$PATH"
 
         # Source Home Manager session variables

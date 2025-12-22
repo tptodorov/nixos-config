@@ -193,6 +193,11 @@
             inputs.home-manager.nixosModules.home-manager
             ./hosts/blade
           ];
+          extraSpecialArgs = {
+            inherit inputs;
+            laptop = true; # Not a laptop (change to true if on laptop)
+            standalone = false; 
+          };
         };
       };
 
