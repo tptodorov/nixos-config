@@ -72,6 +72,20 @@
     };
 
     # ============================================
+    # Package Managers
+    # ============================================
+
+    # nix-snapd: Snap package manager integration for NixOS
+    # - Enables installing snap packages alongside Nix packages
+    # - Used by: System configuration (optional per-host)
+    # - Provides: snapd service and snap CLI tool
+    # - Version: main branch
+    nix-snapd = {
+      url = "github:nix-community/nix-snapd";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # ============================================
     # Window Managers and Desktop Environment
     # ============================================
 
@@ -127,6 +141,7 @@
       home-manager,
       nixvim,
       sops-nix,
+      nix-snapd,
       fenix,
       zig,
       niri,

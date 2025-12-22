@@ -19,6 +19,7 @@
     ../../modules/profiles/base.nix
     ../../modules/profiles/desktop.nix
     ../../modules/profiles/apfs.nix
+    ../../modules/profiles/snap.nix
 
     # Host-specific modules
     ./modules/networking.nix

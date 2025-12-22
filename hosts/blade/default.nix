@@ -20,6 +20,7 @@
     ../../modules/profiles/base.nix
     ../../modules/profiles/desktop.nix
     ../../modules/profiles/laptop.nix
+    ../../modules/profiles/snap.nix
 
     # Host-specific modules
     ./modules/kernel.nix

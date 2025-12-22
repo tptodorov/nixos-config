@@ -18,6 +18,7 @@
     networkmanagerapplet # Network manager GUI
     htop # System monitor
     swayidle # Idle timeout manager
+    xwayland-satellite # X11 compatibility for Wayland (for snaps and X11 apps)
 
     # GNOME dependencies for Nautilus and secrets management
     gnome-themes-extra
@@ -110,6 +111,7 @@
     }
 
     // Startup applications
+    spawn-at-startup "${pkgs.xwayland-satellite}/bin/xwayland-satellite" ":1" // X11 server for snaps and X11 apps
     spawn-at-startup "sh" "-c" "dms ipc wallpaper set ~/.config/asset/3.jpg"
     spawn-at-startup "sh" "-c" "$HOME/.config/niri/scripts/keyring-init.sh"
     spawn-at-startup "sh" "-c" "${pkgs.wl-clipboard}/bin/wl-paste --type text --watch ${pkgs.cliphist}/bin/cliphist store"
@@ -123,6 +125,7 @@
     // spawn-at-startup "{{POLKIT_AGENT_PATH}}"
 
     environment {
+        DISPLAY ":1" // X11 display for XWayland apps and snaps
         XCURSOR_THEME "Bibata-Modern-Classic"
         XCURSOR_SIZE "24"
         NIXOS_OZONE_WL "1"
