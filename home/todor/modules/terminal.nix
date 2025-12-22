@@ -33,8 +33,8 @@
         # Updates
         auto-update = download
 
-        # Disable problematic features that cause parse errors
-        resize-overlay = false
+        # Resize overlay configuration
+        resize-overlay = never
         resize-overlay-position = center
 
         # Terminal behavior

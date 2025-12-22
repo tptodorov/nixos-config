@@ -7,12 +7,11 @@
 }:
 {
   imports = [
-    inputs.dms.homeModules.dankMaterialShell.default
-    inputs.dms.homeModules.dankMaterialShell.niri
-
+    inputs.dms.homeModules.dank-material-shell
+    inputs.dms.homeModules.niri
   ];
 
-  programs.dankMaterialShell = {
+  programs.dank-material-shell = {
     enable = true;
     systemd = {
       enable = true; # Systemd service for auto-start
@@ -20,14 +19,14 @@
     };
 
     enableSystemMonitoring = true; # System monitoring widgets (dgop)
-    enableClipboard = true; # Clipboard history manager
+    # enableClipboard = true; # Now built-in (deprecated)
     enableVPN = true; # VPN management widget
-    enableBrightnessControl = true; # Backlight/brightness controls
-    enableColorPicker = true; # Color picker tool
+    # enableBrightnessControl = true; # Now built-in (deprecated)
+    # enableColorPicker = true; # Now built-in (deprecated)
     enableDynamicTheming = true; # Wallpaper-based theming (matugen)
     enableAudioWavelength = true; # Audio visualizer (cava)
     enableCalendarEvents = true; # Calendar integration (khal)
-    enableSystemSound = true; # System sound effects
+    # enableSystemSound = true; # Now built-in (deprecated)
 
     default.settings = {
       theme = "dark";

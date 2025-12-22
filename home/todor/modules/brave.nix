@@ -1,7 +1,6 @@
 {
   lib,
   pkgs,
-  vm ? false,
   ...
 }:
 {
@@ -52,25 +51,15 @@
       "--no-default-browser-check"
       "--disable-features=TranslateUI"
       "--enable-smooth-scrolling"
-    ]
-    ++ lib.optionals (!vm) [
-      # GPU acceleration and performance (only on physical machines)
+
+      # GPU acceleration and performance
       "--enable-gpu-rasterization"
       "--enable-zero-copy"
       "--enable-hardware-overlays"
       "--max_old_space_size=4096"
+
       # Audio/Video codec support
       "--enable-features=VaapiVideoDecoder"
-    ]
-    ++ lib.optionals vm [
-      # VM-specific flags - optimized for ARM64 VMs
-      # ARM64 VMware VMs don't have full 3D acceleration
-      "--disable-gpu"
-      "--enable-features=CanvasOopRasterization"
-      "--num-raster-threads=4"
-      "--enable-zero-copy"
-      "--ignore-gpu-blocklist"
-      "--in-process-gpu"
     ];
   };
 

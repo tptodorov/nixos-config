@@ -1,34 +1,30 @@
 {
   pkgs,
   lib,
-  vm ? false,
   standalone ? false,
   ...
 }:
 {
   # Desktop applications and GUI tools
-  home.packages =
-    with pkgs;
-    [
-      xdg-utils
-      xdg-user-dirs
-      # Messenger applications (available on both VM and blackbox)
-      telegram-desktop
-      signal-desktop
-      viber
-      wasistlos
-    ]
-    ++ lib.optionals (!vm) [
-      # Audio applications (blackbox only, no audio in VM)
-      spotify
-      discord
+  home.packages = with pkgs; [
+    xdg-utils
+    xdg-user-dirs
 
-      # Productivity applications (blackbox only)
-      obsidian
-      libreoffice-fresh # LibreOffice suite (Writer, Calc, Impress, Draw, etc.)
-      geary # Email client
+    # Messenger applications
+    telegram-desktop
+    signal-desktop
+    viber
+    wasistlos
 
-    ];
+    # Audio applications
+    spotify
+    discord
+
+    # Productivity applications
+    obsidian
+    libreoffice-fresh # LibreOffice suite (Writer, Calc, Impress, Draw, etc.)
+    geary # Email client
+  ];
 
   # Set Brave as default browser in standalone mode using activation script
   home.activation = lib.mkIf standalone {
@@ -79,11 +75,7 @@
             "code.desktop"
             "code-insiders.desktop"
           ];
-          markdown =
-            lib.optionals (!vm) [
-              "obsidian.desktop"
-            ]
-            ++ editor;
+          markdown = [ "obsidian.desktop" ] ++ editor;
         in
         {
           "application/json" = browser;
@@ -116,8 +108,6 @@
           # Media types
           "audio/*" = [
             "mpv.desktop"
-          ]
-          ++ lib.optionals (!vm) [
             "spotify.desktop"
           ];
           "video/*" = [ "mpv.desktop" ];
@@ -129,9 +119,7 @@
 
           "inode/directory" = [ "yazi.desktop" ];
 
-          # LibreOffice document types (only on non-VM)
-        }
-        // lib.optionalAttrs (!vm) {
+          # LibreOffice document types
           # Writer documents
           "application/vnd.oasis.opendocument.text" = [ "writer.desktop" ];
           "application/vnd.oasis.opendocument.text-template" = [ "writer.desktop" ];
@@ -149,8 +137,8 @@
           "application/vnd.oasis.opendocument.presentation-template" = [ "impress.desktop" ];
           "application/vnd.ms-powerpoint" = [ "impress.desktop" ];
           "application/vnd.openxmlformats-officedocument.presentationml.presentation" = [ "impress.desktop" ];
-        }
-        // lib.optionalAttrs (!vm) {
+
+          # Telegram handler
           "x-scheme-handler/tg" = [ "org.telegram.desktop.desktop " ];
         };
 

@@ -12,11 +12,16 @@
     ./modules/development.nix
     ./modules/nixvim.nix
     ./modules/shell.nix
+    ./modules/terminal.nix
     ./secrets/secrets.nix
   ] ++ lib.optionals (!standalone) [
-
-    ./modules/terminal.nix
-  ] ;
+    # Desktop modules (only for NixOS, not for standalone Home Manager)
+    ./modules/niri.nix
+    ./modules/desktop-apps.nix
+    ./modules/brave.nix
+    ./modules/media.nix
+    ./modules/dankmaterialshell.nix
+  ];
 
   # Nixpkgs configuration
   nixpkgs = {
