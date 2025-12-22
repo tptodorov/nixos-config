@@ -22,6 +22,7 @@
     ../../modules/profiles/laptop.nix
 
     # Host-specific modules
+    ./modules/kernel.nix
     ./modules/networking.nix
     ./modules/services.nix
 
@@ -36,8 +37,8 @@
     backupFileExtension = "backup";
     extraSpecialArgs = {
       inherit inputs outputs;
-      laptop = true;  # This is a laptop
-      standalone = false;  # Not standalone Home Manager
+      laptop = true; # This is a laptop
+      standalone = false; # Not standalone Home Manager
     };
     sharedModules = [
       inputs.nixvim.homeModules.nixvim
@@ -48,4 +49,3 @@
   # System version
   system.stateVersion = "25.05";
 }
-
