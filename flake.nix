@@ -2,52 +2,118 @@
   description = "NixOS and Home Manager configuration for todor";
 
   inputs = {
-    # Core - using stable release branches
+    # ============================================
+    # Core System Inputs
+    # ============================================
+
+    # nixpkgs: The main NixOS package repository
+    # - Contains all system packages and NixOS modules
+    # - Used by: All hosts (blackbox, pero, blade), standalone home-manager configs, darwin
+    # - Version: nixos-25.11 stable release branch
     nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
+
+    # nixos-hardware: Hardware-specific NixOS configurations
+    # - Provides optimized settings for specific hardware (laptops, GPUs, etc.)
+    # - Used by: hosts/pero (MacBook Pro), can be used by other hosts for hardware quirks
+    # - Version: master branch (latest hardware support)
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
+    # home-manager: Declarative user environment management
+    # - Manages user packages, dotfiles, and application configurations
+    # - Used by: All NixOS hosts (integrated), standalone configs (todor, todor-aarch64)
+    # - Version: release-25.11 stable branch (matches nixpkgs)
     home-manager = {
       url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Development tools - using main/master branches (pinned via flake.lock)
+    # ============================================
+    # Development Tools
+    # ============================================
+
+    # jujutsu: Next-generation version control system (alternative to Git)
+    # - Provides the `jj` command for version control
+    # - Used by: User environment (home/todor/default.nix)
+    # - Version: main branch (latest features)
     jujutsu.url = "github:martinvonz/jj";
+
+    # zig: Zig programming language overlay
+    # - Provides latest Zig compiler and toolchain
+    # - Used by: All NixOS hosts via overlay (blackbox, pero, blade)
+    # - Version: main branch (latest Zig releases)
     zig.url = "github:mitchellh/zig-overlay";
 
+    # fenix: Rust toolchain manager for Nix
+    # - Provides up-to-date Rust compiler, cargo, clippy, rust-analyzer
+    # - Used by: Desktop profile (modules/profiles/desktop.nix) for COSMIC and Rust development
+    # - Provides: Complete Rust toolchain with all components
+    # - Version: main branch (latest Rust releases)
     fenix = {
       url = "github:nix-community/fenix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # nixvim: NixOS module for configuring Neovim declaratively
+    # - Provides Neovim configuration as Nix modules
+    # - Used by: Home manager config (home/todor/modules/nixvim.nix)
+    # - Version: nixos-25.11 stable branch (matches system)
     nixvim = {
       url = "github:nix-community/nixvim/nixos-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # sops-nix: Secrets management using SOPS (Secrets OPerationS)
+    # - Encrypts secrets in git, decrypts them at build/runtime
+    # - Used by: System configuration (for API keys, passwords, etc.)
+    # - Version: main branch
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Window managers and desktop - using main branches (pinned via flake.lock)
+    # ============================================
+    # Window Managers and Desktop Environment
+    # ============================================
+
+    # niri: Scrollable-tiling Wayland compositor
+    # - Primary window manager with horizontal workspace model
+    # - Used by: Desktop profile (modules/profiles/desktop.nix), Home manager (home/todor/modules/niri.nix)
+    # - Provides: niri-unstable package, NixOS module, Home Manager module
+    # - Version: main branch (latest niri features)
     niri = {
       url = "github:sodiboo/niri-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # dms: Dank Material Shell (GNOME Shell extension)
+    # - Material Design-inspired GNOME Shell theme and layout
+    # - Used by: Can be enabled in GNOME desktop environment
+    # - Depends on: dgop (Dank GNOME Overlay Package)
+    # - Version: main branch
     dms = {
       url = "github:AvengeMedia/DankMaterialShell";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.dgop.follows = "dgop";
     };
 
+    # dgop: Dank GNOME Overlay Package
+    # - Dependency for DankMaterialShell
+    # - Provides GNOME-related packages and overlays
+    # - Used by: dms input (required dependency)
+    # - Version: main branch
     dgop = {
       url = "github:AvengeMedia/dgop";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Mac darwin - using main branch
+    # ============================================
+    # macOS Support
+    # ============================================
+
+    # nix-darwin: NixOS-like system configuration for macOS
+    # - Enables declarative macOS system management (similar to NixOS)
+    # - Used by: Darwin host configuration (hosts/mac, for work MacBook)
+    # - Version: main branch
     nix-darwin.url = "github:nix-darwin/nix-darwin";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
 
