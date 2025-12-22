@@ -2,16 +2,16 @@
   description = "NixOS and Home Manager configuration for todor";
 
   inputs = {
-    # Core
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    # Core - using stable release branches
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
     home-manager = {
-      url = "github:nix-community/home-manager";
+      url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Development tools
+    # Development tools - using main/master branches (pinned via flake.lock)
     jujutsu.url = "github:martinvonz/jj";
     zig.url = "github:mitchellh/zig-overlay";
 
@@ -21,7 +21,7 @@
     };
 
     nixvim = {
-      url = "github:nix-community/nixvim";
+      url = "github:nix-community/nixvim/nixos-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -30,7 +30,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Window managers and desktop
+    # Window managers and desktop - using main branches (pinned via flake.lock)
     niri = {
       url = "github:sodiboo/niri-flake";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -47,7 +47,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Mac darwin
+    # Mac darwin - using main branch
     nix-darwin.url = "github:nix-darwin/nix-darwin";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
 

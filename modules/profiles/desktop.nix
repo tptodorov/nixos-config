@@ -76,7 +76,7 @@
   };
 
   # Disable PulseAudio (using PipeWire instead)
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
 
   # Add fenix overlay for Rust toolchain
   nixpkgs.overlays = [ inputs.fenix.overlays.default ];
