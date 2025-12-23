@@ -32,7 +32,7 @@
       theme = "dark";
       dynamicTheming = true;
       useAutoLocation = true;
-      # Add any other settings here
+
     };
 
     niri = {

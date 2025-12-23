@@ -118,7 +118,7 @@
         "t" = "~/go/bin/task";
 
         "nixvi" = "nvim ~/mycfg";
-        "nixsw" = "sudo darwin-rebuild switch --flake ~/mycfg";
+        "nixsw" = "sudo nixos-rebuild switch --flake ~/mycfg";
 
       };
 
