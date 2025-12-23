@@ -129,6 +129,15 @@
     spawn-at-startup "${pkgs.wasistlos}/bin/wasistlos"
     spawn-at-startup "${pkgs.brave}/bin/brave" "--app=https://mail.notion.so/"
     spawn-at-startup "${pkgs.brave}/bin/brave" "--app=https://calendar.notion.so/"
+
+    // Idle management - screen off after 5 min, lock after 10 min, suspend after 15 min
+    spawn-at-startup "${pkgs.swayidle}/bin/swayidle" "-w" \
+      "timeout" "300" "niri msg action power-off-monitors" \
+      "resume" "niri msg action power-on-monitors" \
+      "timeout" "600" "dms ipc call lock lock" \
+      "timeout" "900" "${pkgs.systemd}/bin/systemctl suspend" \
+      "before-sleep" "dms ipc call lock lock"
+
     // (Optional) replace with a polkit agent for escalation prompts
     // spawn-at-startup "{{POLKIT_AGENT_PATH}}"
 
