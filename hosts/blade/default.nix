@@ -11,7 +11,7 @@
     ./hardware-configuration.nix
 
     # NixOS hardware optimizations for Lenovo IdeaPad 5 Pro 14IMH9
-    inputs.nixos-hardware.nixosModules.lenovo-ideapad-14imh9
+    #    inputs.nixos-hardware.nixosModules.lenovo-ideapad-14imh9
 
     # Home Manager integration
     inputs.home-manager.nixosModules.home-manager
@@ -26,7 +26,7 @@
     ../../modules/profiles/snap.nix
 
     # Host-specific modules
-    ./modules/kernel.nix
+    # ./modules/kernel.nix
     ./modules/networking.nix
     ./modules/services.nix
 
@@ -51,5 +51,5 @@
   };
 
   # System version
-  system.stateVersion = "25.05";
+  system.stateVersion = "25.11";
 }
