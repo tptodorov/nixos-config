@@ -383,7 +383,6 @@
     # Asset folder for desktop access
     ".config/asset".source = ../config/asset;
 
-
   };
   # Wayland and GNOME environment variables
   home.sessionVariables = {
@@ -394,7 +393,7 @@
   }
   // lib.optionalAttrs laptop {
     # HiDPI scaling for GTK apps on laptop (2x scaling = GDK_SCALE 2 * GDK_DPI_SCALE 1.0)
-    GDK_SCALE = "2";
+    GDK_SCALE = "1";
     GDK_DPI_SCALE = "1.0";
   };
 
