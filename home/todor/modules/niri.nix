@@ -75,6 +75,12 @@
     }
 
     window-rule {
+      match title="Notion Mail"
+      match title="Notion Calendar"
+      open-on-workspace 2
+    }
+
+    window-rule {
         match app-id="com.viber.Viber"
         match app-id="wasistlos"
         match title="WasIstLos"
@@ -121,6 +127,8 @@
     spawn-at-startup "${pkgs.spotify}/bin/spotify"
     spawn-at-startup "${pkgs.viber}/bin/viber"
     spawn-at-startup "${pkgs.wasistlos}/bin/wasistlos"
+    spawn-at-startup "${pkgs.brave}/bin/brave" "--app=https://mail.notion.so/"
+    spawn-at-startup "${pkgs.brave}/bin/brave" "--app=https://calendar.notion.so/"
     // (Optional) replace with a polkit agent for escalation prompts
     // spawn-at-startup "{{POLKIT_AGENT_PATH}}"
 

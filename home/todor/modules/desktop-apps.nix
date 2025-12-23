@@ -62,6 +62,24 @@
   xdg = {
     enable = true;
 
+    # Custom desktop entries
+    desktopEntries = {
+      notion-mail = {
+        name = "Notion Mail";
+        exec = "brave --app=https://mail.notion.so/";
+        icon = "mail";
+        categories = [ "Network" "Email" ];
+        comment = "Notion Mail as a native application";
+      };
+      notion-calendar = {
+        name = "Notion Calendar";
+        exec = "brave --app=https://calendar.notion.so/";
+        icon = "calendar";
+        categories = [ "Office" "Calendar" ];
+        comment = "Notion Calendar as a native application";
+      };
+    };
+
     # MIME type associations
     mimeApps = {
       enable = !standalone;
