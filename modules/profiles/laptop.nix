@@ -69,6 +69,7 @@
       tapping = lib.mkDefault true;
       disableWhileTyping = lib.mkDefault true;
       clickMethod = lib.mkDefault "clickfinger";
+      accelSpeed = lib.mkDefault "0.2";
     };
   };
 
@@ -81,6 +82,36 @@
     powertop       # Power consumption analysis
     brightnessctl  # Backlight control
   ];
+
+  # Intel WiFi 7 BE200 fix for suspend/resume issues
+  # Based on: https://bbs.archlinux.org/viewtopic.php?id=293404
+  # Disable power management features that cause firmware crashes
+  boot.extraModprobeConfig = ''
+    # Disable WiFi power save to prevent firmware crashes after suspend
+    options iwlwifi power_save=0
+    # Disable U-APSD (Unscheduled Automatic Power Save Delivery) for stability
+    # Default is 3 (both BSS and P2P), setting to 3 keeps default behavior
+    options iwlwifi uapsd_disable=3
+  '';
+
+  # Use NixOS power management hooks to unload/reload WiFi module
+  # This prevents the "Unable to change power state from D3cold to D0" error
+  # that causes WiFi to fail after resume on BE200 devices
+  powerManagement = {
+    powerDownCommands = ''
+      # Unload iwlwifi modules before suspend
+      ${pkgs.kmod}/bin/modprobe -r iwlmld 2>/dev/null || true
+      ${pkgs.kmod}/bin/modprobe -r iwlwifi 2>/dev/null || true
+      ${pkgs.coreutils}/bin/sleep 0.5
+    '';
+    resumeCommands = ''
+      # Reload iwlwifi after resume
+      ${pkgs.kmod}/bin/modprobe iwlwifi
+      ${pkgs.coreutils}/bin/sleep 1
+      # Restart NetworkManager to ensure WiFi reconnects
+      ${pkgs.systemd}/bin/systemctl restart NetworkManager
+    '';
+  };
 
   # Auto-cpufreq as an alternative to TLP (disabled by default)
   # Uncomment if you prefer auto-cpufreq over TLP

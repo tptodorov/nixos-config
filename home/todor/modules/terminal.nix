@@ -1,6 +1,7 @@
 {
   pkgs,
   lib,
+  laptop ? false,
   ...
 }:
 {
@@ -21,7 +22,7 @@
       text = ''
         # Font configuration
         font-family = "ZedMono Nerd Font Mono"
-        font-size = 20
+        font-size = ${if laptop then "14" else "20"}
 
         # Theme
         theme = TokyoNight Storm

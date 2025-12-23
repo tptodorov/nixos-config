@@ -77,7 +77,7 @@
     window-rule {
       match title="Notion Mail"
       match title="Notion Calendar"
-      open-on-workspace 2
+      open-on-workspace "chat"
     }
 
     window-rule {

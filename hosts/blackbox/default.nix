@@ -20,6 +20,7 @@
     ../../modules/profiles/desktop.nix
     ../../modules/profiles/apfs.nix
     ../../modules/profiles/snap.nix
+    ../../modules/profiles/gaming.nix
 
     # Host-specific modules
     ./modules/networking.nix

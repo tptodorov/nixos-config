@@ -24,6 +24,7 @@
     ../../modules/profiles/desktop.nix
     ../../modules/profiles/laptop.nix
     ../../modules/profiles/snap.nix
+    ../../modules/profiles/gaming.nix
 
     # Host-specific modules
     # ./modules/kernel.nix
@@ -49,6 +50,10 @@
     ];
     users.todor = ../../home/todor;
   };
+
+  # Disable nixos-hardware workaround that doesn't apply to this hardware
+  # The workaround checks for a Chicony webcam, but this laptop has Bison Electronics
+  systemd.services.workaround-reset-xhci-driver-after-resume-if-needed.enable = false;
 
   # System version
   system.stateVersion = "25.11";
