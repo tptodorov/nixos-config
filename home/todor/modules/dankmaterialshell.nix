@@ -9,6 +9,10 @@
   imports = [
     inputs.dms.homeModules.dank-material-shell
     inputs.dms.homeModules.niri
+    inputs.mango.hmModules.mango
+
+    # Note: DMS doesn't have a separate mango home module
+    # MangoWC configuration is handled in mangowc.nix
   ];
 
   programs.dank-material-shell = {
@@ -32,12 +36,17 @@
       theme = "dark";
       dynamicTheming = true;
       useAutoLocation = true;
-
+      compositor = "mango"; # Explicitly set compositor to mango (MangoWC)
+      syncModeWithPortal = false; # Don't sync theme with portal (force dark mode)
+      nightModeEnabled = false; # Night mode is separate from dark theme
     };
 
     niri = {
       enableKeybinds = false;
     };
+
+    # Note: MangoWC keybinds are configured directly in mangowc.nix
+    # DMS will work with MangoWC through the systemd integration
 
     plugins = {
 

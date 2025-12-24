@@ -31,12 +31,15 @@
     };
   };
 
-  # Enable Hyprland and Niri window managers
+  # Enable Hyprland, Niri, and MangoWC window managers
   programs = {
     xwayland.enable = true;
     niri = {
       enable = lib.mkDefault true;
       package = pkgs.niri-unstable; # Use latest niri build from main branch
+    };
+    mango = {
+      enable = lib.mkDefault true; # Enable MangoWC compositor
     };
   };
 
