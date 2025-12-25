@@ -79,8 +79,10 @@
     # Appearance
     border_radius=12
     borderpx=0
+    border_color_active=#7aa2f7
+    border_color_inactive=#414868
     focused_opacity=1.0
-    unfocused_opacity=0.9
+    unfocused_opacity=0.8
     gappih=5
     gappiv=5
     gappoh=5

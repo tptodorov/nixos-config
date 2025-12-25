@@ -78,8 +78,8 @@
     settings = {
       # Fonts
       font_family = "ZedMono Nerd Font Mono Light";
-      font_size = 18;
-      bold_font = "ZedMono Nerd Font Mono Bold";
+      font_size = if laptop then 14 else 20;
+      bold_font = "ZedMono Nerd Font Mono Medium";
       italic_font = "auto";
       bold_italic_font = "auto";
 
