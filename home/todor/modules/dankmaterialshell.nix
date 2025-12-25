@@ -57,4 +57,18 @@
     };
 
   };
+
+  # Override DMS systemd service to include quickshell in PATH and Wayland display
+  systemd.user.services.dms = {
+    Unit = {
+      After = [ "mango-session.target" ];
+      Wants = [ "mango-session.target" ];
+    };
+    Service = {
+      Environment = [
+        "PATH=${config.home.profileDirectory}/bin:/run/current-system/sw/bin"
+        "WAYLAND_DISPLAY=wayland-0"
+      ];
+    };
+  };
 }
