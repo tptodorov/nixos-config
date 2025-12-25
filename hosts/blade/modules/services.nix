@@ -13,6 +13,9 @@
       pulse.enable = true;
     };
 
+    # Firmware updates
+    fwupd.enable = true;
+
     # Printing
     printing.enable = true;
   };
