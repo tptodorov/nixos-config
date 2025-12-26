@@ -79,8 +79,6 @@
     # Appearance
     border_radius=12
     borderpx=0
-    border_color_active=#7aa2f7
-    border_color_inactive=#414868
     focused_opacity=1.0
     unfocused_opacity=0.8
     gappih=5
@@ -138,8 +136,8 @@
     # switch window focus
     bind=SUPER,Tab,focusstack,next
     bind=SUPER,u,focuslast
-    bind=ALT,Left,focusdir,left
-    bind=ALT,Right,focusdir,right
+    #bind=ALT,Left,focusdir,left  # Conflicts with browser back navigation
+    #bind=ALT,Right,focusdir,right  # Conflicts with browser forward navigation
     bind=ALT,Up,focusdir,up
     bind=ALT,Down,focusdir,down
 
@@ -164,12 +162,12 @@
 
     # switch window status
     bind=SUPER,g,toggleglobal,
-    bind=ALT,Tab,toggleoverview,0
-    bind=ALT,backslash,togglefloating,
+    bind=SUPER,o,toggleoverview,0
+    bind=SUPER,backslash,togglefloating,
     bind=ALT,a,togglemaximizescreen,
     bind=SUPER,F,togglefullscreen,
     bind=SUPER,i,minimized,
-    bind=SUPER,o,toggleoverlay,
+    bind=SUPER+SHIFT,o,toggleoverlay,
     bind=SUPER+SHIFT,I,restore_minimized
     #bind=ALT,z,toggle_scratchpad
 
@@ -189,21 +187,21 @@
 
     # tag switch
     bind=SUPER,Left,viewtoleft,0
-    bind=CTRL,Left,viewtoleft_have_client,0
+    #bind=CTRL,Left,viewtoleft_have_client,0
     bind=SUPER,Right,viewtoright,0
-    bind=CTRL,Right,viewtoright_have_client,0
+    #bind=CTRL,Right,viewtoright_have_client,0
     bind=CTRL+SUPER,Left,tagtoleft,0
     bind=CTRL+SUPER,Right,tagtoright,0
 
-    bind=Ctrl,1,view,1,0
-    bind=Ctrl,2,view,2,0
-    bind=Ctrl,3,view,3,0
-    bind=Ctrl,4,view,4,0
-    bind=Ctrl,5,view,5,0
-    bind=Ctrl,6,view,6,0
-    bind=Ctrl,7,view,7,0
-    bind=Ctrl,8,view,8,0
-    bind=Ctrl,9,view,9,0
+    #bind=Ctrl,1,view,1,0  # Conflicts with browser tab switching (Ctrl+1-9)
+    #bind=Ctrl,2,view,2,0
+    #bind=Ctrl,3,view,3,0
+    #bind=Ctrl,4,view,4,0
+    #bind=Ctrl,5,view,5,0
+    #bind=Ctrl,6,view,6,0
+    #bind=Ctrl,7,view,7,0
+    #bind=Ctrl,8,view,8,0
+    #bind=Ctrl,9,view,9,0
 
     bind=Alt,1,tag,1,0
     bind=Alt,2,tag,2,0
@@ -281,10 +279,10 @@
     bind=SUPER,Q,killclient,
     bind=SUPER,W,spawn,${pkgs.nautilus}/bin/nautilus
     bind=SUPER,S,spawn,${pkgs.brave}/bin/brave
-    bind=SUPER,A,spawn,${pkgs.geary}/bin/geary
+    bind=SUPER,A,spawn,${pkgs.brave}/bin/brave --app=https://mail.notion.so/
 
     # Screenshots
-    bind=,Print,spawn,dms ipc niri screenshot
+    bind=NONE,Print,spawn,dms ipc niri screenshot
     bind=SUPER,Print,spawn,dms ipc niri screenshotScreen
     bind=ALT,Print,spawn,dms ipc niri screenshotWindow
 
