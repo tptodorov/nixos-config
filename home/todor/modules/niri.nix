@@ -342,8 +342,21 @@
         # Update systemd and dbus environments
         ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd SSH_AUTH_SOCK GNOME_KEYRING_CONTROL GNOME_KEYRING_PID
 
+        # Add SSH keys to keyring (will prompt for passphrase on first login, then remember)
+        # The keyring will automatically unlock these keys when you log in
+        if [ -f "$HOME/.ssh/id_rsa" ]; then
+          ${pkgs.openssh}/bin/ssh-add "$HOME/.ssh/id_rsa" 2>/dev/null
+        fi
+        if [ -f "$HOME/.ssh/id_ed25519" ]; then
+          ${pkgs.openssh}/bin/ssh-add "$HOME/.ssh/id_ed25519" 2>/dev/null
+        fi
+        if [ -f "$HOME/.ssh/id_ecdsa" ]; then
+          ${pkgs.openssh}/bin/ssh-add "$HOME/.ssh/id_ecdsa" 2>/dev/null
+        fi
+
         # Log for debugging
         echo "Keyring initialized: GNOME_KEYRING_CONTROL=$GNOME_KEYRING_CONTROL SSH_AUTH_SOCK=$SSH_AUTH_SOCK"
+        echo "SSH keys added to keyring"
       '';
       executable = true;
     };
