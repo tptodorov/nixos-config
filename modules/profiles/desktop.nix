@@ -31,6 +31,13 @@
     };
   };
 
+  # XDG Portal configuration - use GNOME backend to avoid GTK portal timeouts
+  xdg.portal = {
+    enable = true;
+    extraPortals = [ pkgs.xdg-desktop-portal-gnome ];
+    config.common.default = "gnome";
+  };
+
   # Enable Hyprland, Niri, and MangoWC window managers
   programs = {
     xwayland.enable = true;

@@ -324,3 +324,4 @@ evolution
 ```
 
 **Important**: You must use an app-specific password (not your regular Apple ID password). Generate one at [appleid.apple.com](https://appleid.apple.com) under Security → App-Specific Passwords.
+- use nixsw alias to apply nixos changes

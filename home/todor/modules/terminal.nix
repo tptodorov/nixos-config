@@ -77,9 +77,9 @@
     enable = true;
     settings = {
       # Fonts
-      font_family = "ZedMono Nerd Font Mono Light";
+      font_family = "ZedMono Nerd Font Mono";
       font_size = if laptop then 14 else 20;
-      bold_font = "ZedMono Nerd Font Mono Medium";
+      bold_font = "auto";
       italic_font = "auto";
       bold_italic_font = "auto";
 

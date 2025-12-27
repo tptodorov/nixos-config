@@ -18,6 +18,12 @@ require("lazy").setup({
   spec = {
     -- add LazyVim and import its plugins
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
+    -- import LazyVim extras (must come before custom plugins)
+    { import = "lazyvim.plugins.extras.lang.typescript" },
+    { import = "lazyvim.plugins.extras.lang.json" },
+    { import = "lazyvim.plugins.extras.lang.go" },
+    { import = "lazyvim.plugins.extras.lang.rust" },
+    { import = "lazyvim.plugins.extras.lang.nix" },
     -- import/override with your plugins
     { import = "plugins" },
   },
@@ -50,4 +56,6 @@ require("lazy").setup({
       },
     },
   },
+  -- Use writable location for lockfile (NixOS symlinks config to read-only store)
+  lockfile = vim.fn.stdpath("state") .. "/lazy-lock.json",
 })

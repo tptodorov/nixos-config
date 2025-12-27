@@ -5,10 +5,11 @@
 }:
 {
   programs.nixvim = {
-    enable = true;
-    defaultEditor = true;
-    viAlias = true;
-    vimAlias = true;
+    # Disabled in favor of traditional LazyVim setup
+    enable = false;
+    defaultEditor = false;
+    viAlias = false;
+    vimAlias = false;
 
     # Global settings
     globals = {

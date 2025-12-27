@@ -23,13 +23,26 @@ in
     nil
     gopass
     nixd
+    statix # Nix linter and code suggestions
     zed-editor
     warp-terminal
     amp-cli
     crush # AI coding agent for terminal
     jq # for jsontools plugin
-    # neovim is provided by programs.nixvim
+    neovim # for LazyVim setup
     jiratui
+    bluetuith # TUI Bluetooth manager
+
+    # Neovim/LazyVim dependencies
+    gcc # C compiler for treesitter
+    tree-sitter # Tree-sitter CLI
+    ripgrep # Fast grep for telescope
+    fd # Fast find for telescope
+    fzf # Fuzzy finder
+    unzip # For Mason package extraction
+    python3 # For Mason and some LSP servers
+    wget # For downloading packages
+    curl # For downloading packages
 
     # Askpass helper for sudo (used by Claude Code)
     zenity
@@ -49,6 +62,7 @@ in
     kubectl # for kubectl plugin
     bun # for bun plugin
     nodejs # for npm plugin
+    nodePackages.typescript-language-server # TypeScript LSP
     cline # AI coding agent
 
     # Rust development
@@ -61,6 +75,9 @@ in
     # PHP development
     php
     phpactor
+
+    # Lua development (for Neovim config)
+    lua-language-server
 
     # Build tools
     gnumake
@@ -129,6 +146,9 @@ in
 
   # File configurations
   home.file = {
+    # Neovim LazyVim configuration
+    ".config/nvim".source = ../config/nvim;
+
     # Zed Editor settings file
     ".config/zed/settings.json".source = ../config/zed/private_settings.json;
     # Git identity for standalone mode (managed by Home Manager)

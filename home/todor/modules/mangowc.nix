@@ -20,6 +20,11 @@
     swayidle # Idle timeout manager
     xwayland-satellite # X11 compatibility for Wayland (for snaps and X11 apps)
     wlr-randr # Output management for wlroots compositors
+    wlrctl # Control wlroots compositors
+
+    # keybinding testing
+    xev
+    wev
 
     # GNOME dependencies for Nautilus and secrets management
     gnome-themes-extra
@@ -90,6 +95,23 @@
     shadows_size=10
     shadows_blur=15
 
+    # Tag rules 
+
+    # Communications
+    tagrule=id:1,no_hide:1,layout_name=scroller
+    # Development
+    tagrule=id:2,no_hide:1,layout_name=tile
+
+
+    # Apps assignment
+    windowrule=tag:1,isnoborder:1,appid:.*Viber.*
+    windowrule=tag:1,isnoborder:1,appid:.*wasist.*
+    windowrule=tag:1,isnoborder:1,appid:.*mail.*
+    windowrule=tag:1,isnoborder:1,appid:.*calendar.*
+
+    windowrule=tag:2,isnoborder:1,appid:.*zed.*
+    
+
     # Layer rules for DMS
     layerrule=noanim:1,layer_name:^dms
 
@@ -97,11 +119,11 @@
     windowrule=isnoborder:1,appid:^org\.gnome\.
 
     # Window rules - disable borders for terminal apps
-    windowrule=isnoborder:1,appid:^org\.wezfurlong\.wezterm$
-    windowrule=isnoborder:1,appid:^Alacritty$
-    windowrule=isnoborder:1,appid:^zen$
-    windowrule=isnoborder:1,appid:^com\.mitchellh\.ghostty$
-    windowrule=isnoborder:1,appid:^kitty$
+    windowrule=tag:2,isnoborder:1,appid:^org\.wezfurlong\.wezterm$
+    windowrule=tag:2,isnoborder:1,appid:^Alacritty$
+    windowrule=tag:2,isnoborder:1,appid:^zen$
+    windowrule=tag:2,isnoborder:1,appid:^com\.mitchellh\.ghostty$
+    windowrule=tag:2,isnoborder:1,appid:^kitty$
 
     # Window rules - floating for DMS widgets (quickshell)
     windowrule=isfloating:1,appid:^org\.quickshell$
@@ -135,11 +157,12 @@
 
     # switch window focus
     bind=SUPER,Tab,focusstack,next
+    bind=SUPER+SHIFT,Tab,focusstack,prev
     bind=SUPER,u,focuslast
-    #bind=ALT,Left,focusdir,left  # Conflicts with browser back navigation
-    #bind=ALT,Right,focusdir,right  # Conflicts with browser forward navigation
-    bind=ALT,Up,focusdir,up
-    bind=ALT,Down,focusdir,down
+    bind=SUPER,Left,focusdir,left  
+    bind=SUPER,Right,focusdir,right
+    bind=SUPER,Up,focusdir,up
+    bind=SUPER,Down,focusdir,down
 
     # swap window
     bind=SUPER+SHIFT,Up,exchange_client,up
@@ -164,25 +187,25 @@
     bind=SUPER,g,toggleglobal,
     bind=SUPER,o,toggleoverview,0
     bind=SUPER,backslash,togglefloating,
-    bind=ALT,a,togglemaximizescreen,
+    #bind=ALT,a,togglemaximizescreen,
     bind=SUPER,F,togglefullscreen,
-    bind=SUPER,i,minimized,
     bind=SUPER+SHIFT,o,toggleoverlay,
-    bind=SUPER+SHIFT,I,restore_minimized
+    #bind=SUPER,i,minimized,
+    #bind=SUPER+SHIFT,I,restore_minimized
     #bind=ALT,z,toggle_scratchpad
 
     # scroller layout
-    bind=ALT,e,set_proportion,1.0
-    bind=ALT,x,switch_proportion_preset,
+    #bind=SUPER+ALT,e,set_proportion,1.0
+    #bind=SUPER+ALT,x,switch_proportion_preset,
 
     # tile layout
-    bind=SUPER,e,incnmaster,1
-    bind=SUPER,t,incnmaster,-1
-    bind=ALT,s,zoom,
+    bind=SUPER+ALT+SHIFT,e,incnmaster,1
+    bind=SUPER+ALT+SHIFT,t,incnmaster,-1
+    bind=SUPER+ALT+SHIFT,s,zoom,
 
     # switch layout
-    bind=CTRL+SUPER,i,setlayout,tile
-    bind=CTRL+SUPER,l,setlayout,scroller
+    #bind=CTRL+SUPER,i,setlayout,tile
+    #bind=CTRL+SUPER,l,setlayout,scroller
     bind=SUPER,L,switch_layout
 
     # tag switch
@@ -193,15 +216,15 @@
     bind=CTRL+SUPER,Left,tagtoleft,0
     bind=CTRL+SUPER,Right,tagtoright,0
 
-    #bind=Ctrl,1,view,1,0  # Conflicts with browser tab switching (Ctrl+1-9)
-    #bind=Ctrl,2,view,2,0
-    #bind=Ctrl,3,view,3,0
-    #bind=Ctrl,4,view,4,0
-    #bind=Ctrl,5,view,5,0
-    #bind=Ctrl,6,view,6,0
-    #bind=Ctrl,7,view,7,0
-    #bind=Ctrl,8,view,8,0
-    #bind=Ctrl,9,view,9,0
+    bind=SUPER+ALT,1,view,1,0  
+    bind=SUPER+ALT,2,view,2,0
+    bind=SUPER+ALT,3,view,3,0
+    bind=SUPER+ALT,4,view,4,0
+    bind=SUPER+ALT,5,view,5,0
+    bind=SUPER+ALT,6,view,6,0
+    bind=SUPER+ALT,7,view,7,0
+    bind=SUPER+ALT,8,view,8,0
+    bind=SUPER+ALT,9,view,9,0
 
     bind=Alt,1,tag,1,0
     bind=Alt,2,tag,2,0

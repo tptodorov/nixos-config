@@ -79,16 +79,27 @@
     }
 
     window-rule {
-      match title="Notion Mail"
-      match title="Notion Calendar"
+      match title="Mail"
+      match title="Calendar"
+      match app-id=r#"calendar"#
+      match app-id=r#"mail"#
       open-on-workspace "chat"
     }
 
     window-rule {
-        match app-id="com.viber.Viber"
+        match app-id=r#"Viber"#
+        match title="viber"
+
+        open-on-workspace "chat"
+        open-focused false
+        default-column-width { proportion 0.5; }
+        min-width 800
+        min-height 600
+    }
+
+    window-rule {
         match app-id="wasistlos"
         match title="WasIstLos"
-        match title="viber"
 
         open-on-workspace "chat"
         open-focused false
@@ -126,10 +137,10 @@
     spawn-at-startup "sh" "-c" "$HOME/.config/niri/scripts/keyring-init.sh"
     spawn-at-startup "sh" "-c" "${pkgs.wl-clipboard}/bin/wl-paste --type text --watch ${pkgs.cliphist}/bin/cliphist store"
     spawn-at-startup "sh" "-c" "${pkgs.wl-clipboard}/bin/wl-paste --type image --watch ${pkgs.cliphist}/bin/cliphist store"
-    spawn-at-startup "${pkgs.ghostty}/bin/ghostty"
+    spawn-at-startup "${pkgs.kitty}/bin/kitty"
     spawn-at-startup "${pkgs.brave}/bin/brave"
     spawn-at-startup "${pkgs.spotify}/bin/spotify"
-    spawn-at-startup "${pkgs.viber}/bin/viber"
+    spawn-at-startup "sh" "-c" "env GDK_SCALE=2 GDK_DPI_SCALE=1 ${pkgs.viber}/bin/viber"
     spawn-at-startup "${pkgs.wasistlos}/bin/wasistlos"
     spawn-at-startup "${pkgs.brave}/bin/brave" "--app=https://mail.notion.so/"
     spawn-at-startup "${pkgs.brave}/bin/brave" "--app=https://calendar.notion.so/"
@@ -167,8 +178,7 @@
 
     binds {
         // Basic keybindings
-        Super+Return { spawn "${pkgs.ghostty}/bin/ghostty"; }
-        Super+T { spawn "${pkgs.ghostty}/bin/ghostty"; }
+        Super+Return { spawn "${pkgs.kitty}/bin/kitty"; }
         Super+Q { close-window; }
         Super+E { spawn "${pkgs.nautilus}/bin/nautilus"; }
         Super+S { spawn "${pkgs.brave}/bin/brave"; }
@@ -415,7 +425,7 @@
   // lib.optionalAttrs laptop {
     # HiDPI scaling for GTK apps on laptop (2x scaling = GDK_SCALE 2 * GDK_DPI_SCALE 1.0)
     GDK_SCALE = "1";
-    GDK_DPI_SCALE = "1.0";
+    GDK_DPI_SCALE = "1.5";
   };
 
   # Enable dconf for GNOME apps

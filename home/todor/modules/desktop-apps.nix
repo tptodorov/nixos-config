@@ -24,11 +24,12 @@
     obsidian
     libreoffice-fresh # LibreOffice suite (Writer, Calc, Impress, Draw, etc.)
     geary # Email client
+
   ];
 
   # Set Brave as default browser in standalone mode using activation script
   home.activation = lib.mkIf standalone {
-    setBraveAsDefault = lib.hm.dag.entryAfter ["writeBoundary"] ''
+    setBraveAsDefault = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       # Unset BROWSER temporarily to allow xdg-settings to work on Omarchy
       OLD_BROWSER="$BROWSER"
       unset BROWSER
@@ -68,14 +69,20 @@
         name = "Notion Mail";
         exec = "brave --app=https://mail.notion.so/";
         icon = "mail";
-        categories = [ "Network" "Email" ];
+        categories = [
+          "Network"
+          "Email"
+        ];
         comment = "Notion Mail as a native application";
       };
       notion-calendar = {
         name = "Notion Calendar";
         exec = "brave --app=https://calendar.notion.so/";
         icon = "calendar";
-        categories = [ "Office" "Calendar" ];
+        categories = [
+          "Office"
+          "Calendar"
+        ];
         comment = "Notion Calendar as a native application";
       };
     };
