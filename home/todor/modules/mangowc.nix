@@ -8,34 +8,7 @@
 }:
 {
   # MangoWC window manager configuration
-  home.packages = with pkgs; [
-    nautilus # File manager
-    nemo # Alternative file manager
-
-    # System utilities
-    brightnessctl # Brightness control
-    blueman # Bluetooth manager
-    networkmanagerapplet # Network manager GUI
-    htop # System monitor
-    swayidle # Idle timeout manager
-    xwayland-satellite # X11 compatibility for Wayland (for snaps and X11 apps)
-    wlr-randr # Output management for wlroots compositors
-    wlrctl # Control wlroots compositors
-
-    # keybinding testing
-    xev
-    wev
-
-    # GNOME dependencies for Nautilus and secrets management
-    gnome-themes-extra
-    gsettings-desktop-schemas
-    glib
-    dconf
-    gnome-keyring # Keyring daemon
-    libsecret # Secret storage library
-
-    swappy # screenshot editor
-  ];
+  # NOTE: Application packages are defined in desktop-apps.nix and other topic-based modules
 
   # MangoWC configuration
   xdg.configFile."mango/config.conf".text = ''
@@ -417,20 +390,4 @@
       WantedBy = [ "graphical-session.target" ];
     };
   };
-
-  # Wayland and GNOME environment variables
-  home.sessionVariables = {
-    NIXOS_OZONE_WL = "1";
-    # GNOME/GTK settings for Nautilus
-    GTK_USE_PORTAL = "1";
-    GSETTINGS_SCHEMA_DIR = "${pkgs.gsettings-desktop-schemas}/share/gsettings-schemas/${pkgs.gsettings-desktop-schemas.name}/glib-2.0/schemas:${pkgs.gtk3}/share/gsettings-schemas/${pkgs.gtk3.name}/glib-2.0/schemas";
-  }
-  // lib.optionalAttrs laptop {
-    # HiDPI scaling for GTK apps on laptop (2x scaling)
-    GDK_SCALE = lib.mkForce "1";
-    GDK_DPI_SCALE = lib.mkForce "1";
-  };
-
-  # Enable dconf for GNOME apps
-  dconf.enable = true;
 }

@@ -8,28 +8,7 @@
 }:
 {
   # Niri window manager configuration
-  home.packages = with pkgs; [
-    nautilus # File manager
-    nemo # Alternative file manager
-
-    # System utilities
-    brightnessctl # Brightness control
-    blueman # Bluetooth manager
-    networkmanagerapplet # Network manager GUI
-    htop # System monitor
-    swayidle # Idle timeout manager
-    xwayland-satellite # X11 compatibility for Wayland (for snaps and X11 apps)
-
-    # GNOME dependencies for Nautilus and secrets management
-    gnome-themes-extra
-    gsettings-desktop-schemas
-    glib
-    dconf
-    gnome-keyring # Keyring daemon
-    libsecret # Secret storage library
-
-    swappy # screenshot editor
-  ];
+  # NOTE: Application packages are defined in desktop-apps.nix and other topic-based modules
 
   # Niri configuration
   xdg.configFile."niri/config.kdl".text = ''
@@ -106,6 +85,17 @@
     }
 
     window-rule {
+        match app-id="zoom"
+        match title="Zoom"
+
+        match app-id="slack"
+        match title="Slack"
+
+        open-on-workspace "chat"
+        open-focused false
+    }
+
+    window-rule {
         match app-id=r#"^org\.gnome\."#
         draw-border-with-background false
         geometry-corner-radius 12
@@ -142,8 +132,8 @@
     spawn-at-startup "${pkgs.spotify}/bin/spotify"
     spawn-at-startup "sh" "-c" "env GDK_SCALE=2 GDK_DPI_SCALE=1 ${pkgs.viber}/bin/viber"
     spawn-at-startup "${pkgs.wasistlos}/bin/wasistlos"
-    spawn-at-startup "${pkgs.brave}/bin/brave" "--app=https://mail.notion.so/"
-    spawn-at-startup "${pkgs.brave}/bin/brave" "--app=https://calendar.notion.so/"
+    // spawn-at-startup "${pkgs.brave}/bin/brave" "--app=https://mail.notion.so/"
+    // spawn-at-startup "${pkgs.brave}/bin/brave" "--app=https://calendar.notion.so/"
 
     // Idle management - screen off after 5 min, lock after 10 min, suspend after 15 min
     spawn-at-startup "${pkgs.swayidle}/bin/swayidle" "-w" \
@@ -428,19 +418,4 @@
     ".config/asset".source = ../config/asset;
 
   };
-  # Wayland and GNOME environment variables
-  home.sessionVariables = {
-    NIXOS_OZONE_WL = "1";
-    # GNOME/GTK settings for Nautilus
-    GTK_USE_PORTAL = "1";
-    GSETTINGS_SCHEMA_DIR = "${pkgs.gsettings-desktop-schemas}/share/gsettings-schemas/${pkgs.gsettings-desktop-schemas.name}/glib-2.0/schemas:${pkgs.gtk3}/share/gsettings-schemas/${pkgs.gtk3.name}/glib-2.0/schemas";
-  }
-  // lib.optionalAttrs laptop {
-    # HiDPI scaling for GTK apps on laptop (2x scaling = GDK_SCALE 2 * GDK_DPI_SCALE 1.0)
-    GDK_SCALE = "1";
-    GDK_DPI_SCALE = "1.5";
-  };
-
-  # Enable dconf for GNOME apps
-  dconf.enable = true;
 }

@@ -2,6 +2,7 @@
   pkgs,
   lib,
   standalone ? false,
+  laptop ? false,
   ...
 }:
 {
@@ -10,11 +11,42 @@
     xdg-utils
     xdg-user-dirs
 
+    # File managers
+    nautilus # File manager
+    nemo # Alternative file manager
+
+    # System utilities
+    brightnessctl # Brightness control
+    blueman # Bluetooth manager
+    networkmanagerapplet # Network manager GUI
+    htop # System monitor
+    swayidle # Idle timeout manager
+    xwayland-satellite # X11 compatibility for Wayland (for snaps and X11 apps)
+    wlr-randr # Output management for wlroots compositors
+    wlrctl # Control wlroots compositors
+
+    # Keybinding testing
+    xev # X11 event viewer
+    wev # Wayland event viewer
+
+    # Screenshot tools
+    swappy # Screenshot editor
+
+    # GNOME dependencies for Nautilus and secrets management
+    gnome-themes-extra
+    gsettings-desktop-schemas
+    glib
+    dconf
+    gnome-keyring # Keyring daemon
+    libsecret # Secret storage library
+
     # Messenger applications
     telegram-desktop
     signal-desktop
     viber
     wasistlos
+    zoom-us # Video conferencing
+    slack # Team communication
 
     # Audio applications
     spotify
@@ -199,5 +231,21 @@
       package = pkgs.noto-fonts;
       size = 11;
     };
+  };
+
+  # Enable dconf for GNOME apps
+  dconf.enable = true;
+
+  # Wayland and GNOME environment variables
+  home.sessionVariables = {
+    NIXOS_OZONE_WL = "1";
+    # GNOME/GTK settings for Nautilus
+    GTK_USE_PORTAL = "1";
+    GSETTINGS_SCHEMA_DIR = "${pkgs.gsettings-desktop-schemas}/share/gsettings-schemas/${pkgs.gsettings-desktop-schemas.name}/glib-2.0/schemas:${pkgs.gtk3}/share/gsettings-schemas/${pkgs.gtk3.name}/glib-2.0/schemas";
+  }
+  // lib.optionalAttrs laptop {
+    # HiDPI scaling for GTK apps on laptop
+    GDK_SCALE = "1";
+    GDK_DPI_SCALE = "1.5";
   };
 }
