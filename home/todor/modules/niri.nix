@@ -39,7 +39,7 @@
 
     output "Samsung Display Corp. ATNA40HQ01-0  Unknown" {
         mode "2880x1800@120.000000"
-        scale 1.5
+        scale 2.0
     }
     output "eDP-1" {
         mode "2560x1600@60.001"
