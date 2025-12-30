@@ -14,6 +14,21 @@ let
     # Run cline with all arguments
     exec ${pkgs.nodejs}/bin/npx cline "$@"
   '';
+
+  # Custom kilocode wrapper that installs and runs kilocode via npm
+  kilocode = pkgs.writeShellScriptBin "kilocode" ''
+    NPM_PREFIX="$HOME/.npm-packages"
+    export PATH="$NPM_PREFIX/bin:$PATH"
+
+    # Ensure kilocode is installed globally
+    if ! ${pkgs.nodejs}/bin/npm list -g --prefix="$NPM_PREFIX" @kilocode/cli &> /dev/null; then
+      echo "Installing @kilocode/cli globally..."
+      ${pkgs.nodejs}/bin/npm install -g --prefix="$NPM_PREFIX" @kilocode/cli
+    fi
+
+    # Run kilocode with all arguments
+    exec "$NPM_PREFIX/bin/kilocode" "$@"
+  '';
 in
 {
   # Development tools and environment
@@ -63,7 +78,10 @@ in
     bun # for bun plugin
     nodejs # for npm plugin
     nodePackages.typescript-language-server # TypeScript LSP
-    cline # AI coding agent
+
+    # AI coding agent
+    cline
+    kilocode
 
     # Rust development
     rustc
