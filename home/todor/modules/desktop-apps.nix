@@ -57,6 +57,15 @@
     libreoffice-fresh # LibreOffice suite (Writer, Calc, Impress, Draw, etc.)
     geary # Email client
 
+    # Scanning applications (for Epson XP-630)
+    simple-scan # GNOME's simple scanner application
+    xsane # Advanced scanner application
+
+    # PDF editing and manipulation
+    pdfarranger # Merge, split, rotate, and rearrange PDF pages
+    xournalpp # Annotate and markup PDFs, handwriting support
+    evince # GNOME PDF viewer with basic annotation
+
   ];
 
   # Set Brave as default browser in standalone mode using activation script

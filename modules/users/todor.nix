@@ -11,6 +11,8 @@
     extraGroups = [
       "networkmanager"
       "wheel"
+      "scanner"  # For scanner access
+      "lp"       # For printer access
     ];
     shell = pkgs.zsh;
     initialPassword = "todor";
