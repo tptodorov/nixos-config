@@ -292,9 +292,13 @@
   };
 
   # Session variables for SSH agent
-  home.sessionVariables = {
+  # Use systemd.user.sessionVariables to ensure SSH_AUTH_SOCK is available
+  # to all user processes, including GUI applications like lazygit
+  systemd.user.sessionVariables = {
     SSH_AUTH_SOCK = "$XDG_RUNTIME_DIR/ssh-agent";
+  };
 
+  home.sessionVariables = {
     # Non-sensitive environment variables for todor
     BROWSER = "brave";
     TERMINAL = "ghostty";
