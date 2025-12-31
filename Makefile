@@ -64,6 +64,8 @@ help:
 	@echo ""
 	@echo "Flake Management:"
 	@echo "  make check                    - Validate flake configuration"
+	@echo "  make check-all                - Validate all configurations"
+	@echo "  make build-all                - Build all configurations"
 	@echo "  make update                   - Update flake inputs"
 	@echo ""
 	@echo "Other:"
@@ -121,12 +123,25 @@ home-aarch64:
 	$(MAKE) home-switch HMNAME=todor-aarch64
 
 # Flake management
-.PHONY: check flake-check update flake-update
+.PHONY: check flake-check update flake-update build-all check-all
 check flake-check:
 	nix flake check
 
 update flake-update:
 	nix flake update
+
+# Build all NixOS configurations without switching (useful for CI/validation)
+build-all:
+	@echo "Building all NixOS configurations..."
+	nix build '.#nixosConfigurations.blackbox.config.system.build.toplevel'
+	nix build '.#nixosConfigurations.blade.config.system.build.toplevel'
+	nix build '.#nixosConfigurations.vm-aarch64.config.system.build.toplevel'
+	@echo "All configurations built successfully"
+
+# Validate all configurations
+check-all: check
+	@echo "Validating all home configurations..."
+	nix flake show --all-systems
 
 # This builds the given NixOS configuration and pushes the results to the
 # cache. This does not alter the current running system. This requires
