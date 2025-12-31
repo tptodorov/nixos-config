@@ -257,7 +257,32 @@
         Super+Shift+U { move-column-to-workspace-down; }
         Super+Shift+I { move-column-to-workspace-up; }
 
-        // Move entire workspace between monitors (multi-monitor setups)
+        // Multi-monitor support
+        // Focus different monitor
+        Super+Alt+H { focus-monitor-left; }
+        Super+Alt+L { focus-monitor-right; }
+        Super+Alt+K { focus-monitor-up; }
+        Super+Alt+J { focus-monitor-down; }
+        Super+Alt+Left { focus-monitor-left; }
+        Super+Alt+Right { focus-monitor-right; }
+        Super+Alt+Up { focus-monitor-up; }
+        Super+Alt+Down { focus-monitor-down; }
+
+        // Move window to different monitor
+        Super+Shift+Alt+H { move-column-to-monitor-left; }
+        Super+Shift+Alt+L { move-column-to-monitor-right; }
+        Super+Shift+Alt+K { move-column-to-monitor-up; }
+        Super+Shift+Alt+J { move-column-to-monitor-down; }
+        Super+Shift+Alt+Left { move-column-to-monitor-left; }
+        Super+Shift+Alt+Right { move-column-to-monitor-right; }
+        Super+Shift+Alt+Up { move-column-to-monitor-up; }
+        Super+Shift+Alt+Down { move-column-to-monitor-down; }
+
+        // Move entire workspace between monitors
+        Super+Ctrl+Shift+H { move-workspace-to-monitor-left; }
+        Super+Ctrl+Shift+L { move-workspace-to-monitor-right; }
+        Super+Ctrl+Shift+K { move-workspace-to-monitor-up; }
+        Super+Ctrl+Shift+J { move-workspace-to-monitor-down; }
         Super+Ctrl+Shift+Left { move-workspace-to-monitor-left; }
         Super+Ctrl+Shift+Right { move-workspace-to-monitor-right; }
         Super+Ctrl+Shift+Up { move-workspace-to-monitor-up; }

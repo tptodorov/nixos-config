@@ -37,6 +37,7 @@ in
     devenv
     nil
     gopass
+    pinentry-gnome3 # GUI pinentry for gopass/age
     nixd
     statix # Nix linter and code suggestions
     zed-editor

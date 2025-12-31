@@ -13,8 +13,8 @@ This is a NixOS system configuration repository using Nix Flakes for declarative
 ### System Management
 ```bash
 # Rebuild and switch NixOS system configuration
-sudo nixos-rebuild switch --flake .#blackbox  # On blackbox
-sudo nixos-rebuild switch --flake .#pero      # On pero (MacBook Pro)
+sudo nixos-rebuild switch --flake .#blackbox  # On blackbox (desktop)
+sudo nixos-rebuild switch --flake .#blade     # On blade (laptop)
 
 # Test system configuration without switching
 sudo nixos-rebuild test --flake .#blackbox
@@ -33,7 +33,7 @@ nix flake update
 nix flake check
 
 # Build a specific host configuration without switching
-nixos-rebuild build --flake .#pero
+nixos-rebuild build --flake .#blade
 ```
 
 ### Development
@@ -69,10 +69,10 @@ This repository is structured to support **multiple NixOS hosts** and **multiple
   - `default.nix`: Host configuration (imports base + desktop profiles)
   - `hardware-configuration.nix`: Hardware-specific configuration
   - `modules/`: Host-specific modules (networking, services)
-- **`hosts/pero/`**: MacBook Pro 13" 2017 configuration
+- **`hosts/blade/`**: Linux laptop configuration
   - `default.nix`: Host configuration (imports base + laptop + desktop profiles)
-  - `hardware-configuration.nix`: Hardware-specific configuration (placeholder until NixOS is installed)
-  - `modules/macbook.nix`: Apple hardware-specific settings (keyboard, trackpad, display scaling)
+  - `hardware-configuration.nix`: Hardware-specific configuration
+  - `modules/`: Host-specific modules (networking, services)
 - **`hosts/vm-aarch64/`**: ARM64 VM configuration
 
 #### User Configurations

@@ -306,5 +306,8 @@
     # User-specific preferences
     EDITOR = "nvim";
     PAGER = "less";
+
+    # Pinentry for gopass/age password prompts
+    PINENTRY_PROGRAM = "${pkgs.pinentry-gnome3}/bin/pinentry-gnome3";
   };
 }

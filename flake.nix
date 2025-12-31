@@ -192,24 +192,6 @@
           ];
         };
 
-        # MacBook Pro 13" 2017
-        pero = nixpkgs.lib.nixosSystem {
-          specialArgs = {
-            inherit inputs outputs;
-          };
-          modules = [
-            {
-              nixpkgs.overlays = [
-                inputs.zig.overlays.default
-                inputs.niri.overlays.niri
-                inputs.mango.overlays.default
-              ];
-            }
-            inputs.home-manager.nixosModules.home-manager
-            ./hosts/pero
-          ];
-        };
-
         # Laptop for development, business, and personal work
         blade = nixpkgs.lib.nixosSystem {
           specialArgs = {

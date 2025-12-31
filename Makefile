@@ -35,7 +35,7 @@ help:
 	@echo "  make switch NIXNAME=<host>    - Apply system configuration"
 	@echo "  make test NIXNAME=<host>      - Test configuration (no switch)"
 	@echo "  make blackbox                 - Apply blackbox (NixOS desktop)"
-	@echo "  make pero                     - Apply pero (NixOS MacBook)"
+	@echo "  make blade                    - Apply blade (NixOS laptop)"
 	@echo "  make vm                       - Apply vm-aarch64 (NixOS VM)"
 	@echo "  make mac                      - Apply mac (nix-darwin)"
 	@echo ""
@@ -47,7 +47,7 @@ help:
 	@echo "  make home-switch HMNAME=<cfg> - Apply specific configuration"
 	@echo ""
 	@echo "Available Configurations:"
-	@echo "  NixOS hosts:     blackbox, pero, vm-aarch64"
+	@echo "  NixOS hosts:     blackbox, blade, vm-aarch64"
 	@echo "  nix-darwin:      mac"
 	@echo "  Home Manager:    todor (x86_64), todor-aarch64 (ARM64)"
 	@echo ""
@@ -101,12 +101,12 @@ home-switch-backup:
 	home-manager switch --flake ".#${HMNAME}" -b backup
 
 # Quick shortcuts for specific hosts
-.PHONY: blackbox pero vm mac home home-aarch64
+.PHONY: blackbox blade vm mac home home-aarch64
 blackbox:
 	$(MAKE) switch NIXNAME=blackbox
 
-pero:
-	$(MAKE) switch NIXNAME=pero
+blade:
+	$(MAKE) switch NIXNAME=blade
 
 vm:
 	$(MAKE) switch NIXNAME=vm-aarch64
