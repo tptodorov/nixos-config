@@ -131,7 +131,7 @@
     spawn-at-startup "${pkgs.brave}/bin/brave"
     spawn-at-startup "${pkgs.spotify}/bin/spotify"
     spawn-at-startup "sh" "-c" "env GDK_SCALE=2 GDK_DPI_SCALE=1 ${pkgs.viber}/bin/viber"
-    spawn-at-startup "${pkgs.wasistlos}/bin/wasistlos"
+    spawn-at-startup "sh" "-c" "env GDK_SCALE=2 GDK_DPI_SCALE=1 ${pkgs.wasistlos}/bin/wasistlos"
     // spawn-at-startup "${pkgs.brave}/bin/brave" "--app=https://mail.notion.so/"
     // spawn-at-startup "${pkgs.brave}/bin/brave" "--app=https://calendar.notion.so/"
 
@@ -168,11 +168,11 @@
 
     binds {
         // Basic keybindings
-        Super+Return { spawn "${pkgs.kitty}/bin/kitty"; }
+        Super+Return hotkey-overlay-title="Terminal" { spawn "${pkgs.kitty}/bin/kitty"; }
         Super+Q { close-window; }
-        Super+E { spawn "${pkgs.nautilus}/bin/nautilus"; }
-        Super+S { spawn "${pkgs.brave}/bin/brave"; }
-        Super+A { spawn "${pkgs.geary}/bin/geary"; }
+        Super+E hotkey-overlay-title="File Manager" { spawn "${pkgs.nautilus}/bin/nautilus"; }
+        Super+S hotkey-overlay-title="Web Browser" { spawn "${pkgs.brave}/bin/brave"; }
+        Super+A hotkey-overlay-title="Email Client" { spawn "${pkgs.brave}/bin/brave" "--app=https://mail.notion.so/" ; }
 
         // Window management (vim-style)
         Super+H { focus-column-left; }
@@ -300,7 +300,8 @@
         Super+Ctrl+Space { switch-focus-between-floating-and-tiling; }
 
         // Screenshots
-        Print { spawn "dms" "ipc" "niri" "screenshot"; }
+        Print hotkey-overlay-title="Take Screenshots" { spawn "dms" "ipc" "niri" "screenshot"; }
+        XF86Cut hotkey-overlay-title="Take Screenshots" { spawn "dms" "ipc" "niri" "screenshot"; }
         Super+Print { spawn "dms" "ipc" "niri" "screenshotScreen"; }
         Alt+Print { spawn "dms" "ipc" "niri" "screenshotWindow"; }
 
@@ -308,7 +309,7 @@
         Super+O { toggle-overview; }
 
         // Power management
-        Super+Shift+P { spawn "${pkgs.systemd}/bin/systemctl" "suspend"; }
+        Super+Shift+P hotkey-overlay-title="Suspend" { spawn "${pkgs.systemd}/bin/systemctl" "suspend"; }
         Super+Alt+P { power-off-monitors; }
 
         // Switch keyboard layout
@@ -322,7 +323,7 @@
         Super+Shift+E { quit; }
 
         // Reload config
-        Super+Ctrl+Shift+R { spawn "sh" "-c" "niri msg action load-config-file"; }
+        Super+Ctrl+Shift+R hotkey-overlay-title="Reload Config" { spawn "sh" "-c" "niri msg action load-config-file"; }
     }
 
 
