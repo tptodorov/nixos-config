@@ -1,5 +1,6 @@
 {
   pkgs,
+  lib,
   ...
 }:
 let
@@ -33,11 +34,10 @@ in
 {
   # Development tools and environment
   home.packages = with pkgs; [
-    # shell productivity
+    # shell productivity (cross-platform)
     devenv
     nil
     gopass
-    pinentry-gnome3 # GUI pinentry for gopass/age
     nixd
     statix # Nix linter and code suggestions
     zed-editor
@@ -47,10 +47,8 @@ in
     jq # for jsontools plugin
     neovim # for LazyVim setup
     jiratui
-    bluetuith # TUI Bluetooth manager
 
-    # Neovim/LazyVim dependencies
-    gcc # C compiler for treesitter
+    # Neovim/LazyVim dependencies (cross-platform)
     tree-sitter # Tree-sitter CLI
     ripgrep # Fast grep for telescope
     fd # Fast find for telescope
@@ -60,19 +58,16 @@ in
     wget # For downloading packages
     curl # For downloading packages
 
-    # Askpass helper for sudo (used by Claude Code)
-    zenity
-
-    # Zig development
+    # Zig development (cross-platform)
     zig
     zls
 
-    # Go development
+    # Go development (cross-platform)
     go
     gopls
     gotools
 
-    # ops
+    # ops (cross-platform)
     flyctl # Fly.io CLI
     awscli2 # for aws plugin
     kubectl # for kubectl plugin
@@ -80,31 +75,37 @@ in
     nodejs # for npm plugin
     nodePackages.typescript-language-server # TypeScript LSP
 
-    # AI coding agent
+    # AI coding agent (cross-platform)
     cline
     kilocode
 
-    # Rust development
+    # Rust development (cross-platform)
     rustc
     cargo
     rust-analyzer
     rustfmt
     clippy
 
-    # PHP development
+    # PHP development (cross-platform)
     php
     phpactor
 
-    # Lua development (for Neovim config)
+    # Lua development (for Neovim config, cross-platform)
     lua-language-server
 
-    # Build tools
+    # Build tools (cross-platform)
     gnumake
     git
     gh
     lazygit
     git-town
     pre-commit
+  ] ++ lib.optionals (!pkgs.stdenv.isDarwin) [
+    # Linux-only packages
+    pinentry-gnome3 # GUI pinentry for gopass/age (Linux only)
+    gcc # C compiler for treesitter (macOS has clang by default)
+    zenity # Askpass helper for sudo (used by Claude Code)
+    bluetuith # TUI Bluetooth manager (Linux only)
   ];
 
   programs = {

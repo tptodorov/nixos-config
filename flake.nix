@@ -9,8 +9,8 @@
     # nixpkgs: The main NixOS package repository
     # - Contains all system packages and NixOS modules
     # - Used by: All hosts (blackbox, pero, blade), standalone home-manager configs, darwin
-    # - Version: nixos-25.11 stable release branch
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
+    # - Version: nixpkgs-25.11-darwin stable release branch (compatible with both NixOS and macOS)
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-25.11-darwin";
 
     # nixos-hardware: Hardware-specific NixOS configurations
     # - Provides optimized settings for specific hardware (laptops, GPUs, etc.)
@@ -137,8 +137,8 @@
     # nix-darwin: NixOS-like system configuration for macOS
     # - Enables declarative macOS system management (similar to NixOS)
     # - Used by: Darwin host configuration (hosts/mac, for work MacBook)
-    # - Version: main branch
-    nix-darwin.url = "github:nix-darwin/nix-darwin";
+    # - Version: nix-darwin-25.11 branch (matches nixpkgs-25.11-darwin)
+    nix-darwin.url = "github:nix-darwin/nix-darwin/nix-darwin-25.11";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
 
     disko.url = "github:nix-community/disko/latest";
@@ -298,7 +298,10 @@
             ./hosts/mac
             {
               home-manager.useUserPackages = true;
-              home-manager.extraSpecialArgs = { inherit inputs; };
+              home-manager.extraSpecialArgs = {
+                inherit inputs;
+                laptop = true; # MacBook Pro is a laptop
+              };
               home-manager.users."todor.todorov" = import ./home/todor/mac.nix;
               home-manager.backupFileExtension = "bak";
               users.users."todor.todorov" = {
