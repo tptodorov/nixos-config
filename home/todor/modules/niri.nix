@@ -14,6 +14,8 @@
   xdg.configFile."niri/config.kdl".text = ''
     include "dms/binds.kdl"
     // Niri configuration for user todor
+    // NOTE: When disconnecting external monitors, press Super+1 (or any workspace number)
+    // to switch focus to a workspace on the remaining display
     workspace "chat" {}
     workspace "browse" {}
     workspace "dev" {}
@@ -37,14 +39,14 @@
         place-within-backdrop true
     }
 
+    // Laptop built-in display
     output "Samsung Display Corp. ATNA40HQ01-0  Unknown" {
         mode "2880x1800@120.000000"
         scale 2.0
     }
-    output "eDP-1" {
-        mode "2560x1600@60.001"
-        scale 2.0
-    }
+
+    // External monitor (when connected) - automatically configured
+    // Niri will auto-detect and position external displays
 
     prefer-no-csd
 
@@ -267,6 +269,9 @@
         Super+Alt+Right { focus-monitor-right; }
         Super+Alt+Up { focus-monitor-up; }
         Super+Alt+Down { focus-monitor-down; }
+
+        // Recovery: Focus workspace 1 (useful when external monitor disconnects)
+        Super+Home hotkey-overlay-title="Focus Workspace 1" { focus-workspace 1; }
 
         // Move window to different monitor
         Super+Shift+Alt+H { move-column-to-monitor-left; }

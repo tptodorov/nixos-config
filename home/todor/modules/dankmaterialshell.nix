@@ -8,9 +8,10 @@
 {
   imports = [
     inputs.dms.homeModules.dank-material-shell
-    inputs.dms.homeModules.niri
     inputs.mango.hmModules.mango
 
+    # Note: DMS niri module removed to avoid conflict with manual niri config
+    # We manually manage niri config.kdl and include DMS snippets via include directives
     # Note: DMS doesn't have a separate mango home module
     # MangoWC configuration is handled in mangowc.nix
   ];
@@ -22,7 +23,7 @@
       restartIfChanged = true; # Auto-restart dms.service when dankMaterialShell changes
     };
 
-    enableSystemMonitoring = true; # System monitoring widgets (dgop)
+    enableSystemMonitoring = false; # System monitoring widgets (dgop) - disabled: package not available
     # enableClipboard = true; # Now built-in (deprecated)
     enableVPN = true; # VPN management widget
     # enableBrightnessControl = true; # Now built-in (deprecated)
@@ -32,7 +33,7 @@
     enableCalendarEvents = true; # Calendar integration (khal)
     # enableSystemSound = true; # Now built-in (deprecated)
 
-    default.settings = {
+    settings = {
       theme = "dark";
       dynamicTheming = true;
       useAutoLocation = true;
@@ -41,9 +42,8 @@
       nightModeEnabled = false; # Night mode is separate from dark theme
     };
 
-    niri = {
-      enableKeybinds = false;
-    };
+    # Niri configuration is now handled in niri.nix directly
+    # DMS niri module removed to avoid conflicts
 
     # Note: MangoWC keybinds are configured directly in mangowc.nix
     # DMS will work with MangoWC through the systemd integration
