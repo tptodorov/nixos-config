@@ -28,6 +28,18 @@
 
     yazi
     dysk
+
+    # Network diagnostic tools
+    bind # dig, nslookup, host, and other DNS tools
+    inetutils # telnet, ftp, etc.
+    traceroute
+    mtr # advanced traceroute
+    nmap # port scanning
+    tcpdump # packet capture
+    whois
+    curl
+    netcat
+    socat
   ];
 
   programs = {

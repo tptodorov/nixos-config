@@ -96,6 +96,7 @@
 
   # Basic networking
   networking.networkmanager.enable = lib.mkDefault true;
+  networking.enableIPv6 = lib.mkDefault true;
 
   # Enable OpenSSH daemon
   services.openssh = {
@@ -111,6 +112,8 @@
   services.avahi = {
     enable = lib.mkDefault true;
     nssmdns4 = true;
+    nssmdns6 = true; # Enable IPv6 mDNS
+    ipv6 = true; # Enable IPv6 support in Avahi
     publish = {
       enable = true;
       addresses = true;
