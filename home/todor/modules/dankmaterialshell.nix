@@ -16,6 +16,10 @@
     # MangoWC configuration is handled in mangowc.nix
   ];
 
+  home.packages = [
+    inputs.dgop.packages.${pkgs.system}.default
+  ];
+
   programs.dank-material-shell = {
     enable = true;
     systemd = {
@@ -23,15 +27,11 @@
       restartIfChanged = true; # Auto-restart dms.service when dankMaterialShell changes
     };
 
-    enableSystemMonitoring = false; # System monitoring widgets (dgop) - disabled: package not available
-    # enableClipboard = true; # Now built-in (deprecated)
+    enableSystemMonitoring = false; # DMS internal monitoring disabled (use standalone dgop)
     enableVPN = true; # VPN management widget
-    # enableBrightnessControl = true; # Now built-in (deprecated)
-    # enableColorPicker = true; # Now built-in (deprecated)
     enableDynamicTheming = true; # Wallpaper-based theming (matugen)
     enableAudioWavelength = true; # Audio visualizer (cava)
     enableCalendarEvents = true; # Calendar integration (khal)
-    # enableSystemSound = true; # Now built-in (deprecated)
 
     settings = {
       theme = "dark";
@@ -41,12 +41,6 @@
       syncModeWithPortal = false; # Don't sync theme with portal (force dark mode)
       nightModeEnabled = false; # Night mode is separate from dark theme
     };
-
-    # Niri configuration is now handled in niri.nix directly
-    # DMS niri module removed to avoid conflicts
-
-    # Note: MangoWC keybinds are configured directly in mangowc.nix
-    # DMS will work with MangoWC through the systemd integration
 
     plugins = {
 
