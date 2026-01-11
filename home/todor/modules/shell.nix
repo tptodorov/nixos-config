@@ -19,6 +19,9 @@
     fd
     fzf
 
+    # SSH askpass for GUI password prompts
+    x11_ssh_askpass
+
     wget
     tree
     ripgrep
@@ -150,7 +153,7 @@
         fi
 
         # Add custom paths (standard Nix paths are handled automatically)
-        export PATH="$HOME/go/bin:$PATH"
+        export PATH="$HOME/go/bin:$HOME/.npm-packages/bin:$PATH"
 
         # Source Home Manager session variables
         if [ -e "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
@@ -354,5 +357,9 @@
   } // lib.optionalAttrs (!pkgs.stdenv.isDarwin) {
     # Linux-only: Pinentry for gopass/age password prompts
     PINENTRY_PROGRAM = "${pkgs.pinentry-gnome3}/bin/pinentry-gnome3";
+
+    # SSH askpass for GUI password prompts
+    SSH_ASKPASS = "${pkgs.x11_ssh_askpass}/libexec/x11-ssh-askpass";
+    SSH_ASKPASS_REQUIRE = "prefer";
   };
 }
