@@ -77,6 +77,9 @@
     load_secret "${config.sops.secrets.aws_secret_access_key.path}" "AWS_SECRET_ACCESS_KEY"
     load_secret "${config.sops.secrets.docker_hub_token.path}" "DOCKER_HUB_TOKEN"
 
+    # Alias for tools that expect GITHUB_PERSONAL_ACCESS_TOKEN
+    export GITHUB_PERSONAL_ACCESS_TOKEN="$GITHUB_TOKEN"
+
     # AWS region (non-secret)
     export AWS_DEFAULT_REGION="us-east-1"
 

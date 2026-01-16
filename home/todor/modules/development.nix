@@ -30,6 +30,12 @@ let
     # Run kilocode with all arguments
     exec "$NPM_PREFIX/bin/kilocode" "$@"
   '';
+
+  # Custom claude wrapper that runs claude-code via npx
+  claude = pkgs.writeShellScriptBin "claude" ''
+    # Run claude-code with all arguments
+    exec ${pkgs.nodejs}/bin/npx claude-code "$@"
+  '';
 in
 {
   # Development tools and environment
@@ -141,14 +147,24 @@ in
     lazygit = {
       enable = true;
       settings = {
-        gui.theme = {
-          lightTheme = true;
-          activeBorderColor = [
-            "blue"
-            "bold"
-          ];
-          inactiveBorderColor = [ "black" ];
-          selectedLineBgColor = [ "default" ];
+        gui = {
+          theme = {
+            lightTheme = true;
+            activeBorderColor = [
+              "blue"
+              "bold"
+            ];
+            inactiveBorderColor = [ "black" ];
+            selectedLineBgColor = [ "default" ];
+          };
+          showRandomTip = false;
+        };
+        git = {
+          # Disable auto-fetch on startup and periodically - it blocks keyboard input
+          autoFetch = false;
+          # Keep auto-refresh enabled but increase interval to reduce startup blocking
+          autoRefresh = true;
+          fetchAll = false;
         };
       };
     };
@@ -161,7 +177,6 @@ in
       silent = true;
     };
 
-    claude-code.enable = true;
   };
 
   # File configurations
