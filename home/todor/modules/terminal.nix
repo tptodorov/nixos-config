@@ -77,9 +77,9 @@
     enable = true;
     settings = {
       # Fonts
-      font_family = "ZedMono Nerd Font Mono";
+      font_family = "ZedMono Nerd Font Mono Light";
       font_size = if laptop then 14 else 20;
-      bold_font = "auto";
+      bold_font = "ZedMono Nerd Font Mono Bold";
       italic_font = "auto";
       bold_italic_font = "auto";
 
@@ -97,7 +97,7 @@
 
       # macOS specific
       macos_option_as_alt = true;
-      macos_thicken_font = 0.5;
+      macos_thicken_font = 0.0;
 
       tab_title_template = "{session_name} {title}";
 
