@@ -157,6 +157,7 @@
       "f7>l" = "goto_session langcache";
       "f7>n" = "goto_session nixos";
       "f7>-" = "goto_session -1";
+      "kitty_mod+a" = "launch zsh -c  'cd $HOME/redislabsdev/langcache && auggie'";
     };
   };
 }

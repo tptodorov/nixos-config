@@ -38,18 +38,19 @@
         enable = true;
         plugins = [
           "git"
-          "brew"
-          "docker"
           "history"
           "pass"
-          "z"
           "jsontools"
-          "aws"
-          "kubectl"
-          "bun"
           "colorize"
-          "tmux"
         ];
+        # Removed plugins for faster startup:
+        # - z: replaced by zoxide (already enabled, faster)
+        # - brew: only useful on macOS with Homebrew
+        # - docker: heavy completion loading - use lazy-load instead
+        # - aws: heavy completion loading - use lazy-load instead
+        # - kubectl: heavy completion loading - use lazy-load instead
+        # - bun: minimal benefit
+        # - tmux: minimal benefit, aliases can be added manually
       };
 
       # History configuration
@@ -123,7 +124,13 @@
 
       };
 
-      # Initialize shell environment
+      # Initialize shell environment (runs before Oh My Zsh)
+      initExtraFirst = ''
+        # Skip compaudit permission checks - significant performance gain
+        ZSH_DISABLE_COMPFIX=true
+      '';
+
+      # Initialize shell environment (runs after Oh My Zsh)
       initContent = ''
         # Source Nix daemon profile for proper PATH setup
         if [ -e /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]; then
@@ -136,6 +143,31 @@
         # Source Home Manager session variables
         if [ -e "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
           . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+        fi
+
+        # Lazy-load heavy completions (only loaded when first used)
+        if command -v kubectl &>/dev/null; then
+          kubectl() {
+            unfunction kubectl
+            source <(command kubectl completion zsh)
+            kubectl "$@"
+          }
+        fi
+
+        if command -v docker &>/dev/null; then
+          docker() {
+            unfunction docker
+            source <(command docker completion zsh 2>/dev/null)
+            docker "$@"
+          }
+        fi
+
+        if command -v aws &>/dev/null; then
+          aws() {
+            unfunction aws
+            complete -C aws_completer aws
+            aws "$@"
+          }
         fi
       '';
     };
