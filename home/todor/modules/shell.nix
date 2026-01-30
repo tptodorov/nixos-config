@@ -339,6 +339,33 @@
     };
   };
 
+  # Add SSH key to agent on login
+  systemd.user.services.ssh-add-key = {
+    Unit = {
+      Description = "Add SSH key to agent";
+      After = [
+        "ssh-agent.service"
+        "graphical-session.target"
+      ];
+      Requires = [ "ssh-agent.service" ];
+      PartOf = [ "graphical-session.target" ];
+    };
+    Service = {
+      Type = "oneshot";
+      Environment = [
+        "SSH_AUTH_SOCK=%t/ssh-agent"
+        "SSH_ASKPASS=${pkgs.seahorse}/libexec/seahorse/ssh-askpass"
+        "SSH_ASKPASS_REQUIRE=prefer"
+        "DISPLAY=:0"
+      ];
+      ExecStart = "${pkgs.openssh}/bin/ssh-add /home/todor/.ssh/id_rsa";
+      RemainAfterExit = true;
+    };
+    Install = {
+      WantedBy = [ "graphical-session.target" ];
+    };
+  };
+
   # Session variables for SSH agent
   # Use systemd.user.sessionVariables to ensure SSH_AUTH_SOCK is available
   # to all user processes, including GUI applications like lazygit
@@ -354,9 +381,9 @@
     # User-specific preferences
     EDITOR = "nvim";
     PAGER = "less";
-  } // lib.optionalAttrs (!pkgs.stdenv.isDarwin) {
-    # Linux-only: Pinentry for gopass/age password prompts
-    PINENTRY_PROGRAM = "${pkgs.pinentry-gnome3}/bin/pinentry-gnome3";
+
+    # Pinentry for gopass/age password prompts
+    PINENTRY_PROGRAM = "${pkgs.pinentry-bemenu}/bin/pinentry-bemenu";
 
     # SSH askpass for GUI password prompts
     SSH_ASKPASS = "${pkgs.x11_ssh_askpass}/libexec/x11-ssh-askpass";

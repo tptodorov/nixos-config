@@ -24,21 +24,21 @@
     xwayland-satellite # X11 compatibility for Wayland (for snaps and X11 apps)
     wlr-randr # Output management for wlroots compositors
     wlrctl # Control wlroots compositors
+    walker # Application launcher and clipboard manager
 
     # Keybinding testing
     xev # X11 event viewer
     wev # Wayland event viewer
+    wtype # Wayland keyboard input simulator (for paste)
 
     # Screenshot tools
     swappy # Screenshot editor
 
-    # GNOME dependencies for Nautilus and secrets management
+    # GNOME dependencies for Nautilus
     gnome-themes-extra
     gsettings-desktop-schemas
     glib
     dconf
-    gnome-keyring # Keyring daemon
-    libsecret # Secret storage library
 
     # Messenger applications
     telegram-desktop

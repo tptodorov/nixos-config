@@ -44,6 +44,7 @@ in
     devenv
     nil
     gopass
+    pinentry-bemenu # Wayland-native pinentry for gopass/age
     nixd
     statix # Nix linter and code suggestions
     zed-editor

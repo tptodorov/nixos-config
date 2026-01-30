@@ -24,12 +24,16 @@
     # Enable Flatpak for COSMIC Store
     flatpak.enable = lib.mkDefault true;
 
-    # GNOME services for online accounts and keyring (keep for compatibility)
-    gnome = {
-      gnome-keyring.enable = true;
-      gnome-online-accounts.enable = true;
-    };
+    # GNOME services disabled - not using GNOME desktop
+    gnome.gnome-keyring.enable = lib.mkForce false;
   };
+
+  # Disable gnome-keyring PAM module (sets SSH_AUTH_SOCK incorrectly)
+  security.pam.services.login.enableGnomeKeyring = lib.mkForce false;
+
+  # Disable gcr-ssh-agent (conflicts with Home Manager's ssh-agent)
+  systemd.user.services.gcr-ssh-agent.enable = lib.mkForce false;
+  systemd.user.sockets.gcr-ssh-agent.enable = lib.mkForce false;
 
   # XDG Portal configuration - use GNOME backend to avoid GTK portal timeouts
   xdg.portal = {
@@ -74,6 +78,7 @@
   hardware.graphics = {
     enable = true;
   };
+
 
   # Audio support with PipeWire
   security.rtkit.enable = true;

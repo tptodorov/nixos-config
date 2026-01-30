@@ -50,6 +50,7 @@
     };
     sharedModules = [
       inputs.nixvim.homeModules.nixvim
+      inputs.cosmic-manager.homeManagerModules.cosmic-manager
     ];
     users.todor = ../../home/todor;
   };

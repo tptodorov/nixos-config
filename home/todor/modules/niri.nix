@@ -124,9 +124,10 @@
     }
 
     // Startup applications
+    spawn-at-startup "dms" "run"
     spawn-at-startup "${pkgs.xwayland-satellite}/bin/xwayland-satellite" ":1" // X11 server for snaps and X11 apps
     spawn-at-startup "sh" "-c" "dms ipc wallpaper set ~/.config/asset/3.jpg"
-    spawn-at-startup "sh" "-c" "$HOME/.config/niri/scripts/keyring-init.sh"
+    spawn-at-startup "sh" "-c" "$HOME/.config/niri/scripts/ssh-agent-init.sh"
     spawn-at-startup "sh" "-c" "${pkgs.wl-clipboard}/bin/wl-paste --type text --watch ${pkgs.cliphist}/bin/cliphist store"
     spawn-at-startup "sh" "-c" "${pkgs.wl-clipboard}/bin/wl-paste --type image --watch ${pkgs.cliphist}/bin/cliphist store"
     spawn-at-startup "${pkgs.kitty}/bin/kitty"
@@ -169,6 +170,11 @@
     screenshot-path "~/Screenshots/screenshot-%Y-%m-%d-%H-%M-%S.png"
 
     binds {
+        // Universal clipboard (Omarchy-style)
+        Super+C hotkey-overlay-title="Copy" { spawn "${pkgs.wtype}/bin/wtype" "-M" "ctrl" "c" "-m" "ctrl"; }
+        Super+X hotkey-overlay-title="Cut" { spawn "${pkgs.wtype}/bin/wtype" "-M" "ctrl" "x" "-m" "ctrl"; }
+        Super+V hotkey-overlay-title="Paste" { spawn "${pkgs.wtype}/bin/wtype" "-M" "ctrl" "v" "-m" "ctrl"; }
+
         // Basic keybindings
         Super+Return hotkey-overlay-title="Terminal" { spawn "${pkgs.kitty}/bin/kitty"; }
         Super+Q { close-window; }
@@ -209,8 +215,8 @@
         Super+BracketRight { expel-window-from-column; }
 
         // Center windows/columns
-        Super+C { center-column; }
-        Super+Shift+C { center-window; }
+        Super+Shift+C { center-column; }
+        Super+Ctrl+Shift+C { center-window; }
         Super+Alt+C { center-visible-columns; }
 
         // Column width management
@@ -346,25 +352,15 @@
       ${lib.optionalString laptop "--force-device-scale-factor=2.0"}
     '';
 
-    # Gnome keyring initialization script
-    ".config/niri/scripts/keyring-init.sh" = {
+    # SSH agent initialization script (gnome-keyring removed)
+    ".config/niri/scripts/ssh-agent-init.sh" = {
       text = ''
         #!/bin/sh
-        # Kill any existing gnome-keyring-daemon instances
-        ${pkgs.procps}/bin/pkill -f gnome-keyring-daemon 2>/dev/null
-        sleep 0.5
+        # Ensure SSH_AUTH_SOCK points to Home Manager's ssh-agent
+        export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent"
+        ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd SSH_AUTH_SOCK
 
-        # Start gnome-keyring-daemon and export the environment variables
-        eval $(${pkgs.gnome-keyring}/bin/gnome-keyring-daemon --start --components=pkcs11,secrets,ssh 2>/dev/null)
-        export SSH_AUTH_SOCK
-        export GNOME_KEYRING_CONTROL
-        export GNOME_KEYRING_PID
-
-        # Update systemd and dbus environments
-        ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd SSH_AUTH_SOCK GNOME_KEYRING_CONTROL GNOME_KEYRING_PID
-
-        # Add SSH keys to keyring (will prompt for passphrase on first login, then remember)
-        # The keyring will automatically unlock these keys when you log in
+        # Add SSH keys to ssh-agent
         if [ -f "$HOME/.ssh/id_rsa" ]; then
           ${pkgs.openssh}/bin/ssh-add "$HOME/.ssh/id_rsa" 2>/dev/null
         fi
@@ -375,9 +371,7 @@
           ${pkgs.openssh}/bin/ssh-add "$HOME/.ssh/id_ecdsa" 2>/dev/null
         fi
 
-        # Log for debugging
-        echo "Keyring initialized: GNOME_KEYRING_CONTROL=$GNOME_KEYRING_CONTROL SSH_AUTH_SOCK=$SSH_AUTH_SOCK"
-        echo "SSH keys added to keyring"
+        echo "SSH agent: SSH_AUTH_SOCK=$SSH_AUTH_SOCK"
       '';
       executable = true;
     };
@@ -389,7 +383,7 @@
               spawn "dms" "ipc" "call" "spotlight" "toggle";
           }
 
-          Mod+V hotkey-overlay-title="Clipboard Manager" {
+          Mod+Shift+V hotkey-overlay-title="Clipboard History" {
               spawn "dms" "ipc" "call" "clipboard" "toggle";
           }
 

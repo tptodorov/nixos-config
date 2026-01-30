@@ -109,7 +109,7 @@
     ''}
 
     exec-once=${pkgs.xwayland-satellite}/bin/xwayland-satellite :1
-    exec-once=sh -c "$HOME/.config/mango/scripts/keyring-init.sh"
+    exec-once=sh -c "$HOME/.config/mango/scripts/ssh-agent-init.sh"
     exec-once=sh -c "${pkgs.wl-clipboard}/bin/wl-paste --type text --watch ${pkgs.cliphist}/bin/cliphist store"
     exec-once=sh -c "${pkgs.wl-clipboard}/bin/wl-paste --type image --watch ${pkgs.cliphist}/bin/cliphist store"
     exec-once=${pkgs.brave}/bin/brave
@@ -337,25 +337,26 @@
       ${lib.optionalString laptop "--force-device-scale-factor=1.0"}
     '';
 
-    # Gnome keyring initialization script
-    ".config/mango/scripts/keyring-init.sh" = {
+    # SSH agent initialization script (gnome-keyring removed)
+    ".config/mango/scripts/ssh-agent-init.sh" = {
       text = ''
         #!/bin/sh
-        # Kill any existing gnome-keyring-daemon instances
-        ${pkgs.procps}/bin/pkill -f gnome-keyring-daemon 2>/dev/null
-        sleep 0.5
+        # Ensure SSH_AUTH_SOCK points to Home Manager's ssh-agent
+        export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent"
+        ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd SSH_AUTH_SOCK
 
-        # Start gnome-keyring-daemon and export the environment variables
-        eval $(${pkgs.gnome-keyring}/bin/gnome-keyring-daemon --start --components=pkcs11,secrets,ssh 2>/dev/null)
-        export SSH_AUTH_SOCK
-        export GNOME_KEYRING_CONTROL
-        export GNOME_KEYRING_PID
+        # Add SSH keys to ssh-agent
+        if [ -f "$HOME/.ssh/id_rsa" ]; then
+          ${pkgs.openssh}/bin/ssh-add "$HOME/.ssh/id_rsa" 2>/dev/null
+        fi
+        if [ -f "$HOME/.ssh/id_ed25519" ]; then
+          ${pkgs.openssh}/bin/ssh-add "$HOME/.ssh/id_ed25519" 2>/dev/null
+        fi
+        if [ -f "$HOME/.ssh/id_ecdsa" ]; then
+          ${pkgs.openssh}/bin/ssh-add "$HOME/.ssh/id_ecdsa" 2>/dev/null
+        fi
 
-        # Update systemd and dbus environments
-        ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd SSH_AUTH_SOCK GNOME_KEYRING_CONTROL GNOME_KEYRING_PID
-
-        # Log for debugging
-        echo "Keyring initialized: GNOME_KEYRING_CONTROL=$GNOME_KEYRING_CONTROL SSH_AUTH_SOCK=$SSH_AUTH_SOCK"
+        echo "SSH agent: SSH_AUTH_SOCK=$SSH_AUTH_SOCK"
       '';
       executable = true;
     };

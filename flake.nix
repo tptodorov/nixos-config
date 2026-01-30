@@ -107,7 +107,6 @@
     dms = {
       url = "github:AvengeMedia/DankMaterialShell";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.dgop.follows = "dgop";
     };
 
     # dgop: Dank GNOME Overlay Package
@@ -144,6 +143,15 @@
     disko.url = "github:nix-community/disko/latest";
     disko.inputs.nixpkgs.follows = "nixpkgs";
 
+    # cosmic-manager: Declarative COSMIC desktop configuration for home-manager
+    # - Manages COSMIC settings, shortcuts, appearance, panels, etc.
+    # - Used by: Home Manager configs for COSMIC desktop users
+    # - Version: main branch
+    cosmic-manager = {
+      url = "github:HeitorAugustoLN/cosmic-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
   };
 
   outputs =
@@ -164,6 +172,7 @@
       jujutsu,
       nix-darwin,
       disko,
+      cosmic-manager,
       ...
     }@inputs:
     let
@@ -237,6 +246,7 @@
               imports = [
                 inputs.niri.homeModules.niri
                 inputs.nixvim.homeModules.nixvim
+                inputs.cosmic-manager.homeManagerModules.cosmic-manager
                 ./home/todor/default.nix
               ];
 
@@ -275,6 +285,7 @@
               imports = [
                 inputs.niri.homeModules.niri
                 inputs.nixvim.homeModules.nixvim
+                inputs.cosmic-manager.homeManagerModules.cosmic-manager
                 ./home/todor/default.nix
               ];
 

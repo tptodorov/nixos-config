@@ -23,7 +23,7 @@
   programs.dank-material-shell = {
     enable = true;
     systemd = {
-      enable = true; # Systemd service for auto-start
+      enable = false; # Systemd service for auto-start disabled
       restartIfChanged = true; # Auto-restart dms.service when dankMaterialShell changes
     };
 
@@ -50,29 +50,5 @@
       #   };
     };
 
-  };
-
-  # Override DMS systemd service to include quickshell in PATH and Wayland display
-  systemd.user.services.dms = {
-    Unit = {
-      # Start DMS automatically with graphical session (niri or any compositor)
-      PartOf = [ "graphical-session.target" ];
-      After = [ "graphical-session.target" ];
-    };
-    Install = {
-      WantedBy = [ "graphical-session.target" ];
-    };
-    Service = {
-      Environment = [
-        "PATH=${config.home.profileDirectory}/bin:/run/current-system/sw/bin"
-        # Note: WAYLAND_DISPLAY is inherited from the graphical session (e.g., wayland-1 for niri)
-        # Don't hardcode it to wayland-0 as different compositors use different socket names
-      ];
-      # Auto-restart configuration - DMS will restart if it crashes
-      Restart = lib.mkForce "always";
-      RestartSec = lib.mkForce "3s";
-      StartLimitInterval = lib.mkForce "60s";
-      StartLimitBurst = lib.mkForce 5;
-    };
   };
 }
