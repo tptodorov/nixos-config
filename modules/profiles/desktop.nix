@@ -22,8 +22,8 @@
       enable = true;
       settings = {
         default_session = {
-          command = "${pkgs.tuigreet}/bin/tuigreet --time";
-          user = "greeter";
+          command = "${pkgs.tuigreet}/bin/tuigreet --time -r --remember-user-session";
+          user = "todor";
         };
       };
     };
@@ -69,14 +69,14 @@
     swaybg
     swayidle
     swaylock
-    
+
     # Status bar and utilities
     waybar
     mako
     wofi
     grim
     slurp
-    
+
     # DMS and theming
     swappy
     matugen
@@ -110,7 +110,6 @@
   hardware.graphics = {
     enable = true;
   };
-
 
   # Audio support with PipeWire
   security.rtkit.enable = true;
