@@ -88,7 +88,7 @@
           };
         };
 
-        # Per-application settings for terminal emulators
+        # Per-application settings for terminal emulators and browsers
         extraConfig = ''
           # Terminal applications - use standard terminal shortcuts
           [alacritty:C]
@@ -101,6 +101,15 @@
 
           # For terminals, restore normal Ctrl behavior
           # (keyd will match application by window class)
+
+          # Browser applications - allow Ctrl+Tab for tab switching
+          [brave-browser:C]
+          [google-chrome:C]
+          [chromium:C]
+          [firefox:C]
+
+          # Pass through Ctrl+Tab for tab switching in browsers
+          control = layer(control)
         '';
       };
     };
