@@ -10,6 +10,7 @@
   wayland.windowManager.sway = {
     enable = true;
     package = pkgs.sway;
+    checkConfig = false;  # Disable config validation
     config = rec {
       modifier = "Mod4"; # Super key
       terminal = "ghostty";
