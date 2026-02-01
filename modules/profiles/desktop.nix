@@ -17,11 +17,12 @@
     displayManager.defaultSession = lib.mkDefault "niri";
 
     # Use greetd with tuigreet for minimal login screen
+    # Allows selecting between Niri and Sway from the login menu
     greetd = {
       enable = true;
       settings = {
         default_session = {
-          command = "${pkgs.tuigreet}/bin/tuigreet --time --cmd niri-session";
+          command = "${pkgs.tuigreet}/bin/tuigreet --time";
           user = "greeter";
         };
       };
@@ -48,12 +49,16 @@
     config.common.default = "wlr";
   };
 
-  # Enable Niri window manager
+  # Enable Niri and Sway window managers
   programs = {
     xwayland.enable = true;
     niri = {
       enable = lib.mkDefault true;
       package = pkgs.niri-unstable; # Use latest niri build from main branch
+    };
+    sway = {
+      enable = lib.mkDefault true;
+      package = pkgs.sway;
     };
   };
 
