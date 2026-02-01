@@ -27,7 +27,7 @@
         };
         "type:touchpad" = {
           tap = "enabled";
-          natural_scroll = "enabled";
+          natural_scroll = "disabled";
           dwt = "enabled";
           accel_profile = "adaptive";
         };
