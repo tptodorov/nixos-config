@@ -10,11 +10,11 @@
   wayland.windowManager.sway = {
     enable = true;
     package = pkgs.sway;
-    checkConfig = false;  # Disable config validation
+    checkConfig = false; # Disable config validation
     config = rec {
       modifier = "Mod4"; # Super key
-      terminal = "ghostty";
-      menu = "wofi --show drun";
+      terminal = "kitty";
+      menu = "dms ipc call spotlight toggle";
 
       # Keyboard layout - matching Niri config
       input = {
@@ -22,7 +22,7 @@
           xkb_layout = "us,bg";
           xkb_variant = "basic,phonetic";
           xkb_options = "grp:rwin_toggle";
-          repeat_delay = "300";
+          repeat_delay = "200";
           repeat_rate = "50";
         };
         "type:touchpad" = {
@@ -32,8 +32,6 @@
           accel_profile = "adaptive";
         };
       };
-
-
 
       # Key bindings
       keybindings = {
@@ -59,7 +57,7 @@
         "${modifier}+Down" = "focus down";
         "${modifier}+Up" = "focus up";
         "${modifier}+Right" = "focus right";
-        
+
         # Window management - move
         "${modifier}+Shift+h" = "move left";
         "${modifier}+Shift+j" = "move down";
@@ -69,7 +67,7 @@
         "${modifier}+Shift+Down" = "move down";
         "${modifier}+Shift+Up" = "move up";
         "${modifier}+Shift+Right" = "move right";
-        
+
         # Window management - layouts
         "${modifier}+v" = "splitv";
         "${modifier}+b" = "splith";
@@ -78,11 +76,11 @@
         "${modifier}+f" = "fullscreen";
         "${modifier}+Shift+space" = "floating toggle";
         "${modifier}+a" = "focus parent";
-        
+
         # Floating/tiling focus
         "${modifier}+Alt+f" = "focus mode_toggle";
         "${modifier}+Alt+Shift+f" = "focus mode_toggle";
-        
+
         # Close window
         "${modifier}+q" = "kill";
 
@@ -96,7 +94,7 @@
         "${modifier}+7" = "workspace number 7";
         "${modifier}+8" = "workspace number 8";
         "${modifier}+9" = "workspace number 9";
-        
+
         # Move to workspaces
         "${modifier}+Shift+1" = "move container to workspace number 1";
         "${modifier}+Shift+2" = "move container to workspace number 2";
@@ -107,14 +105,15 @@
         "${modifier}+Shift+7" = "move container to workspace number 7";
         "${modifier}+Shift+8" = "move container to workspace number 8";
         "${modifier}+Shift+9" = "move container to workspace number 9";
-        
+
         # Workspace navigation
         "${modifier}+Page_Down" = "workspace next";
         "${modifier}+Page_Up" = "workspace prev";
         "${modifier}+Tab" = "workspace back_and_forth";
 
         # Screenshots
-        "Print" = "exec grim -o $(swaymsg -t get_outputs | jq -r '.[] | select(.focused) | .name') ~/Screenshots/screenshot-$(date +%s).png";
+        "Print" =
+          "exec grim -o $(swaymsg -t get_outputs | jq -r '.[] | select(.focused) | .name') ~/Screenshots/screenshot-$(date +%s).png";
         "${modifier}+Shift+s" = "exec grim ~/Screenshots/screenshot-$(date +%s).png";
         "Alt+Print" = "exec sh -c 'grim -g \"$(slurp)\" ~/Screenshots/screenshot-$(date +%s).png'";
 
@@ -131,24 +130,41 @@
 
       # Bar configuration
       bars = [
-        {
-          statusCommand = "while :; do echo ''; sleep 1; done";
-          command = "waybar";
-        }
       ];
 
       # Startup commands - matching Niri applications
       startup = [
         { command = "mako"; }
         { command = "dms run"; }
-        { command = "${pkgs.swayidle}/bin/swayidle -w timeout 300 'swaymsg \"output * dpms off\"' resume 'swaymsg \"output * dpms on\"' timeout 600 swaylock timeout 900 '${pkgs.systemd}/bin/systemctl suspend'"; }
+        {
+          command = "${pkgs.swayidle}/bin/swayidle -w timeout 300 'swaymsg \"output * dpms off\"' resume 'swaymsg \"output * dpms on\"' timeout 600 swaylock timeout 900 '${pkgs.systemd}/bin/systemctl suspend'";
+        }
         { command = "${pkgs.xwayland-satellite}/bin/xwayland-satellite :1"; }
-        { command = "sh -c '${pkgs.wl-clipboard}/bin/wl-paste --type text --watch ${pkgs.cliphist}/bin/cliphist store'"; }
-        { command = "sh -c '${pkgs.wl-clipboard}/bin/wl-paste --type image --watch ${pkgs.cliphist}/bin/cliphist store'"; }
-        { command = "${pkgs.kitty}/bin/kitty"; always = false; }
-        { command = "${pkgs.brave}/bin/brave"; always = false; }
-        { command = "${pkgs.spotify}/bin/spotify"; always = false; }
+        {
+          command = "sh -c '${pkgs.wl-clipboard}/bin/wl-paste --type text --watch ${pkgs.cliphist}/bin/cliphist store'";
+        }
+        {
+          command = "sh -c '${pkgs.wl-clipboard}/bin/wl-paste --type image --watch ${pkgs.cliphist}/bin/cliphist store'";
+        }
+        {
+          command = "${pkgs.kitty}/bin/kitty";
+          always = false;
+        }
+        {
+          command = "${pkgs.brave}/bin/brave";
+          always = false;
+        }
+        {
+          command = "${pkgs.spotify}/bin/spotify";
+          always = false;
+        }
       ];
+
+      # Window decorations
+      window = {
+        border = 2;
+        titlebar = true;
+      };
 
       # Gaps
       gaps = {
@@ -156,36 +172,44 @@
         outer = 5;
       };
 
-      # Colors
+      # Colors - Material Design Dark theme (matching DMS)
       colors = {
         focused = {
-          border = "#4c7899";
-          background = "#285577";
+          border = "#1db8f8";
+          background = "#121212";
           text = "#ffffff";
-          indicator = "#2e9ef4";
-          childBorder = "#285577";
+          indicator = "#1db8f8";
+          childBorder = "#1db8f8";
         };
         focusedInactive = {
-          border = "#333333";
-          background = "#5f676e";
-          text = "#ffffff";
-          indicator = "#484e50";
-          childBorder = "#5f676e";
+          border = "#424242";
+          background = "#1e1e1e";
+          text = "#bdbdbd";
+          indicator = "#616161";
+          childBorder = "#424242";
         };
         unfocused = {
-          border = "#333333";
-          background = "#222222";
-          text = "#888888";
-          indicator = "#292d2e";
-          childBorder = "#222222";
+          border = "#212121";
+          background = "#121212";
+          text = "#757575";
+          indicator = "#303030";
+          childBorder = "#212121";
         };
         urgent = {
-          border = "#2f343a";
-          background = "#900000";
+          border = "#ff5252";
+          background = "#ff5252";
           text = "#ffffff";
-          indicator = "#900000";
-          childBorder = "#900000";
+          indicator = "#ff5252";
+          childBorder = "#ff5252";
         };
+        placeholder = {
+          border = "#212121";
+          background = "#121212";
+          text = "#757575";
+          indicator = "#303030";
+          childBorder = "#212121";
+        };
+        background = "#121212";
       };
 
       output = {
