@@ -1,5 +1,5 @@
 # Desktop workstation configuration profile
-# This profile provides full desktop environment setup with multiple window managers
+# This profile provides full desktop environment setup with Niri window manager
 {
   pkgs,
   lib,
@@ -13,44 +13,47 @@
   ];
   # Desktop environment configuration
   services = {
-    # GNOME Desktop Environment - DISABLED
-    # displayManager.gdm.enable = lib.mkDefault false;
-    # desktopManager.gnome.enable = lib.mkDefault false;
+    # Display Manager configuration
+    displayManager.defaultSession = lib.mkDefault "niri";
 
-    # Enable COSMIC Desktop Environment
-    desktopManager.cosmic.enable = lib.mkDefault true;
-    displayManager.cosmic-greeter.enable = lib.mkDefault true;
-
-    # Enable Flatpak for COSMIC Store
-    flatpak.enable = lib.mkDefault true;
-
-    # GNOME services disabled - not using GNOME desktop
-    gnome.gnome-keyring.enable = lib.mkForce false;
+    # Use greetd with tuigreet for minimal login screen
+    greetd = {
+      enable = true;
+      settings = {
+        default_session = {
+          command = "${pkgs.tuigreet}/bin/tuigreet --time --cmd niri-session";
+          user = "greeter";
+        };
+      };
+    };
   };
 
-  # Disable gnome-keyring PAM module (sets SSH_AUTH_SOCK incorrectly)
+  # Environment variables for display manager
+  environment.sessionVariables = {
+    XCURSOR_THEME = "Adwaita";
+    XCURSOR_SIZE = "24";
+  };
+
+  # Disable gnome-keyring PAM module
   security.pam.services.login.enableGnomeKeyring = lib.mkForce false;
 
   # Disable gcr-ssh-agent (conflicts with Home Manager's ssh-agent)
   systemd.user.services.gcr-ssh-agent.enable = lib.mkForce false;
   systemd.user.sockets.gcr-ssh-agent.enable = lib.mkForce false;
 
-  # XDG Portal configuration - use GNOME backend to avoid GTK portal timeouts
+  # XDG Portal configuration
   xdg.portal = {
     enable = true;
-    extraPortals = [ pkgs.xdg-desktop-portal-gnome ];
-    config.common.default = "gnome";
+    extraPortals = [ pkgs.xdg-desktop-portal-wlr ];
+    config.common.default = "wlr";
   };
 
-  # Enable Hyprland, Niri, and MangoWC window managers
+  # Enable Niri window manager
   programs = {
     xwayland.enable = true;
     niri = {
       enable = lib.mkDefault true;
       package = pkgs.niri-unstable; # Use latest niri build from main branch
-    };
-    mango = {
-      enable = lib.mkDefault true; # Enable MangoWC compositor
     };
   };
 

@@ -119,16 +119,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # mangowc: MangoWC Wayland compositor
-    # - Dynamic tiling Wayland compositor based on dwl (wlroots)
-    # - Optimized for use with DankMaterialShell
-    # - Used by: Desktop profile, DMS configuration
-    # - Version: main branch
-    mango = {
-      url = "github:DreamMaoMao/mango";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     # ============================================
     # macOS Support
     # ============================================
@@ -142,15 +132,6 @@
 
     disko.url = "github:nix-community/disko/latest";
     disko.inputs.nixpkgs.follows = "nixpkgs";
-
-    # cosmic-manager: Declarative COSMIC desktop configuration for home-manager
-    # - Manages COSMIC settings, shortcuts, appearance, panels, etc.
-    # - Used by: Home Manager configs for COSMIC desktop users
-    # - Version: main branch
-    cosmic-manager = {
-      url = "github:HeitorAugustoLN/cosmic-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
 
   };
 
@@ -168,11 +149,9 @@
       niri,
       dms,
       dgop,
-      mango,
       jujutsu,
       nix-darwin,
       disko,
-      cosmic-manager,
       ...
     }@inputs:
     let
@@ -193,7 +172,6 @@
               nixpkgs.overlays = [
                 inputs.zig.overlays.default
                 inputs.niri.overlays.niri
-                inputs.mango.overlays.default
               ];
             }
             inputs.home-manager.nixosModules.home-manager
@@ -213,7 +191,6 @@
               nixpkgs.overlays = [
                 inputs.zig.overlays.default
                 inputs.niri.overlays.niri
-                inputs.mango.overlays.default
               ];
             }
             inputs.home-manager.nixosModules.home-manager

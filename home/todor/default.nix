@@ -17,12 +17,9 @@
   ] ++ lib.optionals (!standalone) [
     # Desktop modules (only for NixOS, not for standalone Home Manager)
     ./modules/niri.nix
-    ./modules/mangowc.nix
-    ./modules/cosmic.nix
     ./modules/desktop-apps.nix
     ./modules/brave.nix
     ./modules/media.nix
-    ./modules/dankmaterialshell.nix
   ];
 
   # Nixpkgs configuration

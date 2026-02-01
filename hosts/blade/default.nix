@@ -19,9 +19,6 @@
     # Niri window manager module
     inputs.niri.nixosModules.niri
 
-    # MangoWC compositor module
-    inputs.mango.nixosModules.mango
-
     # Configuration profiles
     ../../modules/profiles/base.nix
     ../../modules/profiles/desktop.nix
@@ -50,7 +47,6 @@
     };
     sharedModules = [
       inputs.nixvim.homeModules.nixvim
-      inputs.cosmic-manager.homeManagerModules.cosmic-manager
     ];
     users.todor = ../../home/todor;
   };
