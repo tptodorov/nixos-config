@@ -223,7 +223,6 @@
               imports = [
                 inputs.niri.homeModules.niri
                 inputs.nixvim.homeModules.nixvim
-                inputs.cosmic-manager.homeManagerModules.cosmic-manager
                 ./home/todor/default.nix
               ];
 
@@ -262,7 +261,6 @@
               imports = [
                 inputs.niri.homeModules.niri
                 inputs.nixvim.homeModules.nixvim
-                inputs.cosmic-manager.homeManagerModules.cosmic-manager
                 ./home/todor/default.nix
               ];
 

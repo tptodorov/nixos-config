@@ -88,6 +88,7 @@
       # Bar configuration
       bars = [
         {
+          statusCommand = "while :; do echo ''; sleep 1; done";
           command = "waybar";
         }
       ];
@@ -138,7 +139,7 @@
 
       output = {
         "*" = {
-          bg = "~/.config/wallpaper.png fill";
+          bg = "#000000 solid_color";
         };
       };
     };

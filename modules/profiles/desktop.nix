@@ -69,6 +69,13 @@
     swaybg
     swayidle
     swaylock
+    
+    # Status bar and utilities
+    waybar
+    mako
+    wofi
+    grim
+    slurp
 
     # Browser support packages
     libva
