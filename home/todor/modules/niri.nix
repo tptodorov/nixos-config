@@ -12,7 +12,6 @@
 
   # Niri configuration
   xdg.configFile."niri/config.kdl".text = ''
-    include "dms/binds.kdl"
     // Niri configuration for user todor
     // NOTE: When disconnecting external monitors, press Super+1 (or any workspace number)
     // to switch focus to a workspace on the remaining display
@@ -32,11 +31,6 @@
         touchpad {
             tap
         }
-    }
-
-    layer-rule {
-        match namespace="dms:blurwallpaper"
-        place-within-backdrop true
     }
 
     // Laptop built-in display
@@ -142,9 +136,8 @@
     spawn-at-startup "${pkgs.swayidle}/bin/swayidle" "-w" \
       "timeout" "300" "niri msg action power-off-monitors" \
       "resume" "niri msg action power-on-monitors" \
-      "timeout" "600" "dms ipc call lock lock" \
-      "timeout" "900" "${pkgs.systemd}/bin/systemctl suspend" \
-      "before-sleep" "dms ipc call lock lock"
+      "timeout" "600" "swaylock" \
+      "timeout" "900" "${pkgs.systemd}/bin/systemctl suspend"
 
     // (Optional) replace with a polkit agent for escalation prompts
     // spawn-at-startup "{{POLKIT_AGENT_PATH}}"
@@ -159,8 +152,7 @@
           ELECTRON_OZONE_PLATFORM_HINT "auto"
           QT_QPA_PLATFORMTHEME "gtk3"
           QT_QPA_PLATFORMTHEME_QT6 "gtk3"
-          DMS_SCREENSHOT_EDITOR "swappy"
-    }
+          }
 
     cursor {
         xcursor-theme "Bibata-Modern-Classic"
@@ -310,11 +302,10 @@
         Super+Alt+Shift+F { focus-tiling; }
         Super+Ctrl+Space { switch-focus-between-floating-and-tiling; }
 
-        // Screenshots
-        Print hotkey-overlay-title="Take Screenshots" { spawn "dms" "ipc" "niri" "screenshot"; }
-        XF86Cut hotkey-overlay-title="Take Screenshots" { spawn "dms" "ipc" "niri" "screenshot"; }
-        Super+Print { spawn "dms" "ipc" "niri" "screenshotScreen"; }
-        Alt+Print { spawn "dms" "ipc" "niri" "screenshotWindow"; }
+        // Screenshots with grim and slurp
+        Print { spawn "grim" "-o" "$(swaymsg -t get_outputs | jq -r '.[] | select(.focused) | .name')" "~/Screenshots/screenshot-$(date +%s).png"; }
+        Super+Print { spawn "grim" "~/Screenshots/screenshot-$(date +%s).png"; }
+        Alt+Print { spawn "sh" "-c" "grim -g \"$(slurp)\" ~/Screenshots/screenshot-$(date +%s).png"; }
 
         // Overview mode
         Super+O { toggle-overview; }
