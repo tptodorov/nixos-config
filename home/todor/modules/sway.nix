@@ -97,6 +97,7 @@
       startup = [
         { command = "waybar"; }
         { command = "mako"; }
+        { command = "dms run"; }
       ];
 
       # Gaps
