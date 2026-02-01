@@ -40,10 +40,10 @@
         "${modifier}+t" = "exec ${terminal}";
 
         # Application launcher
-        "${modifier}+d" = "exec ${menu}";
+        "${modifier}+space" = "exec ${menu}";
 
         # DMS Keybindings
-        "${modifier}+space" = "exec dms ipc call spotlight toggle";
+        "${modifier}+slash" = "exec dms ipc call spotlight toggle";
         "${modifier}+v" = "exec dms ipc call clipboard toggle";
         "${modifier}+m" = "exec dms ipc call processlist focusOrToggle";
         "${modifier}+comma" = "exec dms ipc call settings focusOrToggle";
