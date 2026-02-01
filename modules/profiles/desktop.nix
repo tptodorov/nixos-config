@@ -64,6 +64,12 @@
 
   # System-wide desktop support packages
   environment.systemPackages = with pkgs; [
+    # Window managers
+    sway
+    swaybg
+    swayidle
+    swaylock
+
     # Browser support packages
     libva
     libva-utils
@@ -81,6 +87,12 @@
     ])
     rust-analyzer-nightly
   ];
+
+  # Configure greetd environments
+  environment.etc."greetd/environments".text = ''
+    niri-session
+    sway
+  '';
 
   # Hardware acceleration support
   hardware.graphics = {
