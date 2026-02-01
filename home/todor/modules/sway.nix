@@ -40,7 +40,13 @@
         "${modifier}+t" = "exec ${terminal}";
 
         # Application launcher
-        "${modifier}+space" = "exec ${menu}";
+        "${modifier}+d" = "exec ${menu}";
+
+        # DMS Keybindings
+        "${modifier}+space" = "exec dms ipc call spotlight toggle";
+        "${modifier}+v" = "exec dms ipc call clipboard toggle";
+        "${modifier}+m" = "exec dms ipc call processlist focusOrToggle";
+        "${modifier}+comma" = "exec dms ipc call settings focusOrToggle";
 
         # File manager
         "${modifier}+n" = "exec nautilus";
@@ -69,7 +75,7 @@
         "${modifier}+Shift+Right" = "move right";
 
         # Window management - layouts
-        "${modifier}+v" = "splitv";
+        "${modifier}+backslash" = "splitv";
         "${modifier}+b" = "splith";
         "${modifier}+w" = "layout tabbed";
         "${modifier}+e" = "layout toggle split";
@@ -120,7 +126,14 @@
         # Power management
         "${modifier}+Shift+p" = "exec ${pkgs.systemd}/bin/systemctl suspend";
 
-        # Keyboard layout switch - (already using Mod+Shift+Space for floating toggle, skipping)
+        # Audio controls
+        "XF86AudioRaiseVolume" = "exec dms ipc call audio increment 3";
+        "XF86AudioLowerVolume" = "exec dms ipc call audio decrement 3";
+        "XF86AudioMute" = "exec dms ipc call audio mute";
+
+        # Brightness controls
+        "XF86MonBrightnessUp" = "exec dms ipc call brightness increment 5";
+        "XF86MonBrightnessDown" = "exec dms ipc call brightness decrement 5";
 
         # Exit/reload
         "${modifier}+Shift+e" = "exec swaynag -t warning -m 'Exit sway?' -b 'Yes' 'swaymsg exit'";
@@ -163,12 +176,12 @@
       # Window decorations
       window = {
         border = 2;
-        titlebar = true;
+        titlebar = false;
       };
 
       # Gaps
       gaps = {
-        inner = 10;
+        inner = 5;
         outer = 5;
       };
 
