@@ -76,6 +76,11 @@
     wofi
     grim
     slurp
+    
+    # DMS and theming
+    swappy
+    matugen
+    cava
 
     # Browser support packages
     libva

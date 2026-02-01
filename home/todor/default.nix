@@ -18,6 +18,7 @@
     # Desktop modules (only for NixOS, not for standalone Home Manager)
     ./modules/niri.nix
     ./modules/sway.nix
+    ./modules/dms.nix
     ./modules/desktop-apps.nix
     ./modules/brave.nix
     ./modules/media.nix
