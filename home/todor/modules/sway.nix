@@ -121,8 +121,7 @@
         # Power management
         "${modifier}+Shift+p" = "exec ${pkgs.systemd}/bin/systemctl suspend";
 
-        # Keyboard layout switch
-        "${modifier}+Shift+space" = "exec 'swaymsg input type:keyboard xkb_switch_layout next'";
+        # Keyboard layout switch - (already using Mod+Shift+Space for floating toggle, skipping)
 
         # Exit/reload
         "${modifier}+Shift+e" = "exec swaynag -t warning -m 'Exit sway?' -b 'Yes' 'swaymsg exit'";
