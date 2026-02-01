@@ -22,7 +22,7 @@
           xkb_layout = "us,bg";
           xkb_variant = "basic,phonetic";
           xkb_options = "grp:rwin_toggle";
-          repeat_delay = "200";
+          repeat_delay = "250";
           repeat_rate = "50";
         };
         "type:touchpad" = {
@@ -148,7 +148,6 @@
       # Startup commands - matching Niri applications
       startup = [
         { command = "mako"; }
-        { command = "dms run"; }
         {
           command = "${pkgs.swayidle}/bin/swayidle -w timeout 300 'swaymsg \"output * dpms off\"' resume 'swaymsg \"output * dpms on\"' timeout 600 swaylock timeout 900 '${pkgs.systemd}/bin/systemctl suspend'";
         }
