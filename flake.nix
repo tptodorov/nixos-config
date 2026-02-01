@@ -232,13 +232,13 @@
           ];
 
           extraSpecialArgs = {
-            inherit inputs;
-            laptop = false; # Not a laptop (change to true if on laptop)
-            standalone = true; # Standalone Home Manager (protect certain files)
+           inherit inputs;
+           laptop = false; # Not a laptop (change to true if on laptop)
+           standalone = false; # Standalone Home Manager but with desktop modules
           };
-        };
+          };
 
-        # Standalone home-manager for ARM64 systems
+          # Standalone home-manager for ARM64 systems
         todor-aarch64 = home-manager.lib.homeManagerConfiguration {
           pkgs = import nixpkgs {
             system = "aarch64-linux";
@@ -271,7 +271,7 @@
           extraSpecialArgs = {
             inherit inputs;
             laptop = false; # Not a laptop (change to true if on ARM laptop)
-            standalone = true; # Standalone Home Manager (protect certain files)
+            standalone = false; # Standalone Home Manager but with desktop modules
           };
         };
       };
