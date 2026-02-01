@@ -14,7 +14,7 @@
   # Desktop environment configuration
   services = {
     # Display Manager configuration
-    displayManager.defaultSession = lib.mkDefault "niri";
+    displayManager.defaultSession = lib.mkDefault "sway";
 
     # Use greetd with tuigreet for minimal login screen
     # Allows selecting between Niri and Sway from the login menu
@@ -22,7 +22,7 @@
       enable = true;
       settings = {
         default_session = {
-          command = "${pkgs.tuigreet}/bin/tuigreet --time";
+          command = "${pkgs.tuigreet}/bin/tuigreet --time --user todor";
           user = "greeter";
         };
       };
