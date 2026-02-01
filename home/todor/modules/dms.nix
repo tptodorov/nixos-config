@@ -43,11 +43,6 @@
 
   # Sway configuration for DMS integration
   # DMS systemd service is managed by the dms module
-  # Configure Sway startup if DMS isn't starting automatically
-  wayland.windowManager.sway.config = lib.mkIf config.wayland.windowManager.sway.enable {
-    startup = lib.optional (config.programs.dank-material-shell.systemd.enable != true) {
-      command = "dms run";
-      always = false;
-    };
-  };
+  # No additional Sway startup config needed - DMS handles its own startup
 }
+
