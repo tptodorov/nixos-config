@@ -11,23 +11,11 @@
 
   # System packages from llm-agents
   environment.systemPackages = with pkgs; [
-    # Primary AI Coding Agents
-    llm-agents.amp             # Amp - Agentic coding tool from Sourcegraph
-    llm-agents.claude-code     # Claude Code - Agentic coding in terminal
-    llm-agents.copilot-cli     # GitHub Copilot CLI
-    
-    # Alternative AI Agents
-    llm-agents.codex           # OpenAI Codex CLI
-    llm-agents.gemini-cli      # Google Gemini AI agent
-    llm-agents.crush           # Charmbracelet's AI coding agent
-    llm-agents.goose-cli       # Block's Goose - local AI agent
-    llm-agents.kilocode-cli    # Kilocode - open-source AI coding agent
-    llm-agents.mistral-vibe    # Mistral AI's coding agent
-    
-    # Additional Tools
-    llm-agents.code            # Fork of codex with multi-provider support
-    llm-agents.nanocoder       # Community-built local-first coding agent
-    llm-agents.eca             # Editor Code Assistant
+    llm-agents.amp # Amp - Agentic coding tool from Sourcegraph
+    llm-agents.claude-code # Claude Code - Agentic coding in terminal
+    llm-agents.codex # OpenAI Codex CLI
+    llm-agents.gemini-cli # Google Gemini AI agent
+    llm-agents.kilocode-cli # Kilocode - open-source AI coding agent
   ];
 
   # Note: Some agents are unfree (amp, claude-code, copilot-cli, etc.)
