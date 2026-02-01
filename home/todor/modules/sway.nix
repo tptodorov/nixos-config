@@ -230,6 +230,22 @@
         };
       };
     };
+
+    extraConfig = ''
+      # 3-finger swipe gestures for workspace switching
+      bindgesture swipe:right workspace prev
+      bindgesture swipe:left workspace next
+
+      # 3-finger swipe up/down
+      bindgesture swipe:up exec dms ipc call spotlight toggle
+      bindgesture swipe:down exec makoctl dismiss --all
+
+      # 4-finger gestures
+      bindgesture swipe:4:left workspace next
+      bindgesture swipe:4:right workspace prev
+      bindgesture swipe:4:up fullscreen toggle
+      bindgesture swipe:4:down floating toggle
+    '';
   };
 
   # Sway-specific packages
