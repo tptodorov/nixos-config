@@ -13,6 +13,7 @@
       "wheel"
       "scanner"  # For scanner access
       "lp"       # For printer access
+      "docker"   # For Docker access
     ];
     shell = pkgs.zsh;
     initialPassword = "todor";

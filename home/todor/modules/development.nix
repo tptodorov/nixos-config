@@ -71,6 +71,11 @@
       lazygit
       git-town
       pre-commit
+
+      # Docker and container tools (cross-platform)
+      docker
+      docker-compose
+      lazydocker # TUI Docker client
     ]
     ++ lib.optionals (!pkgs.stdenv.isDarwin) [
       # Linux-only packages

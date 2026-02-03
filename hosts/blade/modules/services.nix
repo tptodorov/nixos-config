@@ -4,6 +4,20 @@
   security.rtkit.enable = true;
 
   services = {
+    # Docker - Container runtime
+    docker = {
+      enable = true;
+      enableOnBoot = true;
+      # Automatically assign IPs to containers
+      daemon.settings = {
+        log-driver = "json-file";
+        log-opts = {
+          max-size = "10m";
+          max-file = "3";
+        };
+      };
+    };
+
     # Audio services
     pulseaudio.enable = false;
     pipewire = {
