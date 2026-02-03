@@ -15,7 +15,17 @@
     llm-agents.claude-code # Claude Code - Agentic coding in terminal
     llm-agents.codex # OpenAI Codex CLI
     llm-agents.gemini-cli # Google Gemini AI agent
-    # kilocode-cli installed via npm instead
+    (llm-agents.kilocode-cli.overrideAttrs (old: {
+      version = "1.0.12";
+      src = pkgs.fetchzip {
+        url = "https://registry.npmjs.org/@kilocode/cli/-/cli-1.0.12.tgz";
+        hash = "sha256-htxoHxQvPgAriMCPQMkmzSNOXPD92EtWeel0GxGSmBQ=";
+      };
+      postPatch = ''
+        # npm-shrinkwrap.json is functionally equivalent to package-lock.json
+        ln -s npm-shrinkwrap.json package-lock.json || true
+      '';
+    })) # Kilocode - open-source AI coding agent (version 1.0.12)
   ];
 
   # Note: Some agents are unfree (amp, claude-code, copilot-cli, etc.)
