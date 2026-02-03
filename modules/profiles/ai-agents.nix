@@ -19,7 +19,7 @@
       version = "1.0.13";
       src = pkgs.fetchzip {
         url = "https://registry.npmjs.org/@kilocode/cli/-/cli-1.0.13.tgz";
-        hash = "sha256-vo1bfdRYgbbkAUwKY1vdcb404uWIendGRhtIjEr2GEE=";
+        hash = "sha256-vWNgU4SzTnISAcktOKEqjdA6ra4coBtwjnIs/rmf1/A=";
       };
     })) # Kilocode - open-source AI coding agent (version 1.0.13)
   ];
