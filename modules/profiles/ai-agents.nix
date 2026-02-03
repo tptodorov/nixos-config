@@ -13,11 +13,11 @@
   environment.systemPackages = with pkgs; [
     llm-agents.amp # Amp - Agentic coding tool from Sourcegraph
     llm-agents.claude-code # Claude Code - Agentic coding in terminal
-    llm-agents.codex # OpenAI Codex CLI
-    llm-agents.gemini-cli # Google Gemini AI agent
-    llm-agents.kilocode-cli # Kilocode - open-source AI coding agent (version 0.26.1)
   ];
 
   # Note: Some agents are unfree (amp, claude-code, copilot-cli, etc.)
   # Make sure allowUnfree = true is set in nixpkgs config
+
+  # Kilocode CLI - install via npm (not available as Nix package due to missing lock file):
+  #   npm install -g @kilocode/cli
 }

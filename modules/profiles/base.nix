@@ -147,4 +147,7 @@
     layout = lib.mkDefault "us";
     variant = lib.mkDefault "";
   };
+
+  # Enable nix-ld for running dynamically linked executables
+  programs.nix-ld.enable = true;
 }
