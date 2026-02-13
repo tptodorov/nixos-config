@@ -42,6 +42,7 @@ See [Omarchy Setup](docs/OMARCHY-SETUP.md) for more details.
 
 ## 🛠 Common Workflows
 
+### System & Home Manager
 ```bash
 # Apply Changes (NixOS)
 sudo nixos-rebuild switch --flake .#<hostname>
@@ -52,6 +53,27 @@ home-manager switch --flake .#todor
 # Update Flake Inputs
 nix flake update
 ```
+
+### Neovim Setup (LazyVim)
+After your first install, synchronize LazyVim configuration from this repo:
+
+```bash
+# One-time setup
+./scripts/sync-lazyvim.sh
+
+# Open neovim
+nvim
+
+# Inside nvim, run these commands:
+:Lazy sync      # Sync all plugins
+:Mason          # Install language servers (optional)
+```
+
+The script copies your LazyVim config with:
+- Language support (TypeScript, Go, Rust, Nix)
+- LSP servers configured (nil_ls, gopls, rust_analyzer, ts_ls, lua_ls, etc.)
+- Tokyonight colorscheme
+- Proper lockfile handling for NixOS environments
 
 ## ⌨️ Keybindings & Features
 
