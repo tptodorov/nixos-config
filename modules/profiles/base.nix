@@ -136,6 +136,7 @@
     efibootmgr
     ventoy
     ventoy-full-qt
+    bind # Provides dig and nslookup DNS utilities
     inputs.home-manager.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
   nixpkgs.config.permittedInsecurePackages = [
