@@ -1,4 +1,5 @@
 {
+  config,
   pkgs,
   lib,
   standalone ? false,
@@ -108,7 +109,7 @@
     desktopEntries = {
       notion-mail = {
         name = "Notion Mail";
-        exec = "brave --app=https://mail.notion.so/";
+        exec = "brave --user-data-dir=${config.home.homeDirectory}/.config/brave-apps/notion-mail --app=https://mail.notion.so/";
         icon = "mail";
         categories = [
           "Network"
@@ -118,7 +119,7 @@
       };
       notion-calendar = {
         name = "Notion Calendar";
-        exec = "brave --app=https://calendar.notion.so/";
+        exec = "brave --user-data-dir=${config.home.homeDirectory}/.config/brave-apps/notion-calendar --app=https://calendar.notion.so/";
         icon = "calendar";
         categories = [
           "Office"
@@ -245,12 +246,12 @@
   # Enable dconf for GNOME apps
   dconf.enable = true;
 
-  # Wayland and GNOME environment variables
+  # Wayland environment variables
+  # Note: GTK_USE_PORTAL and GSETTINGS_SCHEMA_DIR are not set here —
+  # GNOME manages these itself, and niri/sway don't need them globally.
   home.sessionVariables = {
     NIXOS_OZONE_WL = "1";
-    # GNOME/GTK settings for Nautilus
-    GTK_USE_PORTAL = "1";
-    GSETTINGS_SCHEMA_DIR = "${pkgs.gsettings-desktop-schemas}/share/gsettings-schemas/${pkgs.gsettings-desktop-schemas.name}/glib-2.0/schemas:${pkgs.gtk3}/share/gsettings-schemas/${pkgs.gtk3.name}/glib-2.0/schemas";
+    ELECTRON_OZONE_PLATFORM_HINT = "auto";
   }
   // lib.optionalAttrs laptop {
     # HiDPI scaling for GTK apps on laptop

@@ -22,6 +22,7 @@
     # Configuration profiles
     ../../modules/profiles/base.nix
     ../../modules/profiles/desktop.nix
+    ../../modules/profiles/gnome.nix
     ../../modules/profiles/laptop.nix
     ../../modules/profiles/snap.nix
     ../../modules/profiles/gaming.nix

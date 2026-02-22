@@ -45,6 +45,7 @@
         # Key bindings
         keybind = global:cmd+option+grave_accent=toggle_quick_terminal
         keybind = shift+enter=text:\n
+        keybind = ctrl+shift+k=new_tab>new_split:right>text:bunx @kilocode/cli\n
       '';
     };
   };

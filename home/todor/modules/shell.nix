@@ -152,6 +152,9 @@
           . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
         fi
 
+        # Direnv integration
+        eval "$(direnv hook zsh)"
+
         # Add custom paths (standard Nix paths are handled automatically)
         export PATH="$HOME/go/bin:$HOME/.npm-packages/bin:$PATH"
 

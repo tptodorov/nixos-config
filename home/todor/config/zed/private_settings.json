@@ -156,5 +156,8 @@
     "W": "w",
     "Wq": "wq",
     "Q": "q"
+  },
+  "extensions": {
+    "mermaid": {}
   }
 }

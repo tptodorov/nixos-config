@@ -47,6 +47,7 @@
         "${modifier}+v" = "exec dms ipc call clipboard toggle";
         "${modifier}+m" = "exec dms ipc call processlist focusOrToggle";
         "${modifier}+comma" = "exec dms ipc call settings focusOrToggle";
+        "${modifier}+Shift+slash" = "exec dms ipc call keybinds toggle sway";
 
         # File manager
         "${modifier}+n" = "exec nautilus";
@@ -147,11 +148,11 @@
 
       # Startup commands - matching Niri applications
       startup = [
+        { command = "dms run"; }
         { command = "mako"; }
-        {
-          command = "${pkgs.swayidle}/bin/swayidle -w timeout 300 'swaymsg \"output * dpms off\"' resume 'swaymsg \"output * dpms on\"' timeout 600 swaylock timeout 900 '${pkgs.systemd}/bin/systemctl suspend'";
-        }
+        # Idle management handled by DMS (Settings app: Mod+comma → Power & Sleep / Lock Screen)
         { command = "${pkgs.xwayland-satellite}/bin/xwayland-satellite :1"; }
+        { command = "sh -c '$HOME/.config/sway/scripts/ssh-agent-init.sh'"; }
         {
           command = "sh -c '${pkgs.wl-clipboard}/bin/wl-paste --type text --watch ${pkgs.cliphist}/bin/cliphist store'";
         }
@@ -248,6 +249,44 @@
     '';
   };
 
+  # Sway-specific configuration files and scripts
+  home.file = {
+    # Electron flags for proper HiDPI scaling on Wayland
+    ".config/electron-flags.conf".text = ''
+      --enable-features=UseOzonePlatform,WaylandWindowDecorations
+      --ozone-platform=wayland
+      ${lib.optionalString laptop "--force-device-scale-factor=2.0"}
+    '';
+
+    # SSH agent initialization script
+    ".config/sway/scripts/ssh-agent-init.sh" = {
+      text = ''
+        #!/bin/sh
+        # Ensure SSH_AUTH_SOCK points to Home Manager's ssh-agent
+        export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent"
+        ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd SSH_AUTH_SOCK
+
+        # Add SSH keys to ssh-agent
+        if [ -f "$HOME/.ssh/id_rsa" ]; then
+          ${pkgs.openssh}/bin/ssh-add "$HOME/.ssh/id_rsa" 2>/dev/null
+        fi
+        if [ -f "$HOME/.ssh/id_ed25519" ]; then
+          ${pkgs.openssh}/bin/ssh-add "$HOME/.ssh/id_ed25519" 2>/dev/null
+        fi
+        if [ -f "$HOME/.ssh/id_ecdsa" ]; then
+          ${pkgs.openssh}/bin/ssh-add "$HOME/.ssh/id_ecdsa" 2>/dev/null
+        fi
+
+        echo "SSH agent: SSH_AUTH_SOCK=$SSH_AUTH_SOCK"
+      '';
+      executable = true;
+    };
+  };
+
+  # Sway-specific environment variables are set inside sway config itself.
+  # Global session variables (XDG_CURRENT_DESKTOP, QT_QPA_PLATFORM, etc.)
+  # are NOT set here to avoid conflicts with GNOME or other desktop sessions.
+
   # Sway-specific packages
   home.packages = with pkgs; [
     sway
@@ -261,5 +300,7 @@
     xwayland-satellite
     kitty
     spotify
+    openssh
+    dbus
   ];
 }

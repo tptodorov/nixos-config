@@ -37,18 +37,18 @@
     XCURSOR_SIZE = "24";
   };
 
-  # Disable gnome-keyring PAM module
-  security.pam.services.login.enableGnomeKeyring = lib.mkForce false;
+  # Disable gnome-keyring PAM module (override with mkForce true in gnome.nix)
+  security.pam.services.login.enableGnomeKeyring = lib.mkDefault false;
 
-  # Disable gcr-ssh-agent (conflicts with Home Manager's ssh-agent)
-  systemd.user.services.gcr-ssh-agent.enable = lib.mkForce false;
-  systemd.user.sockets.gcr-ssh-agent.enable = lib.mkForce false;
+  # Disable gcr-ssh-agent (override with mkForce true in gnome.nix)
+  systemd.user.services.gcr-ssh-agent.enable = lib.mkDefault false;
+  systemd.user.sockets.gcr-ssh-agent.enable = lib.mkDefault false;
 
   # XDG Portal configuration
   xdg.portal = {
     enable = true;
     extraPortals = [ pkgs.xdg-desktop-portal-wlr ];
-    config.common.default = "wlr";
+    config.common.default = lib.mkDefault "wlr";
   };
 
   # Enable Niri and Sway window managers
@@ -100,6 +100,9 @@
       "rustfmt"
     ])
     rust-analyzer-nightly
+
+    # for debugging
+    chromium
   ];
 
   # Configure greetd environments
@@ -112,6 +115,10 @@
   hardware.graphics = {
     enable = true;
   };
+
+  # Removable media support
+  services.udisks2.enable = true;
+  services.gvfs.enable = true;
 
   # Audio support with PipeWire
   security.rtkit.enable = true;

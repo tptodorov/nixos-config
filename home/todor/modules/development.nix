@@ -41,6 +41,7 @@
       go
       gopls
       gotools
+      jetbrains.goland
 
       # ops (cross-platform)
       flyctl # Fly.io CLI
@@ -97,24 +98,6 @@
       };
     };
 
-    gh = {
-      enable = true;
-      gitCredentialHelper.enable = true;
-      hosts = {
-        "github.com" = {
-          user = "tptodorov";
-        };
-      };
-      settings = {
-        git_protocol = "ssh";
-        prompt = "enabled";
-        aliases = {
-          co = "pr checkout";
-          pv = "pr view";
-        };
-      };
-    };
-
     lazygit = {
       enable = true;
       settings = {
@@ -146,6 +129,15 @@
       enableZshIntegration = true;
       nix-direnv.enable = true;
       silent = true;
+      # stdlib = ''
+      #   # Add devenv integration for use_devenv in .envrc files
+      #   use_devenv() {
+      #     watch_file devenv.nix
+      #     watch_file devenv.yaml
+      #     watch_file devenv.lock
+      #     eval "$(devenv print-dev-env)"
+      #   }
+      # '';
     };
 
   };
