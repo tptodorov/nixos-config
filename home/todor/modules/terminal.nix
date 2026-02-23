@@ -25,7 +25,7 @@
         font-size = ${if laptop then "14" else "20"}
 
         # Theme
-        theme = TokyoNight Storm
+        theme = TokyoNight
 
         # Shell integration
         shell-integration = zsh
@@ -45,7 +45,6 @@
         # Key bindings
         keybind = global:cmd+option+grave_accent=toggle_quick_terminal
         keybind = shift+enter=text:\n
-        keybind = ctrl+shift+k=new_tab>new_split:right>text:bunx @kilocode/cli\n
       '';
     };
   };
