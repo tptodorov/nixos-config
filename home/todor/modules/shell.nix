@@ -3,6 +3,10 @@
   lib,
   ...
 }:
+let
+  isLinux = pkgs.stdenv.isLinux;
+  isDarwin = pkgs.stdenv.isDarwin;
+in
 {
   imports = [
     ../secrets/secrets.nix
@@ -19,9 +23,6 @@
     fd
     fzf
 
-    # SSH askpass for GUI password prompts
-    x11_ssh_askpass
-
     wget
     tree
     ripgrep
@@ -35,14 +36,17 @@
     # Network diagnostic tools
     bind # dig, nslookup, host, and other DNS tools
     inetutils # telnet, ftp, etc.
-    traceroute
-    mtr # advanced traceroute
     nmap # port scanning
-    tcpdump # packet capture
     whois
     curl
     netcat
     socat
+  ] ++ lib.optionals isLinux [
+    # Linux-only packages
+    x11_ssh_askpass # SSH askpass for GUI password prompts
+    traceroute
+    mtr # advanced traceroute
+    tcpdump # packet capture
   ];
 
   programs = {
@@ -327,6 +331,11 @@
         "~/.orbstack/ssh/config"
       ];
       matchBlocks = {
+        "blackbox.local" = {
+          extraOptions = {
+            MACs = "hmac-sha2-512-etm@openssh.com";
+          };
+        };
         "*" = {
           addKeysToAgent = "yes";
           identityFile = "~/.ssh/id_rsa";
@@ -335,44 +344,46 @@
     };
   };
 
-  # SSH services
-  services = {
+  # SSH services (Linux only - macOS uses system ssh-agent)
+  services = lib.mkIf isLinux {
     ssh-agent = {
       enable = true;
     };
   };
 
-  # Add SSH key to agent on login
-  systemd.user.services.ssh-add-key = {
-    Unit = {
-      Description = "Add SSH key to agent";
-      After = [
-        "ssh-agent.service"
-        "graphical-session.target"
-      ];
-      Requires = [ "ssh-agent.service" ];
-      PartOf = [ "graphical-session.target" ];
-    };
-    Service = {
-      Type = "oneshot";
-      Environment = [
-        "SSH_AUTH_SOCK=%t/ssh-agent"
-        "SSH_ASKPASS=${pkgs.seahorse}/libexec/seahorse/ssh-askpass"
-        "SSH_ASKPASS_REQUIRE=prefer"
-        "DISPLAY=:0"
-      ];
-      ExecStart = "${pkgs.openssh}/bin/ssh-add /home/todor/.ssh/id_rsa";
-      RemainAfterExit = true;
-    };
-    Install = {
-      WantedBy = [ "graphical-session.target" ];
+  # Add SSH key to agent on login (Linux only)
+  systemd.user.services = lib.mkIf isLinux {
+    ssh-add-key = {
+      Unit = {
+        Description = "Add SSH key to agent";
+        After = [
+          "ssh-agent.service"
+          "graphical-session.target"
+        ];
+        Requires = [ "ssh-agent.service" ];
+        PartOf = [ "graphical-session.target" ];
+      };
+      Service = {
+        Type = "oneshot";
+        Environment = [
+          "SSH_AUTH_SOCK=%t/ssh-agent"
+          "SSH_ASKPASS=${pkgs.seahorse}/libexec/seahorse/ssh-askpass"
+          "SSH_ASKPASS_REQUIRE=prefer"
+          "DISPLAY=:0"
+        ];
+        ExecStart = "${pkgs.openssh}/bin/ssh-add /home/todor/.ssh/id_rsa";
+        RemainAfterExit = true;
+      };
+      Install = {
+        WantedBy = [ "graphical-session.target" ];
+      };
     };
   };
 
-  # Session variables for SSH agent
+  # Session variables for SSH agent (Linux only)
   # Use systemd.user.sessionVariables to ensure SSH_AUTH_SOCK is available
   # to all user processes, including GUI applications like lazygit
-  systemd.user.sessionVariables = {
+  systemd.user.sessionVariables = lib.mkIf isLinux {
     SSH_AUTH_SOCK = "$XDG_RUNTIME_DIR/ssh-agent";
   };
 
@@ -384,12 +395,13 @@
     # User-specific preferences
     EDITOR = "nvim";
     PAGER = "less";
-
+  } // (if isLinux then {
+    # Linux-only session variables
     # Pinentry for gopass/age password prompts
     PINENTRY_PROGRAM = "${pkgs.pinentry-bemenu}/bin/pinentry-bemenu";
 
     # SSH askpass for GUI password prompts
     SSH_ASKPASS = "${pkgs.x11_ssh_askpass}/libexec/x11-ssh-askpass";
     SSH_ASKPASS_REQUIRE = "prefer";
-  };
+  } else {});
 }

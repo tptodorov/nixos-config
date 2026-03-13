@@ -3,6 +3,10 @@
   lib,
   ...
 }:
+let
+  isLinux = pkgs.stdenv.isLinux;
+  isDarwin = pkgs.stdenv.isDarwin;
+in
 {
   # Development tools and environment
   home.packages =
@@ -12,7 +16,6 @@
       devenv
       nil
       gopass
-      pinentry-bemenu # Wayland-native pinentry for gopass/age
       nixd
       statix # Nix linter and code suggestions
       zed-editor
@@ -29,7 +32,10 @@
       fd # Fast find for telescope
       fzf # Fuzzy finder
       unzip # For Mason package extraction
-      python3 # For Mason and some LSP servers
+      (python3.withPackages (ps: with ps; [
+        pip
+      ])) # Python with pip
+      uv # Fast Python package installer and resolver
       wget # For downloading packages
       curl # For downloading packages
 
@@ -71,15 +77,14 @@
       gh
       lazygit
       git-town
-      pre-commit
-
       # Docker and container tools (cross-platform)
       docker
       docker-compose
       lazydocker # TUI Docker client
     ]
-    ++ lib.optionals (!pkgs.stdenv.isDarwin) [
+    ++ lib.optionals isLinux [
       # Linux-only packages
+      pinentry-bemenu # Wayland-native pinentry for gopass/age
       pinentry-gnome3 # GUI pinentry for gopass/age (Linux only)
       gcc # C compiler for treesitter (macOS has clang by default)
       zenity # Askpass helper for sudo (used by Claude Code)
@@ -160,15 +165,15 @@
   # Environment variables
   home.sessionVariables = {
     EDITOR = "nvim";
-
-    # Askpass configuration for sudo (used by Claude Code)
+  } // (if isLinux then {
+    # Askpass configuration for sudo (used by Claude Code) - Linux only
     SUDO_ASKPASS = "${pkgs.writeShellScript "askpass" ''
       ${pkgs.zenity}/bin/zenity --password --title="sudo password prompt"
     ''}";
-  };
+  } else {});
 
   services = {
     # Container services
-    podman.enable = !pkgs.stdenv.isDarwin;
+    podman.enable = isLinux;
   };
 }
