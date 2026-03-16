@@ -35,7 +35,6 @@ in
 
     # Network diagnostic tools
     bind # dig, nslookup, host, and other DNS tools
-    inetutils # telnet, ftp, etc.
     nmap # port scanning
     whois
     curl
@@ -43,6 +42,7 @@ in
     socat
   ] ++ lib.optionals isLinux [
     # Linux-only packages
+    inetutils # telnet, ftp, etc. - fails to build on macOS
     x11_ssh_askpass # SSH askpass for GUI password prompts
     traceroute
     mtr # advanced traceroute

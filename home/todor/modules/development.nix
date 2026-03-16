@@ -32,9 +32,11 @@ in
       fd # Fast find for telescope
       fzf # Fuzzy finder
       unzip # For Mason package extraction
-      (python3.withPackages (ps: with ps; [
-        pip
-      ])) # Python with pip
+      (python3.withPackages (
+        ps: with ps; [
+          pip
+        ]
+      )) # Python with pip
       uv # Fast Python package installer and resolver
       wget # For downloading packages
       curl # For downloading packages
@@ -119,12 +121,161 @@ in
           showRandomTip = false;
         };
         git = {
+          branchPrefix = "todor/";
           # Disable auto-fetch on startup and periodically - it blocks keyboard input
           autoFetch = false;
           # Keep auto-refresh enabled but increase interval to reduce startup blocking
           autoRefresh = true;
           fetchAll = false;
         };
+        customCommands = [
+          {
+            key = "Y";
+            context = "global";
+            description = "Git Town sYnc";
+            command = "git town sync --all";
+            loadingText = "Syncing";
+            output = "log";
+          }
+          {
+            key = "U";
+            context = "global";
+            description = "Git Town Undo (undo the last Git Town command)";
+            command = "git-town undo";
+            prompts = [
+              {
+                type = "confirm";
+                title = "Undo Last Command";
+                body = "Are you sure you want to Undo the last Git Town command?";
+              }
+            ];
+            loadingText = "Undoing Git Town Command";
+            output = "log";
+          }
+          {
+            key = "!";
+            context = "global";
+            description = "Git Town Repo (opens the repo link)";
+            command = "git-town repo";
+            loadingText = "Opening Repo Link";
+            output = "log";
+          }
+          {
+            key = "a";
+            context = "localBranches";
+            description = "Git Town Append";
+            prompts = [
+              {
+                type = "input";
+                title = "Enter name of new child branch. Branches off of '{{.CheckedOutBranch.Name}}'";
+                key = "BranchName";
+                initialValue = "todor/";
+              }
+            ];
+            command = "git-town append {{.Form.BranchName}}";
+            loadingText = "Appending";
+            output = "log";
+          }
+          {
+            key = "H";
+            context = "localBranches";
+            description = "Git Town Hack (creates a new branch)";
+            prompts = [
+              {
+                type = "input";
+                title = "Enter name of new branch. Branches off of 'Main'";
+                key = "BranchName";
+                initialValue = "todor/";
+              }
+            ];
+            command = "git-town hack {{.Form.BranchName}}";
+            loadingText = "Hacking";
+            output = "log";
+          }
+          {
+            key = "I";
+            context = "localBranches";
+            description = "Git Town Initiate hack+propose";
+            prompts = [
+              {
+                type = "input";
+                title = "Enter name of new branch. Branches off of 'Main'";
+                key = "BranchName";
+                initialValue = "todor/";
+              }
+              {
+                type = "input";
+                title = "Enter Commit Message";
+                key = "CommitMessage";
+              }
+            ];
+            command = "git-town hack {{.Form.BranchName}} -m '{{.Form.CommitMessage}}' -c --propose";
+            loadingText = "Hacking";
+            output = "log";
+          }
+          {
+            key = "D";
+            context = "localBranches";
+            description = "Git Town Delete (deletes the current feature branch and sYnc)";
+            command = "git-town delete";
+            prompts = [
+              {
+                type = "confirm";
+                title = "Delete current feature branch";
+                body = "Are you sure you want to delete the current feature branch?";
+              }
+            ];
+            loadingText = "Deleting Feature Branch";
+            output = "log";
+          }
+          {
+            key = "g";
+            context = "localBranches";
+            description = "Git Town Propose (creates a pull request)";
+            command = "git-town propose";
+            loadingText = "Creating pull request";
+            output = "log";
+          }
+          {
+            key = "b";
+            context = "localBranches";
+            description = "Git Town Prepend (creates a branch before/between current and parent)";
+            prompts = [
+              {
+                type = "input";
+                title = "Enter name of the for child branch between '{{.CheckedOutBranch.Name}}' and its parent";
+                key = "BranchName";
+              }
+            ];
+            command = "git-town prepend {{.Form.BranchName}}";
+            loadingText = "Prepending";
+            output = "log";
+          }
+          {
+            key = "S";
+            context = "localBranches";
+            description = "Git Town Skip (skip branch with merge conflicts when syncing)";
+            command = "git-town skip";
+            loadingText = "Skiping";
+            output = "log";
+          }
+          {
+            key = "G";
+            context = "files";
+            description = "Git Town GO Continue (continue after resolving merge conflicts)";
+            command = "git-town continue";
+            loadingText = "Continuing";
+            output = "log";
+          }
+          {
+            key = "E";
+            context = "localBranches";
+            description = "Git Town Compress";
+            command = "git-town compress";
+            loadingText = "Compressing";
+            output = "log";
+          }
+        ];
       };
     };
 
@@ -165,12 +316,18 @@ in
   # Environment variables
   home.sessionVariables = {
     EDITOR = "nvim";
-  } // (if isLinux then {
-    # Askpass configuration for sudo (used by Claude Code) - Linux only
-    SUDO_ASKPASS = "${pkgs.writeShellScript "askpass" ''
-      ${pkgs.zenity}/bin/zenity --password --title="sudo password prompt"
-    ''}";
-  } else {});
+  }
+  // (
+    if isLinux then
+      {
+        # Askpass configuration for sudo (used by Claude Code) - Linux only
+        SUDO_ASKPASS = "${pkgs.writeShellScript "askpass" ''
+          ${pkgs.zenity}/bin/zenity --password --title="sudo password prompt"
+        ''}";
+      }
+    else
+      { }
+  );
 
   services = {
     # Container services
