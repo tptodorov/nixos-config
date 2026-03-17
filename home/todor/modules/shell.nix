@@ -162,6 +162,20 @@ in
         # Add custom paths (standard Nix paths are handled automatically)
         export PATH="$HOME/go/bin:$HOME/.npm-packages/bin:$PATH"
 
+        # View function: use mdterm for markdown, view for everything else
+        v() {
+          if [[ $# -eq 0 ]]; then
+            echo "Usage: v <file>"
+            return 1
+          fi
+          local file="$1"
+          if [[ "$file" == *.md ]]; then
+            mdterm "$file"
+          else
+            view "$file"
+          fi
+        }
+
         # Source Home Manager session variables
         if [ -e "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
           . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
