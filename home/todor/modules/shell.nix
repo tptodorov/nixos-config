@@ -17,6 +17,7 @@ in
     dua
     nixfmt-rfc-style
     nixfmt-tree
+    google-cloud-sdk
 
     # Supporting packages for Oh My Zsh plugins
     gopass # for pass plugin
@@ -32,6 +33,8 @@ in
 
     yazi
     dysk
+    btop
+    eza
 
     # Network diagnostic tools
     bind # dig, nslookup, host, and other DNS tools
@@ -147,6 +150,8 @@ in
       initExtraFirst = ''
         # Skip compaudit permission checks - significant performance gain
         ZSH_DISABLE_COMPFIX=true
+        # gcloud zsh completions (must be before compinit/oh-my-zsh)
+        fpath=(${pkgs.google-cloud-sdk}/share/zsh/site-functions $fpath)
       '';
 
       # Initialize shell environment (runs after Oh My Zsh)
@@ -160,7 +165,7 @@ in
         eval "$(direnv hook zsh)"
 
         # Add custom paths (standard Nix paths are handled automatically)
-        export PATH="$HOME/go/bin:$HOME/.npm-packages/bin:$PATH"
+        export PATH="$HOME/.local/bin:$HOME/go/bin:$HOME/.npm-packages/bin:$PATH"
 
         # View function: use mdterm for markdown, view for everything else
         v() {
@@ -213,7 +218,7 @@ in
     htop.enable = true;
     zoxide.enable = true;
     fzf.enable = true;
-    eza.enable = false;
+    eza.enable = true;
     starship = {
       enable = true;
       settings = {

@@ -184,7 +184,7 @@
           "image/png" = [ "imv-dir.desktop" ];
           "image/webp" = [ "imv-dir.desktop" ];
 
-          "inode/directory" = [ "yazi.desktop" ];
+          "inode/directory" = [ "org.gnome.Nautilus.desktop" ];
 
           # LibreOffice document types
           # Writer documents
@@ -245,6 +245,14 @@
 
   # Enable dconf for GNOME apps
   dconf.enable = true;
+  dconf.settings."org/gnome/desktop/default-applications/terminal" = {
+    exec = "ghostty";
+    exec-arg = "";
+  };
+  dconf.settings."org/gnome/desktop/default-applications/file-manager" = {
+    exec = "nautilus";
+    exec-arg = "";
+  };
 
   # Wayland environment variables
   # Note: GTK_USE_PORTAL and GSETTINGS_SCHEMA_DIR are not set here —

@@ -14,6 +14,7 @@
       "scanner"  # For scanner access
       "lp"       # For printer access
       "docker"   # For Docker access
+      "video"    # For camera/webcam access
     ];
     shell = pkgs.zsh;
     initialPassword = "todor";

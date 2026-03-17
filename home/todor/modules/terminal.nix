@@ -45,6 +45,12 @@
         # Key bindings
         keybind = global:cmd+option+grave_accent=toggle_quick_terminal
         keybind = shift+enter=text:\n
+        keybind = ctrl+shift+h=goto_split:left
+        keybind = ctrl+shift+l=goto_split:right
+        keybind = ctrl+shift+k=goto_split:up
+        keybind = ctrl+shift+j=goto_split:down
+        keybind = ctrl+shift+page_up=previous_tab
+        keybind = ctrl+shift+page_down=next_tab
       '';
     };
   };

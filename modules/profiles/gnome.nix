@@ -24,6 +24,8 @@
   # Add GNOME XDG portal (wlr portal from desktop.nix is kept for niri/sway sessions)
   xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gnome ];
   xdg.portal.config.gnome.default = "gnome";
+  # Route Camera portal to gnome for all sessions (wlr does not support Camera)
+  xdg.portal.config.common."org.freedesktop.impl.portal.Camera" = "gnome";
 
   # GNOME extensions and tools
   environment.systemPackages = with pkgs; [
