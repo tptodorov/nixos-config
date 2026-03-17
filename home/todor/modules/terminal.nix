@@ -42,15 +42,88 @@
         confirm-close-surface = false
         quit-after-last-window-closed = false
 
-        # Key bindings
+        # ═══════════════════════════════════════════════════════════════
+        # Key Bindings - Cross-platform Ctrl+Shift based
+        # ═══════════════════════════════════════════════════════════════
+
+        # Global / Special
         keybind = global:cmd+option+grave_accent=toggle_quick_terminal
         keybind = shift+enter=text:\n
+
+        # ── Clipboard ──────────────────────────────────────────────────
+        keybind = ctrl+shift+c=copy_to_clipboard
+        keybind = ctrl+shift+v=paste_from_clipboard
+        keybind = ctrl+shift+u=copy_url_to_clipboard
+
+        # ── Font Size ──────────────────────────────────────────────────
+        keybind = ctrl+shift+equal=increase_font_size:1
+        keybind = ctrl+shift+minus=decrease_font_size:1
+        keybind = ctrl+shift+digit_0=reset_font_size
+
+        # ── Tabs ───────────────────────────────────────────────────────
+        keybind = ctrl+shift+t=new_tab
+        keybind = ctrl+shift+w=close_surface
+        keybind = ctrl+shift+page_up=previous_tab
+        keybind = ctrl+shift+page_down=next_tab
+        keybind = ctrl+shift+home=goto_tab:1
+        keybind = ctrl+shift+end=last_tab
+        keybind = ctrl+shift+digit_1=goto_tab:1
+        keybind = ctrl+shift+digit_2=goto_tab:2
+        keybind = ctrl+shift+digit_3=goto_tab:3
+        keybind = ctrl+shift+digit_4=goto_tab:4
+        keybind = ctrl+shift+digit_5=goto_tab:5
+        keybind = ctrl+shift+digit_6=goto_tab:6
+        keybind = ctrl+shift+digit_7=goto_tab:7
+        keybind = ctrl+shift+digit_8=goto_tab:8
+        keybind = ctrl+shift+digit_9=goto_tab:9
+
+        # ── Splits ─────────────────────────────────────────────────────
+        keybind = ctrl+shift+d=new_split:right
+        keybind = ctrl+shift+e=new_split:down
+        keybind = ctrl+shift+x=close_surface
+        keybind = ctrl+shift+z=toggle_split_zoom
+        keybind = ctrl+shift+backslash=equalize_splits
+
+        # Split Navigation (vim-style)
         keybind = ctrl+shift+h=goto_split:left
         keybind = ctrl+shift+l=goto_split:right
         keybind = ctrl+shift+k=goto_split:up
         keybind = ctrl+shift+j=goto_split:down
-        keybind = ctrl+shift+page_up=previous_tab
-        keybind = ctrl+shift+page_down=next_tab
+        keybind = ctrl+shift+bracket_left=goto_split:previous
+        keybind = ctrl+shift+bracket_right=goto_split:next
+
+        # Split Resizing
+        keybind = ctrl+shift+arrow_left=resize_split:left,20
+        keybind = ctrl+shift+arrow_right=resize_split:right,20
+        keybind = ctrl+shift+arrow_up=resize_split:up,10
+        keybind = ctrl+shift+arrow_down=resize_split:down,10
+
+        # ── Windows ────────────────────────────────────────────────────
+        keybind = ctrl+shift+n=new_window
+        keybind = ctrl+shift+q=close_window
+        keybind = ctrl+shift+f=toggle_fullscreen
+        keybind = ctrl+shift+m=toggle_maximize
+
+        # ── Scrolling ──────────────────────────────────────────────────
+        keybind = ctrl+shift+s=scroll_to_top
+        keybind = ctrl+shift+b=scroll_to_bottom
+        keybind = ctrl+shift+g=scroll_to_selection
+
+        # ── Search ─────────────────────────────────────────────────────
+        keybind = ctrl+shift+slash=start_search
+        keybind = ctrl+shift+r=search_selection
+
+        # ── Screen ─────────────────────────────────────────────────────
+        keybind = ctrl+shift+a=select_all
+        keybind = ctrl+shift+backspace=clear_screen
+        keybind = ctrl+shift+i=reset
+
+        # ── Utilities ──────────────────────────────────────────────────
+        keybind = ctrl+shift+p=toggle_command_palette
+        keybind = ctrl+shift+o=open_config
+        keybind = ctrl+shift+f5=reload_config
+        keybind = ctrl+shift+y=toggle_readonly
+        keybind = ctrl+shift+period=inspector:toggle
       '';
     };
   };
