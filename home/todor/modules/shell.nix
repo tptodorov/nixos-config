@@ -192,7 +192,7 @@ in
         eval "$(direnv hook zsh)"
 
         # Add custom paths (standard Nix paths are handled automatically)
-        export PATH="$HOME/.local/bin:$HOME/go/bin:$HOME/.npm-packages/bin:$PATH"
+        export PATH="$HOME/.local/bin:$HOME/go/bin:$HOME/.npm-packages/bin:$HOME/.cargo/bin:$PATH"
 
         # View function: use mdterm for markdown, view for everything else
         v() {
