@@ -3,7 +3,6 @@
     "blueprint": {
       "inputs": {
         "nixpkgs": [
-          "llm-agents",
           "nixpkgs"
         ],
         "systems": "systems_2"
@@ -276,28 +275,6 @@
       "original": {
         "owner": "martinvonz",
         "repo": "jj",
-        "type": "github"
-      }
-    },
-    "llm-agents": {
-      "inputs": {
-        "blueprint": "blueprint",
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "treefmt-nix": "treefmt-nix"
-      },
-      "locked": {
-        "lastModified": 1771338738,
-        "narHash": "sha256-CH6gkznCEgsEjobD2zUvFSlYg1LTNQoO0aliRCuwCQw=",
-        "owner": "numtide",
-        "repo": "llm-agents.nix",
-        "rev": "cb932aee9b1e7cef0f2d6f005667808eebad72f0",
-        "type": "github"
-      },
-      "original": {
-        "owner": "numtide",
-        "repo": "llm-agents.nix",
         "type": "github"
       }
     },
@@ -574,7 +551,6 @@
         "fenix": "fenix",
         "home-manager": "home-manager",
         "jujutsu": "jujutsu",
-        "llm-agents": "llm-agents",
         "niri": "niri",
         "nix-darwin": "nix-darwin",
         "nix-snapd": "nix-snapd",
@@ -722,7 +698,6 @@
     "treefmt-nix": {
       "inputs": {
         "nixpkgs": [
-          "llm-agents",
           "nixpkgs"
         ]
       },

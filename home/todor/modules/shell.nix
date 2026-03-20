@@ -6,6 +6,32 @@
 let
   isLinux = pkgs.stdenv.isLinux;
   isDarwin = pkgs.stdenv.isDarwin;
+  viewFileCmd = pkgs.writeShellScriptBin "v" ''
+    if [ "$#" -eq 0 ]; then
+      echo "Usage: v <file>" >&2
+      exit 1
+    fi
+
+    file="$1"
+
+    case "$file" in
+      *.md)
+        exec mdterm --follow "$file"
+        ;;
+      *)
+        exec view \
+          -c 'filetype plugin indent on' \
+          -c 'syntax enable' \
+          -c 'set autoread' \
+          -c 'set updatetime=1000' \
+          -c 'augroup v_autoreload' \
+          -c 'autocmd!' \
+          -c 'autocmd FocusGained,BufEnter,CursorHold,CursorHoldI * checktime' \
+          -c 'augroup END' \
+          "$file"
+        ;;
+    esac
+  '';
 in
 {
   imports = [
@@ -30,6 +56,7 @@ in
     age
     sops
     starship
+    viewFileCmd
 
     yazi
     dysk
@@ -169,16 +196,7 @@ in
 
         # View function: use mdterm for markdown, view for everything else
         v() {
-          if [[ $# -eq 0 ]]; then
-            echo "Usage: v <file>"
-            return 1
-          fi
-          local file="$1"
-          if [[ "$file" == *.md ]]; then
-            mdterm "$file"
-          else
-            view "$file"
-          fi
+          command v "$@"
         }
 
         # Source Home Manager session variables

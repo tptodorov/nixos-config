@@ -138,6 +138,13 @@ in
             output = "log";
           }
           {
+            key = "V";
+            context = "files";
+            description = "View selected file with v()";
+            command = "v {{.SelectedFile.Name | quote}}";
+            output = "terminal";
+          }
+          {
             key = "U";
             context = "global";
             description = "Git Town Undo (undo the last Git Town command)";

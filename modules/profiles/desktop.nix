@@ -10,8 +10,6 @@
   imports = [
     # Mac-style keyboard remapping
     ./keyd-mac.nix
-    # AI Coding Agents
-    ./ai-agents.nix
   ];
   # Desktop environment configuration
   services = {

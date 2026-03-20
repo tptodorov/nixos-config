@@ -27,19 +27,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # ============================================
-    # Development Tools & AI Agents
-    # ============================================
-
-    # llm-agents: Nix packages for AI coding agents and development tools
-    # - Provides: claude-code, copilot-cli, amp, codex, and 30+ other AI agents
-    # - Used by: System and home configuration for agentic development tools
-    # - Version: main branch (daily updates)
-    llm-agents = {
-      url = "github:numtide/llm-agents.nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     # jujutsu: Next-generation version control system (alternative to Git)
     # - Provides the `jj` command for version control
     # - Used by: User environment (home/todor/default.nix)
@@ -158,7 +145,6 @@
       niri,
       dms,
       dgop,
-      llm-agents,
       jujutsu,
       nix-darwin,
       disko,
