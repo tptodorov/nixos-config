@@ -22,6 +22,10 @@
       text = ''
         # Font configuration
         font-family = "ZedMono Nerd Font Mono"
+        font-style = Regular
+        font-style-bold = ExtraBold
+        font-style-italic = Italic
+        font-style-bold-italic = ExtraBold Italic
         font-size = ${if laptop then "14" else "20"}
 
         # Theme
@@ -155,12 +159,12 @@
   programs.kitty = {
     enable = true;
     settings = {
-      # Fonts
-      font_family = "ZedMono Nerd Font Mono Light";
+      # Fonts - Regular for normal, ExtraBold for bold to maximize contrast
+      font_family = "ZedMono Nerd Font Mono";
       font_size = if laptop then 14 else 20;
-      bold_font = "ZedMono Nerd Font Mono Bold";
-      italic_font = "auto";
-      bold_italic_font = "auto";
+      bold_font = "ZedMono Nerd Font Mono ExtraBold";
+      italic_font = "ZedMono Nerd Font Mono Italic";
+      bold_italic_font = "ZedMono Nerd Font Mono ExtraBold Italic";
 
       # Cursor customization
       cursor_shape = "block";
