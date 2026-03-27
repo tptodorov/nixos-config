@@ -124,7 +124,7 @@
     spawn-at-startup "sh" "-c" "$HOME/.config/niri/scripts/ssh-agent-init.sh"
     spawn-at-startup "sh" "-c" "${pkgs.wl-clipboard}/bin/wl-paste --type text --watch ${pkgs.cliphist}/bin/cliphist store"
     spawn-at-startup "sh" "-c" "${pkgs.wl-clipboard}/bin/wl-paste --type image --watch ${pkgs.cliphist}/bin/cliphist store"
-    spawn-at-startup "${pkgs.ghostty}/bin/ghostty"
+    spawn-at-startup "${pkgs.kitty}/bin/kitty"
     spawn-at-startup "${pkgs.brave}/bin/brave"
     spawn-at-startup "${pkgs.spotify}/bin/spotify"
     spawn-at-startup "sh" "-c" "env GDK_SCALE=2 GDK_DPI_SCALE=1 ${pkgs.viber}/bin/viber"
@@ -163,8 +163,8 @@
         Super+V hotkey-overlay-title="Paste" { spawn "${pkgs.wtype}/bin/wtype" "-M" "ctrl" "v" "-m" "ctrl"; }
 
         // Basic keybindings
-        Super+Return hotkey-overlay-title="Terminal" { spawn "${pkgs.ghostty}/bin/ghostty"; }
-        Super+T hotkey-overlay-title="Terminal" { spawn "${pkgs.ghostty}/bin/ghostty"; }
+        Super+Return hotkey-overlay-title="Terminal" { spawn "${pkgs.kitty}/bin/kitty"; }
+        Super+T hotkey-overlay-title="Terminal" { spawn "${pkgs.kitty}/bin/kitty"; }
         Super+Q { close-window; }
         Super+E hotkey-overlay-title="File Manager" { spawn "${pkgs.nautilus}/bin/nautilus"; }
         Super+S hotkey-overlay-title="Web Browser" { spawn "${pkgs.brave}/bin/brave"; }

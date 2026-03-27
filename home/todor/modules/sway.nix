@@ -13,7 +13,7 @@
     checkConfig = false; # Disable config validation
     config = rec {
       modifier = "Mod4"; # Super key
-      terminal = "ghostty";
+      terminal = "kitty";
       menu = "dms ipc call spotlight toggle";
 
       # Keyboard layout - matching Niri config

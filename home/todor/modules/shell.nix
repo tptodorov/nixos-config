@@ -427,7 +427,7 @@ in
   home.sessionVariables = {
     # Non-sensitive environment variables for todor
     BROWSER = "brave";
-    TERMINAL = "ghostty";
+    TERMINAL = "kitty";
 
     # User-specific preferences
     EDITOR = "nvim";

@@ -249,7 +249,7 @@
   # Enable dconf for GNOME apps
   dconf.enable = true;
   dconf.settings."org/gnome/desktop/default-applications/terminal" = {
-    exec = "ghostty";
+    exec = "kitty";
     exec-arg = "";
   };
   dconf.settings."org/gnome/desktop/default-applications/file-manager" = {
@@ -277,7 +277,7 @@
   };
   dconf.settings."org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/terminal" = {
     name = "Terminal";
-    command = "ghostty";
+    command = "kitty";
     binding = "<Super>t";
   };
 
