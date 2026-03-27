@@ -135,24 +135,163 @@
   programs.alacritty = {
     enable = true;
     settings = {
+      # Window settings
       window = {
         padding = {
           x = 10;
           y = 10;
         };
         decorations = "full";
+        dynamic_padding = true;
       };
+
+      # Font configuration - matching Kitty and Ghostty
       font = {
         normal = {
           family = "ZedMono Nerd Font Mono";
+          style = "Regular";
         };
-        size = 12;
+        bold = {
+          family = "ZedMono Nerd Font Mono";
+          style = "ExtraBold";
+        };
+        italic = {
+          family = "ZedMono Nerd Font Mono";
+          style = "Italic";
+        };
+        bold_italic = {
+          family = "ZedMono Nerd Font Mono";
+          style = "ExtraBold Italic";
+        };
+        size = if laptop then 14 else 20;
       };
+
+      # Cursor - matching Kitty
+      cursor = {
+        style = {
+          shape = "Block";
+          blinking = "Off";
+        };
+        unfocused_hollow = true;
+      };
+
+      # Selection
+      selection = {
+        save_to_clipboard = true;
+      };
+
+      # Tokyo Night theme colors - matching Kitty
       colors = {
         primary = {
           background = "#1a1b26";
           foreground = "#c0caf5";
         };
+        cursor = {
+          text = "#1a1b26";
+          cursor = "#c0caf5";
+        };
+        selection = {
+          text = "#c0caf5";
+          background = "#283457";
+        };
+        # Normal colors
+        normal = {
+          black = "#15161e";
+          red = "#f7768e";
+          green = "#9ece6a";
+          yellow = "#e0af68";
+          blue = "#7aa2f7";
+          magenta = "#bb9af7";
+          cyan = "#7dcfff";
+          white = "#a9b1d6";
+        };
+        # Bright colors
+        bright = {
+          black = "#414868";
+          red = "#f7768e";
+          green = "#9ece6a";
+          yellow = "#e0af68";
+          blue = "#7aa2f7";
+          magenta = "#bb9af7";
+          cyan = "#7dcfff";
+          white = "#c0caf5";
+        };
+        # Indexed colors (extended)
+        indexed_colors = [
+          { index = 16; color = "#ff9e64"; }
+          { index = 17; color = "#db4b4b"; }
+        ];
+      };
+
+      # Keybindings - Ctrl+Shift based like Ghostty
+      keyboard = {
+        bindings = [
+          # Clipboard
+          { key = "C"; mods = "Control|Shift"; action = "Copy"; }
+          { key = "V"; mods = "Control|Shift"; action = "Paste"; }
+
+          # Font size
+          { key = "Equals"; mods = "Control|Shift"; action = "IncreaseFontSize"; }
+          { key = "Minus"; mods = "Control|Shift"; action = "DecreaseFontSize"; }
+          { key = "Key0"; mods = "Control|Shift"; action = "ResetFontSize"; }
+
+          # Tabs (Alacritty doesn't have native tabs, but we keep bindings for reference)
+          { key = "N"; mods = "Control|Shift"; action = "SpawnNewInstance"; }
+
+          # Scrolling
+          { key = "PageUp"; mods = "Shift"; action = "ScrollPageUp"; }
+          { key = "PageDown"; mods = "Shift"; action = "ScrollPageDown"; }
+          { key = "Home"; mods = "Shift"; action = "ScrollToTop"; }
+          { key = "End"; mods = "Shift"; action = "ScrollToBottom"; }
+
+          # Search
+          { key = "F"; mods = "Control|Shift"; action = "SearchForward"; }
+          { key = "B"; mods = "Control|Shift"; action = "SearchBackward"; }
+
+          # Toggle fullscreen
+          { key = "F"; mods = "Control|Shift|Alt"; action = "ToggleFullscreen"; }
+
+          # Vi mode
+          { key = "Space"; mods = "Control|Shift"; action = "ToggleViMode"; }
+        ];
+      };
+
+      # Scrolling
+      scrolling = {
+        history = 10000;
+        multiplier = 3;
+      };
+
+      # Terminal settings
+      terminal = {
+        shell = {
+          program = "zsh";
+        };
+      };
+
+      # Mouse
+      mouse = {
+        hide_when_typing = true;
+      };
+
+      # Hints (URL detection)
+      hints = {
+        enabled = [
+          {
+            regex = "(ipfs:|ipns:|magnet:|mailto:|gemini://|gopher://|https://|http://|news:|file:|git://|ssh:|ftp://)[^\\u0000-\\u001F\\u007F-\\u009F<>\"\\\\s{-}\\\\^⟨⟩`]+";
+            hyperlinks = true;
+            command = "xdg-open";
+            post_processing = true;
+            mouse = {
+              enabled = true;
+              mods = "None";
+            };
+            binding = {
+              key = "U";
+              mods = "Control|Shift";
+            };
+          }
+        ];
       };
     };
   };
