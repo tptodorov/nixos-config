@@ -81,8 +81,6 @@
     load_secret "${config.sops.secrets.aws_access_key_id.path}" "AWS_ACCESS_KEY_ID"
     load_secret "${config.sops.secrets.aws_secret_access_key.path}" "AWS_SECRET_ACCESS_KEY"
     load_secret "${config.sops.secrets.docker_hub_token.path}" "DOCKER_HUB_TOKEN"
-    load_secret "${config.sops.secrets.telegram_bot_token.path}" "TELEGRAM_BOT_TOKEN"
-
     # Alias for tools that expect GITHUB_PERSONAL_ACCESS_TOKEN
     export GITHUB_PERSONAL_ACCESS_TOKEN="$GITHUB_TOKEN"
 

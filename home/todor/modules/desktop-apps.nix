@@ -49,6 +49,9 @@
     zoom-us # Video conferencing
     slack # Team communication
 
+    # Notifications
+    libnotify # notify-send command
+
     # Audio applications
     spotify
     discord
@@ -252,6 +255,38 @@
   dconf.settings."org/gnome/desktop/default-applications/file-manager" = {
     exec = "nautilus";
     exec-arg = "";
+  };
+
+  # GNOME custom keybindings
+  dconf.settings."org/gnome/settings-daemon/plugins/media-keys" = {
+    custom-keybindings = [
+      "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/whisper/"
+      "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/nautilus/"
+      "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/terminal/"
+    ];
+  };
+  dconf.settings."org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/whisper" = {
+    name = "Whisper Dictate";
+    command = "/home/todor/.config/niri/scripts/whisper-toggle.sh";
+    binding = "<Super>d";
+  };
+  dconf.settings."org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/nautilus" = {
+    name = "File Manager";
+    command = "nautilus";
+    binding = "<Super>e";
+  };
+  dconf.settings."org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/terminal" = {
+    name = "Terminal";
+    command = "ghostty";
+    binding = "<Super>t";
+  };
+
+  # Move window to monitor — physical Ctrl+Alt+Super+PageUp/PageDown
+  # Left/Right are hardware-ghosted with 3 modifiers on this keyboard
+  # keyd swaps Alt↔Super, so GNOME sees <Primary><Super><Alt>
+  dconf.settings."org/gnome/desktop/wm/keybindings" = {
+    move-to-monitor-left  = [ "<Primary><Super><Alt>Prior" ];
+    move-to-monitor-right = [ "<Primary><Super><Alt>Next" ];
   };
 
   # Wayland environment variables

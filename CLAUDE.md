@@ -4,7 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a NixOS system configuration repository using Nix Flakes for declarative system and user environment management. It supports **multiple hosts** (blackbox, pero, vm-aarch64) and **multiple users** with reusable configuration profiles. The modular structure makes it easy to add new machines and user accounts.
+This is a NixOS system configuration repository using Nix Flakes for declarative system and user environment management. It supports **multiple hosts** (blackbox, blade, pero, vm-aarch64) and **multiple users** with reusable configuration profiles. The modular structure makes it easy to add new machines and user accounts.
+
+**Important for Claude Code**: This repo is shared across multiple machines. Always run `hostname` to detect which machine you are currently on before making assumptions about the active host.
 
 **Standalone Home Manager Support**: This repository also includes `flake-home.nix`, a standalone Home Manager configuration that can be used on **non-NixOS systems** (like Omarchy, Ubuntu, etc.). See `docs/OMARCHY-SETUP.md` for setup instructions.
 
