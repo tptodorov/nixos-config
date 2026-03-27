@@ -218,8 +218,14 @@
         };
         # Indexed colors (extended)
         indexed_colors = [
-          { index = 16; color = "#ff9e64"; }
-          { index = 17; color = "#db4b4b"; }
+          {
+            index = 16;
+            color = "#ff9e64";
+          }
+          {
+            index = 17;
+            color = "#db4b4b";
+          }
         ];
       };
 
@@ -227,32 +233,88 @@
       keyboard = {
         bindings = [
           # Clipboard
-          { key = "C"; mods = "Control|Shift"; action = "Copy"; }
-          { key = "V"; mods = "Control|Shift"; action = "Paste"; }
+          {
+            key = "C";
+            mods = "Control|Shift";
+            action = "Copy";
+          }
+          {
+            key = "V";
+            mods = "Control|Shift";
+            action = "Paste";
+          }
 
           # Font size
-          { key = "Equals"; mods = "Control|Shift"; action = "IncreaseFontSize"; }
-          { key = "Minus"; mods = "Control|Shift"; action = "DecreaseFontSize"; }
-          { key = "Key0"; mods = "Control|Shift"; action = "ResetFontSize"; }
+          {
+            key = "Equals";
+            mods = "Control|Shift";
+            action = "IncreaseFontSize";
+          }
+          {
+            key = "Minus";
+            mods = "Control|Shift";
+            action = "DecreaseFontSize";
+          }
+          {
+            key = "Key0";
+            mods = "Control|Shift";
+            action = "ResetFontSize";
+          }
 
           # Tabs (Alacritty doesn't have native tabs, but we keep bindings for reference)
-          { key = "N"; mods = "Control|Shift"; action = "SpawnNewInstance"; }
+          {
+            key = "N";
+            mods = "Control|Shift";
+            action = "SpawnNewInstance";
+          }
 
           # Scrolling
-          { key = "PageUp"; mods = "Shift"; action = "ScrollPageUp"; }
-          { key = "PageDown"; mods = "Shift"; action = "ScrollPageDown"; }
-          { key = "Home"; mods = "Shift"; action = "ScrollToTop"; }
-          { key = "End"; mods = "Shift"; action = "ScrollToBottom"; }
+          {
+            key = "PageUp";
+            mods = "Shift";
+            action = "ScrollPageUp";
+          }
+          {
+            key = "PageDown";
+            mods = "Shift";
+            action = "ScrollPageDown";
+          }
+          {
+            key = "Home";
+            mods = "Shift";
+            action = "ScrollToTop";
+          }
+          {
+            key = "End";
+            mods = "Shift";
+            action = "ScrollToBottom";
+          }
 
           # Search
-          { key = "F"; mods = "Control|Shift"; action = "SearchForward"; }
-          { key = "B"; mods = "Control|Shift"; action = "SearchBackward"; }
+          {
+            key = "F";
+            mods = "Control|Shift";
+            action = "SearchForward";
+          }
+          {
+            key = "B";
+            mods = "Control|Shift";
+            action = "SearchBackward";
+          }
 
           # Toggle fullscreen
-          { key = "F"; mods = "Control|Shift|Alt"; action = "ToggleFullscreen"; }
+          {
+            key = "F";
+            mods = "Control|Shift|Alt";
+            action = "ToggleFullscreen";
+          }
 
           # Vi mode
-          { key = "Space"; mods = "Control|Shift"; action = "ToggleViMode"; }
+          {
+            key = "Space";
+            mods = "Control|Shift";
+            action = "ToggleViMode";
+          }
         ];
       };
 
@@ -322,53 +384,10 @@
       macos_thicken_font = 0.0;
 
       tab_title_template = "{session_name} {title}";
-
-      # Keyboard shortcuts
-      # kitty_mod = "ctrl+shift";
-
-      # Tokyo Night theme colors
-      background = "#1a1b26";
-      foreground = "#c0caf5";
-      selection_background = "#283457";
-      selection_foreground = "#c0caf5";
-      url_color = "#73daca";
-      cursor = "#c0caf5";
-      cursor_text_color = "#1a1b26";
-
-      # Tabs
-      active_tab_background = "#7aa2f7";
-      active_tab_foreground = "#16161e";
-      inactive_tab_background = "#292e42";
-      inactive_tab_foreground = "#545c7e";
-
-      # Windows
-      active_border_color = "#7aa2f7";
-      inactive_border_color = "#292e42";
-
-      # Normal colors
-      color0 = "#15161e";
-      color1 = "#f7768e";
-      color2 = "#9ece6a";
-      color3 = "#e0af68";
-      color4 = "#7aa2f7";
-      color5 = "#bb9af7";
-      color6 = "#7dcfff";
-      color7 = "#a9b1d6";
-
-      # Bright colors
-      color8 = "#414868";
-      color9 = "#f7768e";
-      color10 = "#9ece6a";
-      color11 = "#e0af68";
-      color12 = "#7aa2f7";
-      color13 = "#bb9af7";
-      color14 = "#7dcfff";
-      color15 = "#c0caf5";
-
-      # Extended colors
-      color16 = "#ff9e64";
-      color17 = "#db4b4b";
     };
+
+    # Use predefined Tokyo Night theme
+    theme = "Tokyo Night";
 
     # Key mappings
     keybindings = {
