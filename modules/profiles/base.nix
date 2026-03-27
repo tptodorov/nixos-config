@@ -131,6 +131,7 @@
     git
     tree
     ripgrep
+    bubblewrap
     age
     sops
     efibootmgr
