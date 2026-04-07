@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 {
   # APFS support for reading Mac-formatted drives
@@ -14,17 +19,20 @@
   boot.kernelModules = [ "apfs" ];
 
   # Install APFS userspace tools
-  environment.systemPackages = with pkgs; [
-    # FUSE-based APFS driver (read-only, more stable fallback)
-    apfs-fuse
+  environment.systemPackages =
+    with pkgs;
+    [
+      # FUSE-based APFS driver (read-only, more stable fallback)
+      apfs-fuse
 
-    # APFS filesystem utilities (mkfs, fsck, etc.)
-    apfsprogs
+      # APFS filesystem utilities (mkfs, fsck, etc.)
+      apfsprogs
 
-    # APFS compression/decompression tool (Darwin only, conditionally included)
-  ] ++ lib.optionals pkgs.stdenv.isDarwin [
-    pkgs.afsctool
-  ];
+      # APFS compression/decompression tool (Darwin only, conditionally included)
+    ]
+    ++ lib.optionals pkgs.stdenv.isDarwin [
+      pkgs.afsctool
+    ];
 
   # Add filesystem support for automatic mounting
   boot.supportedFilesystems = [ "apfs" ];

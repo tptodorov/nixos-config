@@ -12,6 +12,11 @@
     # - Version: nixpkgs-25.11-darwin stable release branch (compatible with both NixOS and macOS)
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-25.11-darwin";
 
+    # nixpkgsUnstable: Selectively pull packages that have not landed in 25.11 yet
+    # - Used by: Home Manager package overrides (currently neovim 0.12)
+    # - Version: nixpkgs-unstable
+    nixpkgsUnstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+
     # nixos-hardware: Hardware-specific NixOS configurations
     # - Provides optimized settings for specific hardware (laptops, GPUs, etc.)
     # - Used by: hosts/pero (MacBook Pro), can be used by other hosts for hardware quirks
@@ -228,13 +233,13 @@
           ];
 
           extraSpecialArgs = {
-           inherit inputs;
-           laptop = false; # Not a laptop (change to true if on laptop)
-           standalone = false; # Standalone Home Manager but with desktop modules
+            inherit inputs;
+            laptop = false; # Not a laptop (change to true if on laptop)
+            standalone = false; # Standalone Home Manager but with desktop modules
           };
-          };
+        };
 
-          # Standalone home-manager for ARM64 systems
+        # Standalone home-manager for ARM64 systems
         todor-aarch64 = home-manager.lib.homeManagerConfiguration {
           pkgs = import nixpkgs {
             system = "aarch64-linux";

@@ -9,7 +9,10 @@
   # Form factor is determined per-host in flake.nix specialArgs
   # Available values: "desktop", "laptop"
   options.formFactor = lib.mkOption {
-    type = lib.types.enum [ "desktop" "laptop" ];
+    type = lib.types.enum [
+      "desktop"
+      "laptop"
+    ];
     default = "desktop";
     description = "System form factor (desktop or laptop)";
   };

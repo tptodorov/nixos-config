@@ -30,20 +30,20 @@
   # GNOME extensions and tools
   environment.systemPackages = with pkgs; [
     # Extension management
-    gnome-extensions-cli      # CLI tool: gext install/update/enable extensions
-    gnome-tweaks              # Advanced GNOME settings (fonts, themes, extensions, etc.)
-    gnome-extension-manager   # GUI app to browse, install, and manage extensions
+    gnome-extensions-cli # CLI tool: gext install/update/enable extensions
+    gnome-tweaks # Advanced GNOME settings (fonts, themes, extensions, etc.)
+    gnome-extension-manager # GUI app to browse, install, and manage extensions
 
     # Popular extensions
-    gnomeExtensions.appindicator          # System tray icons (needed for many apps)
-    gnomeExtensions.dash-to-dock          # macOS-style dock
-    gnomeExtensions.pop-shell             # Tiling window management (Pop!_OS style)
-    gnomeExtensions.blur-my-shell         # Blur effects on shell UI
-    gnomeExtensions.clipboard-indicator   # Clipboard history manager
-    gnomeExtensions.gsconnect             # Phone integration (KDE Connect protocol)
-    gnomeExtensions.caffeine              # Prevent auto-suspend/screen lock
-    gnomeExtensions.vitals                # System monitoring in top bar
-    gnomeExtensions.space-bar             # Workspace indicator in top bar
+    gnomeExtensions.appindicator # System tray icons (needed for many apps)
+    gnomeExtensions.dash-to-dock # macOS-style dock
+    gnomeExtensions.pop-shell # Tiling window management (Pop!_OS style)
+    gnomeExtensions.blur-my-shell # Blur effects on shell UI
+    gnomeExtensions.clipboard-indicator # Clipboard history manager
+    gnomeExtensions.gsconnect # Phone integration (KDE Connect protocol)
+    gnomeExtensions.caffeine # Prevent auto-suspend/screen lock
+    gnomeExtensions.vitals # System monitoring in top bar
+    gnomeExtensions.space-bar # Workspace indicator in top bar
   ];
 
   # Enable chrome-gnome-shell for browser-based extension installation

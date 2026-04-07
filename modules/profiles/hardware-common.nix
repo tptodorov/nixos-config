@@ -25,9 +25,9 @@
 
   # Common hardware packages
   environment.systemPackages = with pkgs; [
-    lm_sensors      # Temperature monitoring
-    dmidecode       # Hardware info
-    usbutils        # USB utilities
-    pciutils        # PCI utilities
+    lm_sensors # Temperature monitoring
+    dmidecode # Hardware info
+    usbutils # USB utilities
+    pciutils # PCI utilities
   ];
 }

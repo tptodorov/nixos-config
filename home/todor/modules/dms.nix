@@ -69,7 +69,9 @@
 
   # Fix PATH for systemd service to find quickshell (qs)
   systemd.user.services.dms.Service.Environment = [
-    "PATH=${lib.makeBinPath [ inputs.dms.packages.${pkgs.system}.quickshell ]}:/run/current-system/sw/bin"
+    "PATH=${
+      lib.makeBinPath [ inputs.dms.packages.${pkgs.system}.quickshell ]
+    }:/run/current-system/sw/bin"
   ];
 
   # Lock screen before suspend (lid close, power button, etc.)

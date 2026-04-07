@@ -38,7 +38,7 @@
     extraSpecialArgs = {
       inherit inputs outputs;
       laptop = false;
-      standalone = false;  # Not standalone Home Manager
+      standalone = false; # Not standalone Home Manager
     };
     sharedModules = [
       inputs.nixvim.homeModules.nixvim

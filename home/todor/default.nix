@@ -14,7 +14,8 @@
     ./modules/shell.nix
     ./modules/terminal.nix
     ./secrets/secrets.nix
-  ] ++ lib.optionals (!standalone) [
+  ]
+  ++ lib.optionals (!standalone) [
     # Desktop modules (only for NixOS, not for standalone Home Manager)
     ./modules/niri.nix
     ./modules/sway.nix

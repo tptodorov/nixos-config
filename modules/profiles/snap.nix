@@ -2,7 +2,13 @@
 # Enables installation of snap packages alongside Nix packages
 # Import this module in hosts that need snap support
 
-{ config, pkgs, lib, inputs, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  inputs,
+  ...
+}:
 
 {
   # Import nix-snapd NixOS module

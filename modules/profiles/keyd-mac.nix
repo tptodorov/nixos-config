@@ -32,41 +32,41 @@
           "control:C" = {
             # Common shortcuts - use Super (which is now physical Alt) as modifier
             # Copy/Paste/Cut
-            c = "C-c";  # Cmd+C -> Ctrl+C
-            v = "C-v";  # Cmd+V -> Ctrl+V
-            x = "C-x";  # Cmd+X -> Ctrl+X
+            c = "C-c"; # Cmd+C -> Ctrl+C
+            v = "C-v"; # Cmd+V -> Ctrl+V
+            x = "C-x"; # Cmd+X -> Ctrl+X
 
             # Undo/Redo
-            z = "C-z";  # Cmd+Z -> Ctrl+Z
-            y = "C-y";  # Cmd+Y -> Ctrl+Y (redo in some apps)
+            z = "C-z"; # Cmd+Z -> Ctrl+Z
+            y = "C-y"; # Cmd+Y -> Ctrl+Y (redo in some apps)
 
             # Select all
-            a = "C-a";  # Cmd+A -> Ctrl+A
+            a = "C-a"; # Cmd+A -> Ctrl+A
 
             # Find
-            f = "C-f";  # Cmd+F -> Ctrl+F
+            f = "C-f"; # Cmd+F -> Ctrl+F
 
             # Save/Open/New
-            s = "C-s";  # Cmd+S -> Ctrl+S
-            o = "C-o";  # Cmd+O -> Ctrl+O
-            n = "C-n";  # Cmd+N -> Ctrl+N
+            s = "C-s"; # Cmd+S -> Ctrl+S
+            o = "C-o"; # Cmd+O -> Ctrl+O
+            n = "C-n"; # Cmd+N -> Ctrl+N
 
             # Window/Tab management
-            w = "C-w";      # Cmd+W -> Ctrl+W (close tab/window)
-            t = "C-t";      # Cmd+T -> Ctrl+T (new tab)
-            tab = "A-tab";  # Cmd+Tab -> Alt+Tab (app switcher)
+            w = "C-w"; # Cmd+W -> Ctrl+W (close tab/window)
+            t = "C-t"; # Cmd+T -> Ctrl+T (new tab)
+            tab = "A-tab"; # Cmd+Tab -> Alt+Tab (app switcher)
 
             # Browser shortcuts
-            r = "C-r";        # Cmd+R -> Ctrl+R (refresh)
-            l = "C-l";        # Cmd+L -> Ctrl+L (address bar)
-            left = "A-left";  # Cmd+Left -> Alt+Left (browser back)
+            r = "C-r"; # Cmd+R -> Ctrl+R (refresh)
+            l = "C-l"; # Cmd+L -> Ctrl+L (address bar)
+            left = "A-left"; # Cmd+Left -> Alt+Left (browser back)
             right = "A-right"; # Cmd+Right -> Alt+Right (browser forward)
 
             # Text navigation (Mac-style)
-            backspace = "C-backspace";  # Cmd+Backspace -> Ctrl+Backspace (delete word)
+            backspace = "C-backspace"; # Cmd+Backspace -> Ctrl+Backspace (delete word)
 
             # Quit application
-            q = "A-f4";  # Cmd+Q -> Alt+F4
+            q = "A-f4"; # Cmd+Q -> Alt+F4
           };
 
           # Terminal application layer - restore standard terminal behavior
@@ -75,16 +75,16 @@
             # In terminals, we want physical Ctrl to work as Ctrl
             # Since we swapped keys, physical Ctrl is now Alt
             # So we map Alt back to Ctrl in terminal contexts
-            c = "C-c";  # Ctrl+C (interrupt)
-            d = "C-d";  # Ctrl+D (EOF)
-            z = "C-z";  # Ctrl+Z (suspend)
-            l = "C-l";  # Ctrl+L (clear)
-            r = "C-r";  # Ctrl+R (reverse search)
-            a = "C-a";  # Ctrl+A (beginning of line)
-            e = "C-e";  # Ctrl+E (end of line)
-            k = "C-k";  # Ctrl+K (kill line)
-            u = "C-u";  # Ctrl+U (kill line backwards)
-            w = "C-w";  # Ctrl+W (delete word)
+            c = "C-c"; # Ctrl+C (interrupt)
+            d = "C-d"; # Ctrl+D (EOF)
+            z = "C-z"; # Ctrl+Z (suspend)
+            l = "C-l"; # Ctrl+L (clear)
+            r = "C-r"; # Ctrl+R (reverse search)
+            a = "C-a"; # Ctrl+A (beginning of line)
+            e = "C-e"; # Ctrl+E (end of line)
+            k = "C-k"; # Ctrl+K (kill line)
+            u = "C-u"; # Ctrl+U (kill line backwards)
+            w = "C-w"; # Ctrl+W (delete word)
           };
         };
 

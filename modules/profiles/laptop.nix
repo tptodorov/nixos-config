@@ -31,11 +31,11 @@
       # Note: "on" means runtime PM is disabled, "auto" means enabled
       # For MacBook Pro 2017, keep devices active to prevent suspend issues
       RUNTIME_PM_ON_AC = "on";
-      RUNTIME_PM_ON_BAT = "on";  # Changed from "auto" to fix MacBook suspend issues
+      RUNTIME_PM_ON_BAT = "on"; # Changed from "auto" to fix MacBook suspend issues
 
       # Exclude specific devices from runtime PM to prevent suspend issues
       # Particularly important for NVMe and Thunderbolt on MacBook Pro 2017
-      RUNTIME_PM_BLACKLIST = "01:00.0";  # Typically NVMe controller
+      RUNTIME_PM_BLACKLIST = "01:00.0"; # Typically NVMe controller
 
       # WiFi power saving (disabled for MacBook Pro 2017 Broadcom WiFi stability)
       WIFI_PWR_ON_AC = "off";
@@ -78,9 +78,9 @@
 
   # Laptop-specific packages
   environment.systemPackages = with pkgs; [
-    acpi           # Battery status
-    powertop       # Power consumption analysis
-    brightnessctl  # Backlight control
+    acpi # Battery status
+    powertop # Power consumption analysis
+    brightnessctl # Backlight control
   ];
 
   # Intel WiFi 7 BE200 fix for suspend/resume issues

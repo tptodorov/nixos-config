@@ -83,7 +83,7 @@
     windowrule=tag:1,isnoborder:1,appid:.*calendar.*
 
     windowrule=tag:2,isnoborder:1,appid:.*zed.*
-    
+
 
     # Layer rules for DMS
     layerrule=noanim:1,layer_name:^dms

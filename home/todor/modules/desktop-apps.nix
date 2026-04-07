@@ -285,7 +285,7 @@
   # Left/Right are hardware-ghosted with 3 modifiers on this keyboard
   # keyd swaps Alt↔Super, so GNOME sees <Primary><Super><Alt>
   dconf.settings."org/gnome/desktop/wm/keybindings" = {
-    move-to-monitor-left  = [ "<Primary><Super><Alt>Prior" ];
+    move-to-monitor-left = [ "<Primary><Super><Alt>Prior" ];
     move-to-monitor-right = [ "<Primary><Super><Alt>Next" ];
   };
 
