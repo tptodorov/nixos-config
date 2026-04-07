@@ -49,7 +49,6 @@ in
       go
       gopls
       gotools
-      jetbrains.goland
 
       # ops (cross-platform)
       flyctl # Fly.io CLI
@@ -290,6 +289,14 @@ in
     direnv = {
       enable = true;
       enableZshIntegration = true;
+      package =
+        if isDarwin then
+          pkgs.direnv.overrideAttrs (_: {
+            # direnv 2.37.1 currently dies in its upstream Fish test on Darwin.
+            doCheck = false;
+          })
+        else
+          pkgs.direnv;
       nix-direnv.enable = true;
       silent = true;
       # stdlib = ''

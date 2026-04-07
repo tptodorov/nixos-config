@@ -39,45 +39,48 @@ in
   ];
 
   # Shell configuration
-  home.packages = with pkgs; [
-    dua
-    nixfmt-rfc-style
-    nixfmt-tree
-    google-cloud-sdk
+  home.packages =
+    with pkgs;
+    [
+      dua
+      nixfmt-rfc-style
+      nixfmt-tree
+      google-cloud-sdk
 
-    # Supporting packages for Oh My Zsh plugins
-    gopass # for pass plugin
-    fd
-    fzf
+      # Supporting packages for Oh My Zsh plugins
+      gopass # for pass plugin
+      fd
+      fzf
 
-    wget
-    tree
-    ripgrep
-    age
-    sops
-    starship
-    viewFileCmd
+      wget
+      tree
+      ripgrep
+      age
+      sops
+      starship
+      viewFileCmd
 
-    yazi
-    dysk
-    btop
-    eza
+      yazi
+      dysk
+      btop
+      eza
 
-    # Network diagnostic tools
-    bind # dig, nslookup, host, and other DNS tools
-    nmap # port scanning
-    whois
-    curl
-    netcat
-    socat
-  ] ++ lib.optionals isLinux [
-    # Linux-only packages
-    inetutils # telnet, ftp, etc. - fails to build on macOS
-    x11_ssh_askpass # SSH askpass for GUI password prompts
-    traceroute
-    mtr # advanced traceroute
-    tcpdump # packet capture
-  ];
+      # Network diagnostic tools
+      bind # dig, nslookup, host, and other DNS tools
+      nmap # port scanning
+      whois
+      curl
+      netcat
+      socat
+    ]
+    ++ lib.optionals isLinux [
+      # Linux-only packages
+      inetutils # telnet, ftp, etc. - fails to build on macOS
+      x11_ssh_askpass # SSH askpass for GUI password prompts
+      traceroute
+      mtr # advanced traceroute
+      tcpdump # packet capture
+    ];
 
   programs = {
     # Shell and utilities
@@ -173,62 +176,60 @@ in
 
       };
 
-      # Initialize shell environment (runs before Oh My Zsh)
-      initExtraFirst = ''
-        # Skip compaudit permission checks - significant performance gain
-        ZSH_DISABLE_COMPFIX=true
-        # gcloud zsh completions (must be before compinit/oh-my-zsh)
-        fpath=(${pkgs.google-cloud-sdk}/share/zsh/site-functions $fpath)
-      '';
+      initContent = lib.mkMerge [
+        (lib.mkBefore ''
+          # Skip compaudit permission checks - significant performance gain
+          ZSH_DISABLE_COMPFIX=true
+          # gcloud zsh completions (must be before compinit/oh-my-zsh)
+          fpath=(${pkgs.google-cloud-sdk}/share/zsh/site-functions $fpath)
+        '')
 
-      # Initialize shell environment (runs after Oh My Zsh)
-      initContent = ''
-        # Source Nix daemon profile for proper PATH setup
-        if [ -e /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]; then
-          . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
-        fi
+        # Initialize shell environment (runs after Oh My Zsh)
+        ''
+          # Source Nix daemon profile for proper PATH setup
+          if [ -e /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]; then
+            . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+          fi
 
-        # Direnv integration
-        eval "$(direnv hook zsh)"
+          # Add custom paths (standard Nix paths are handled automatically)
+          export PATH="$HOME/.local/bin:$HOME/go/bin:$HOME/.npm-packages/bin:$HOME/.cargo/bin:$PATH"
 
-        # Add custom paths (standard Nix paths are handled automatically)
-        export PATH="$HOME/.local/bin:$HOME/go/bin:$HOME/.npm-packages/bin:$HOME/.cargo/bin:$PATH"
-
-        # View function: use mdterm for markdown, view for everything else
-        v() {
-          command v "$@"
-        }
-
-        # Source Home Manager session variables
-        if [ -e "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
-          . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
-        fi
-
-        # Lazy-load heavy completions (only loaded when first used)
-        if command -v kubectl &>/dev/null; then
-          kubectl() {
-            unfunction kubectl
-            source <(command kubectl completion zsh)
-            kubectl "$@"
+          # View function: use mdterm for markdown, view for everything else
+          v() {
+            command v "$@"
           }
-        fi
 
-        if command -v docker &>/dev/null; then
-          docker() {
-            unfunction docker
-            source <(command docker completion zsh 2>/dev/null)
-            docker "$@"
-          }
-        fi
+          # Source Home Manager session variables
+          if [ -e "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
+            . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+          fi
 
-        if command -v aws &>/dev/null; then
-          aws() {
-            unfunction aws
-            complete -C aws_completer aws
-            aws "$@"
-          }
-        fi
-      '';
+          # Lazy-load heavy completions (only loaded when first used)
+          if command -v kubectl &>/dev/null; then
+            kubectl() {
+              unfunction kubectl
+              source <(command kubectl completion zsh)
+              kubectl "$@"
+            }
+          fi
+
+          if command -v docker &>/dev/null; then
+            docker() {
+              unfunction docker
+              source <(command docker completion zsh 2>/dev/null)
+              docker "$@"
+            }
+          fi
+
+          if command -v aws &>/dev/null; then
+            aws() {
+              unfunction aws
+              complete -C aws_completer aws
+              aws "$@"
+            }
+          fi
+        ''
+      ];
     };
 
     # CLI tools
@@ -432,13 +433,19 @@ in
     # User-specific preferences
     EDITOR = "nvim";
     PAGER = "less";
-  } // (if isLinux then {
-    # Linux-only session variables
-    # Pinentry for gopass/age password prompts
-    PINENTRY_PROGRAM = "${pkgs.pinentry-bemenu}/bin/pinentry-bemenu";
+  }
+  // (
+    if isLinux then
+      {
+        # Linux-only session variables
+        # Pinentry for gopass/age password prompts
+        PINENTRY_PROGRAM = "${pkgs.pinentry-bemenu}/bin/pinentry-bemenu";
 
-    # SSH askpass for GUI password prompts
-    SSH_ASKPASS = "${pkgs.x11_ssh_askpass}/libexec/x11-ssh-askpass";
-    SSH_ASKPASS_REQUIRE = "prefer";
-  } else {});
+        # SSH askpass for GUI password prompts
+        SSH_ASKPASS = "${pkgs.x11_ssh_askpass}/libexec/x11-ssh-askpass";
+        SSH_ASKPASS_REQUIRE = "prefer";
+      }
+    else
+      { }
+  );
 }

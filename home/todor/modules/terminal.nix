@@ -387,10 +387,11 @@
     };
 
     # Use predefined Tokyo Night theme
-    theme = "Tokyo Night";
+    themeFile = "tokyo_night_night";
 
     # Key mappings
     keybindings = {
+      "ctrl+shift+enter" = "launch --location=split --cwd=last_reported";
       "kitty_mod+]" = "next_window";
       "kitty_mod+[" = "previous_window";
       "kitty_mod+l" = "next_layout";
