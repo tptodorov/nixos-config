@@ -363,9 +363,9 @@
       # Fonts - Regular for normal, ExtraBold for bold to maximize contrast
       font_family = "ZedMono Nerd Font Mono";
       font_size = if laptop then 14 else 20;
-      bold_font = "ZedMono Nerd Font Mono ExtraBold";
+      bold_font = "ZedMono Nerd Font Mono Bold";
       italic_font = "ZedMono Nerd Font Mono Italic";
-      bold_italic_font = "ZedMono Nerd Font Mono ExtraBold Italic";
+      bold_italic_font = "ZedMono Nerd Font Mono Bold Italic";
 
       # Cursor customization
       cursor_shape = "block";
