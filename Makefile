@@ -67,6 +67,7 @@ help:
 	@echo "  make check-all                - Validate all configurations"
 	@echo "  make build-all                - Build all configurations"
 	@echo "  make update                   - Update flake inputs"
+	@echo "  make hooks/install            - Configure repo-local git hooks"
 	@echo ""
 	@echo "Other:"
 	@echo "  make cache                    - Build and cache configuration"
@@ -123,12 +124,15 @@ home-aarch64:
 	$(MAKE) home-switch HMNAME=todor-aarch64
 
 # Flake management
-.PHONY: check flake-check update flake-update build-all check-all
+.PHONY: check flake-check update flake-update build-all check-all hooks/install
 check flake-check:
 	nix flake check
 
 update flake-update:
 	nix flake update
+
+hooks/install:
+	git config core.hooksPath .githooks
 
 # Build all NixOS configurations without switching (useful for CI/validation)
 build-all:

@@ -12,34 +12,50 @@ let
     system = pkgs.stdenv.hostPlatform.system;
     config = config.nixpkgs.config;
   };
-  mkCodexPrefixRule =
-    pattern: ''prefix_rule(pattern=${builtins.toJSON pattern}, decision="allow")'';
-  codexHomeManagerRules = lib.concatMapStringsSep "\n" mkCodexPrefixRule [
-    [ "codex" "mcp" ]
-    [ "docker" ]
-    [ "git" ]
-    [ "gh" ]
-    [ "curl" ]
-    [ "wget" ]
-    [ "jq" ]
-    [ "rg" ]
-    [ "fd" ]
-    [ "fzf" ]
-    [ "tree" ]
-    [ "eza" ]
-    [ "dysk" ]
-    [ "dua" ]
-    [ "dig" ]
-    [ "host" ]
-    [ "nslookup" ]
-    [ "whois" ]
-    [ "nix" "eval" ]
-    [ "nix" "flake" "check" "--no-build" ]
-    [ "nix-instantiate" "--parse" ]
-    [ "nixfmt-rfc-style" ]
-    [ "nixfmt-tree" ]
-    [ "statix" ]
-  ] + "\n";
+  mkCodexPrefixRule = pattern: ''prefix_rule(pattern=${builtins.toJSON pattern}, decision="allow")'';
+  codexHomeManagerRules =
+    lib.concatMapStringsSep "\n" mkCodexPrefixRule [
+      [
+        "codex"
+        "mcp"
+      ]
+      [ "docker" ]
+      [ "git" ]
+      [ "gh" ]
+      [ "curl" ]
+      [ "wget" ]
+      [ "jq" ]
+      [ "rg" ]
+      [ "fd" ]
+      [ "fzf" ]
+      [ "tree" ]
+      [ "eza" ]
+      [ "dysk" ]
+      [ "dua" ]
+      [ "dig" ]
+      [ "host" ]
+      [ "nslookup" ]
+      [ "whois" ]
+      [
+        "nix"
+        "eval"
+      ]
+      [
+        "nix"
+        "flake"
+        "check"
+        "--no-build"
+      ]
+      [
+        "nix-instantiate"
+        "--parse"
+      ]
+      [ "nixfmt" ]
+      [ "nixfmt-rfc-style" ]
+      [ "nixfmt-tree" ]
+      [ "statix" ]
+    ]
+    + "\n";
 in
 {
   # Development tools and environment

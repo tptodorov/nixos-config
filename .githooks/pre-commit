@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+formatter=""
+if command -v nixfmt >/dev/null 2>&1; then
+  formatter="nixfmt"
+elif command -v nixfmt-rfc-style >/dev/null 2>&1; then
+  formatter="nixfmt-rfc-style"
+else
+  echo "pre-commit: nixfmt or nixfmt-rfc-style is required but not installed" >&2
+  exit 1
+fi
+
+files=()
+while IFS= read -r -d '' file; do
+  files+=("$file")
+done < <(git diff --cached --name-only --diff-filter=ACMR -z -- '*.nix')
+
+if [ "${#files[@]}" -eq 0 ]; then
+  exit 0
+fi
+
+"$formatter" "${files[@]}"
+git add -- "${files[@]}"
