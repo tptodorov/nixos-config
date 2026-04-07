@@ -1,11 +1,45 @@
 {
+  config,
   pkgs,
   lib,
+  inputs,
   ...
 }:
 let
   isLinux = pkgs.stdenv.isLinux;
   isDarwin = pkgs.stdenv.isDarwin;
+  unstablePkgs = import inputs.nixpkgsUnstable {
+    system = pkgs.stdenv.hostPlatform.system;
+    config = config.nixpkgs.config;
+  };
+  mkCodexPrefixRule =
+    pattern: ''prefix_rule(pattern=${builtins.toJSON pattern}, decision="allow")'';
+  codexHomeManagerRules = lib.concatMapStringsSep "\n" mkCodexPrefixRule [
+    [ "codex" "mcp" ]
+    [ "docker" ]
+    [ "git" ]
+    [ "gh" ]
+    [ "curl" ]
+    [ "wget" ]
+    [ "jq" ]
+    [ "rg" ]
+    [ "fd" ]
+    [ "fzf" ]
+    [ "tree" ]
+    [ "eza" ]
+    [ "dysk" ]
+    [ "dua" ]
+    [ "dig" ]
+    [ "host" ]
+    [ "nslookup" ]
+    [ "whois" ]
+    [ "nix" "eval" ]
+    [ "nix" "flake" "check" "--no-build" ]
+    [ "nix-instantiate" "--parse" ]
+    [ "nixfmt-rfc-style" ]
+    [ "nixfmt-tree" ]
+    [ "statix" ]
+  ] + "\n";
 in
 {
   # Development tools and environment
@@ -23,7 +57,7 @@ in
       amp-cli
       crush # AI coding agent for terminal
       jq # for jsontools plugin
-      neovim # for LazyVim setup
+      unstablePkgs.neovim # Neovim 0.12 until it lands in the 25.11 branch
       jiratui
 
       # Neovim/LazyVim dependencies (cross-platform)
@@ -319,6 +353,11 @@ in
 
     # Zed Editor settings file
     ".config/zed/settings.json".source = ../config/zed/private_settings.json;
+
+    # Codex global command approval rules managed by Home Manager.
+    # Codex keeps writing user-approved commands to ~/.codex/rules/default.rules.
+    ".codex/rules/home-manager.rules".text = codexHomeManagerRules;
+
     # Git identity for standalone mode (managed by Home Manager)
     ".config/git/config.d/identity".text = ''
       [user]
