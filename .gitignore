@@ -24,3 +24,5 @@ result-*
 Thumbs.db
 result
 *.log
+.cache/nix
+.codex
