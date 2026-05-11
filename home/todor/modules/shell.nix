@@ -212,6 +212,13 @@ in
             . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
           fi
 
+          ${lib.optionalString isDarwin ''
+            # Add the default SSH key to Apple's keychain-backed agent.
+            if [ -f "$HOME/.ssh/id_ed25519" ]; then
+              /usr/bin/ssh-add --apple-use-keychain "$HOME/.ssh/id_ed25519" 2>/dev/null || true
+            fi
+          ''}
+
           # Lazy-load heavy completions (only loaded when first used)
           if command -v kubectl &>/dev/null; then
             kubectl() {
