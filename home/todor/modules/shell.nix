@@ -6,6 +6,14 @@
 let
   isLinux = pkgs.stdenv.isLinux;
   isDarwin = pkgs.stdenv.isDarwin;
+  sshAddKeys = pkgs.writeShellScript "ssh-add-keys" ''
+    if [ -f "$HOME/.ssh/id_ed25519" ]; then
+      ${pkgs.openssh}/bin/ssh-add "$HOME/.ssh/id_ed25519" 2>/dev/null || true
+    fi
+    if [ -f "$HOME/.ssh/id_rsa" ]; then
+      ${pkgs.openssh}/bin/ssh-add "$HOME/.ssh/id_rsa" 2>/dev/null || true
+    fi
+  '';
   viewFileCmd = pkgs.writeShellScriptBin "v" ''
     if [ "$#" -eq 0 ]; then
       echo "Usage: v <file>" >&2
@@ -360,8 +368,11 @@ in
 
     # SSH
     ssh = {
-      enable = !pkgs.stdenv.isDarwin;
+      enable = true;
       enableDefaultConfig = false;
+      extraOptionOverrides = {
+        IgnoreUnknown = "UseKeychain";
+      };
       extraConfig = ''
         MACs hmac-sha2-256,hmac-sha1,hmac-sha2-512,hmac-sha2-512-etm@openssh.com,umac-128-etm@openssh.com
       '';
@@ -374,9 +385,16 @@ in
             MACs = "hmac-sha2-512-etm@openssh.com";
           };
         };
+        "github.com" = {
+          addKeysToAgent = "yes";
+          identityFile = "~/.ssh/id_ed25519";
+          extraOptions = {
+            UseKeychain = "yes";
+          };
+        };
         "*" = {
           addKeysToAgent = "yes";
-          identityFile = "~/.ssh/id_rsa";
+          identityFile = "~/.ssh/id_ed25519";
         };
       };
     };
@@ -409,7 +427,7 @@ in
           "SSH_ASKPASS_REQUIRE=prefer"
           "DISPLAY=:0"
         ];
-        ExecStart = "${pkgs.openssh}/bin/ssh-add /home/todor/.ssh/id_rsa";
+        ExecStart = "${sshAddKeys}";
         RemainAfterExit = true;
       };
       Install = {

@@ -348,11 +348,11 @@
         ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd SSH_AUTH_SOCK
 
         # Add SSH keys to ssh-agent
-        if [ -f "$HOME/.ssh/id_rsa" ]; then
-          ${pkgs.openssh}/bin/ssh-add "$HOME/.ssh/id_rsa" 2>/dev/null
-        fi
         if [ -f "$HOME/.ssh/id_ed25519" ]; then
           ${pkgs.openssh}/bin/ssh-add "$HOME/.ssh/id_ed25519" 2>/dev/null
+        fi
+        if [ -f "$HOME/.ssh/id_rsa" ]; then
+          ${pkgs.openssh}/bin/ssh-add "$HOME/.ssh/id_rsa" 2>/dev/null
         fi
         if [ -f "$HOME/.ssh/id_ecdsa" ]; then
           ${pkgs.openssh}/bin/ssh-add "$HOME/.ssh/id_ecdsa" 2>/dev/null
