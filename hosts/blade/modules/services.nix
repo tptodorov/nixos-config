@@ -66,7 +66,26 @@
       };
     };
 
+    # DLNA server for smart TVs on the local network.
+    minidlna = {
+      enable = true;
+      openFirewall = true;
+      settings = {
+        friendly_name = "blade";
+        media_dir = [ "V,/srv/media/video" ];
+        root_container = "V";
+        inotify = "yes";
+        enable_subtitles = "yes";
+      };
+    };
+
   };
+
+  # Shared directory for videos served over DLNA to the Samsung TV.
+  systemd.tmpfiles.rules = [
+    "d /srv/media 2775 root users - -"
+    "d /srv/media/video 2775 root users - -"
+  ];
 
   # SANE - Scanner Access Now Easy (for Epson XP-630 scanner)
   hardware.sane = {
