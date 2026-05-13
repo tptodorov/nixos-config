@@ -5,6 +5,9 @@
   inputs,
   ...
 }:
+let
+  system = pkgs.stdenv.hostPlatform.system;
+in
 {
   # Dank Material Shell (DMS) configuration for Sway
   imports = [
@@ -12,8 +15,8 @@
   ];
 
   home.packages = [
-    inputs.dgop.packages.${pkgs.system}.default
-    inputs.dms.packages.${pkgs.system}.quickshell # Required for DMS to run
+    inputs.dgop.packages.${system}.default
+    inputs.dms.packages.${system}.quickshell # Required for DMS to run
     pkgs.swappy # Screenshot editor
     pkgs.matugen # Dynamic theming based on wallpaper
     pkgs.cava # Audio visualizer
@@ -70,7 +73,7 @@
   # Fix PATH for systemd service to find quickshell (qs)
   systemd.user.services.dms.Service.Environment = [
     "PATH=${
-      lib.makeBinPath [ inputs.dms.packages.${pkgs.system}.quickshell ]
+      lib.makeBinPath [ inputs.dms.packages.${system}.quickshell ]
     }:/run/current-system/sw/bin"
   ];
 

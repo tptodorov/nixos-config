@@ -8,99 +8,105 @@
 }:
 {
   # Desktop applications and GUI tools
-  home.packages = with pkgs; [
-    xdg-utils
-    xdg-user-dirs
+  home.packages =
+    with pkgs;
+    [
+      xdg-utils
+      xdg-user-dirs
 
-    # File managers
-    nautilus # File manager
-    nemo # Alternative file manager
+      # File managers
+      nautilus # File manager
+      nemo # Alternative file manager
 
-    # System utilities
-    brightnessctl # Brightness control
-    blueman # Bluetooth manager
-    networkmanagerapplet # Network manager GUI
-    htop # System monitor
-    swayidle # Idle timeout manager
-    xwayland-satellite # X11 compatibility for Wayland (for snaps and X11 apps)
-    wlr-randr # Output management for wlroots compositors
-    wlrctl # Control wlroots compositors
-    walker # Application launcher and clipboard manager
+      # System utilities
+      brightnessctl # Brightness control
+      blueman # Bluetooth manager
+      networkmanagerapplet # Network manager GUI
+      htop # System monitor
+      swayidle # Idle timeout manager
+      xwayland-satellite # X11 compatibility for Wayland (for snaps and X11 apps)
+      wlr-randr # Output management for wlroots compositors
+      wlrctl # Control wlroots compositors
+      walker # Application launcher and clipboard manager
 
-    # Keybinding testing
-    xev # X11 event viewer
-    wev # Wayland event viewer
-    wtype # Wayland keyboard input simulator (for paste)
+      # Keybinding testing
+      xev # X11 event viewer
+      wev # Wayland event viewer
+      wtype # Wayland keyboard input simulator (for paste)
 
-    # Screenshot tools
-    swappy # Screenshot editor
+      # Screenshot tools
+      swappy # Screenshot editor
 
-    # GNOME dependencies for Nautilus
-    gnome-themes-extra
-    gsettings-desktop-schemas
-    glib
-    dconf
+      # GNOME dependencies for Nautilus
+      gnome-themes-extra
+      gsettings-desktop-schemas
+      glib
+      dconf
 
-    # Messenger applications
-    telegram-desktop
-    signal-desktop
-    viber
-    wasistlos
-    zoom-us # Video conferencing
-    slack # Team communication
+      # Messenger applications
+      telegram-desktop
+      signal-desktop
+      viber
+      wasistlos
+      zoom-us # Video conferencing
+      slack # Team communication
 
-    # Notifications
-    libnotify # notify-send command
+      # Notifications
+      libnotify # notify-send command
 
-    # Audio applications
-    spotify
-    discord
+      # Audio applications
+      spotify
+      discord
 
-    # Productivity applications
-    obsidian
-    libreoffice-fresh # LibreOffice suite (Writer, Calc, Impress, Draw, etc.)
-    geary # Email client
+      # Productivity applications
+      obsidian
+      libreoffice-fresh # LibreOffice suite (Writer, Calc, Impress, Draw, etc.)
+      geary # Email client
 
-    # Scanning applications (for Epson XP-630)
-    simple-scan # GNOME's simple scanner application
-    xsane # Advanced scanner application
+      # Scanning applications (for Epson XP-630)
+      simple-scan # GNOME's simple scanner application
+      xsane # Advanced scanner application
 
-    # PDF editing and manipulation
-    pdfarranger # Merge, split, rotate, and rearrange PDF pages
-    xournalpp # Annotate and markup PDFs, handwriting support
-    evince # GNOME PDF viewer with basic annotation
+      # PDF editing and manipulation
+      pdfarranger # Merge, split, rotate, and rearrange PDF pages
+      xournalpp # Annotate and markup PDFs, handwriting support
+      evince # GNOME PDF viewer with basic annotation
+    ]
+    ++ lib.optionals (pkgs.stdenv.hostPlatform.isLinux && pkgs.stdenv.hostPlatform.isx86_64) [
+      dropbox
+    ];
 
-  ];
-
-  # Set Brave as default browser in standalone mode using activation script
-  home.activation = lib.mkIf standalone {
+  # Make Brave the session default browser for desktop environments like GNOME.
+  home.activation = {
     setBraveAsDefault = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      # Unset BROWSER temporarily to allow xdg-settings to work on Omarchy
-      OLD_BROWSER="$BROWSER"
+      OLD_BROWSER="''${BROWSER-}"
       unset BROWSER
       $DRY_RUN_CMD ${pkgs.xdg-utils}/bin/xdg-settings set default-web-browser brave-browser.desktop || true
-      export BROWSER="$OLD_BROWSER"
-
-      # Also update mimeapps.list directly for browser-related MIME types
-      # This forcefully overrides Omarchy's managed mimeapps.list
-      MIMEAPPS="$HOME/.config/mimeapps.list"
-      if [ -f "$MIMEAPPS" ]; then
-        $DRY_RUN_CMD sed -i \
-          -e 's|^text/html=.*|text/html=brave-browser.desktop|' \
-          -e 's|^x-scheme-handler/http=.*|x-scheme-handler/http=brave-browser.desktop|' \
-          -e 's|^x-scheme-handler/https=.*|x-scheme-handler/https=brave-browser.desktop|' \
-          -e 's|^x-scheme-handler/about=.*|x-scheme-handler/about=brave-browser.desktop|' \
-          -e 's|^x-scheme-handler/unknown=.*|x-scheme-handler/unknown=brave-browser.desktop|' \
-          -e 's|^x-scheme-handler/ftp=.*|x-scheme-handler/ftp=brave-browser.desktop|' \
-          "$MIMEAPPS"
+      if [ -n "$OLD_BROWSER" ]; then
+        export BROWSER="$OLD_BROWSER"
       fi
 
-      # Verify the changes were applied
-      if grep -q "brave-browser.desktop" "$MIMEAPPS"; then
-        echo "✓ Brave set as default browser in mimeapps.list"
-      else
-        echo "⚠ Warning: Failed to set Brave as default browser"
-      fi
+      ${lib.optionalString standalone ''
+        # Also update mimeapps.list directly for browser-related MIME types.
+        # This forcefully overrides Omarchy's managed mimeapps.list.
+        MIMEAPPS="$HOME/.config/mimeapps.list"
+        if [ -f "$MIMEAPPS" ]; then
+          $DRY_RUN_CMD sed -i \
+            -e 's|^text/html=.*|text/html=brave-browser.desktop|' \
+            -e 's|^x-scheme-handler/http=.*|x-scheme-handler/http=brave-browser.desktop|' \
+            -e 's|^x-scheme-handler/https=.*|x-scheme-handler/https=brave-browser.desktop|' \
+            -e 's|^x-scheme-handler/about=.*|x-scheme-handler/about=brave-browser.desktop|' \
+            -e 's|^x-scheme-handler/unknown=.*|x-scheme-handler/unknown=brave-browser.desktop|' \
+            -e 's|^x-scheme-handler/ftp=.*|x-scheme-handler/ftp=brave-browser.desktop|' \
+            "$MIMEAPPS"
+        fi
+
+        if grep -q "brave-browser.desktop" "$MIMEAPPS"; then
+          echo "✓ Brave set as default browser in mimeapps.list"
+        else
+          echo "⚠ Warning: Failed to set Brave as default browser"
+        fi
+      ''}
     '';
   };
 

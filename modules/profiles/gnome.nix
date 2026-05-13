@@ -5,10 +5,10 @@
 {
   # Enable GNOME desktop environment
   services.xserver.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
+  services.desktopManager.gnome.enable = true;
 
   # Use GDM as the display manager (replaces greetd from desktop.nix)
-  services.xserver.displayManager.gdm.enable = true;
+  services.displayManager.gdm.enable = true;
   services.displayManager.defaultSession = lib.mkForce "gnome";
 
   # Disable greetd (conflicts with GDM)
