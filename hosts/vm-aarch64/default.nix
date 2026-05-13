@@ -53,7 +53,6 @@
     tree
     ripgrep
     age
-    sops
     efibootmgr
     inputs.home-manager.packages.${pkgs.stdenv.hostPlatform.system}.default
 

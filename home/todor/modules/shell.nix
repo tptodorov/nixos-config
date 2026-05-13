@@ -42,10 +42,6 @@ let
   '';
 in
 {
-  imports = [
-    ../secrets/secrets.nix
-  ];
-
   # Shell configuration
   home.packages =
     with pkgs;
@@ -64,7 +60,6 @@ in
       tree
       ripgrep
       age
-      sops
       starship
       viewFileCmd
 
@@ -201,6 +196,10 @@ in
 
           # Add custom paths (standard Nix paths are handled automatically)
           export PATH="$HOME/.local/bin:$HOME/go/bin:$HOME/.npm-packages/bin:$HOME/.cargo/bin:$PATH"
+
+          if command -v mise >/dev/null 2>&1; then
+            eval "$(mise activate zsh)"
+          fi
 
           # View function: use mdterm for markdown, view for everything else
           v() {

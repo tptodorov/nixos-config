@@ -1,4 +1,11 @@
 {
+  nixConfig = {
+    extra-substituters = [ "https://cache.numtide.com" ];
+    extra-trusted-public-keys = [
+      "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
+    ];
+  };
+
   description = "NixOS and Home Manager configuration for todor";
 
   inputs = {
@@ -60,15 +67,6 @@
     # - Version: nixos-25.11 stable branch (matches system)
     nixvim = {
       url = "github:nix-community/nixvim/nixos-25.11";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    # sops-nix: Secrets management using SOPS (Secrets OPerationS)
-    # - Encrypts secrets in git, decrypts them at build/runtime
-    # - Used by: System configuration (for API keys, passwords, etc.)
-    # - Version: main branch
-    sops-nix = {
-      url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -134,6 +132,11 @@
     disko.url = "github:nix-community/disko/latest";
     disko.inputs.nixpkgs.follows = "nixpkgs";
 
+    # llm-agents: packaged AI coding CLIs maintained as a separate flake
+    # - Used by: Home Manager package set (codex, claude-code, kilocode-cli)
+    # - Keep its own pinned nixpkgs for cache compatibility with upstream CI
+    llm-agents.url = "github:numtide/llm-agents.nix";
+
   };
 
   outputs =
@@ -143,7 +146,6 @@
       nixos-hardware,
       home-manager,
       nixvim,
-      sops-nix,
       nix-snapd,
       fenix,
       zig,

@@ -8,7 +8,6 @@
     ./modules/development.nix
     ./modules/shell.nix
     ./modules/terminal.nix
-    ./secrets/secrets.nix
   ];
 
   # Nixpkgs configuration

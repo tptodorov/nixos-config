@@ -8,6 +8,7 @@
 let
   isLinux = pkgs.stdenv.isLinux;
   isDarwin = pkgs.stdenv.isDarwin;
+  llmAgentsPkgs = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system};
   unstablePkgs = import inputs.nixpkgsUnstable {
     system = pkgs.stdenv.hostPlatform.system;
     config = config.nixpkgs.config;
@@ -64,6 +65,7 @@ in
     [
       # shell productivity (cross-platform)
       devenv
+      mise
       nil
       gopass
       nixd
@@ -71,7 +73,10 @@ in
       zed-editor
       warp-terminal
       amp-cli
+      llmAgentsPkgs.codex
+      llmAgentsPkgs.claude-code
       crush # AI coding agent for terminal
+      llmAgentsPkgs.kilocode-cli
       jq # for jsontools plugin
       unstablePkgs.neovim # Neovim 0.12 until it lands in the 25.11 branch
       jiratui
@@ -118,6 +123,10 @@ in
       # PHP development (cross-platform)
       php
       phpactor
+
+      # BEAM development (cross-platform)
+      erlang_28
+      beam28Packages.elixir_1_19
 
       # Lua development (for Neovim config, cross-platform)
       lua-language-server

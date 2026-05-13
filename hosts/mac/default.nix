@@ -5,7 +5,6 @@
 {
   imports = [
     inputs.home-manager.darwinModules.home-manager
-    inputs.sops-nix.darwinModules.sops
     ../../modules/common/fonts.nix
   ];
 

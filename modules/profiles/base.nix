@@ -23,6 +23,7 @@
         "flakes"
       ];
       auto-optimise-store = true;
+      warn-dirty = false;
       trusted-users = [
         "root"
         "@wheel"
@@ -133,7 +134,6 @@
     ripgrep
     bubblewrap
     age
-    sops
     efibootmgr
     bind # Provides dig and nslookup DNS utilities
     inputs.home-manager.packages.${pkgs.stdenv.hostPlatform.system}.default
