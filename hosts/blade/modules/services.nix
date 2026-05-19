@@ -74,6 +74,7 @@
         friendly_name = "blade";
         media_dir = [ "V,/srv/media/video" ];
         root_container = "V";
+        notify_interval = 30;
         inotify = "yes";
         enable_subtitles = "yes";
       };

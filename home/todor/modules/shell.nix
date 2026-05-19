@@ -175,7 +175,6 @@ in
         "t" = "~/go/bin/task";
 
         "nixvi" = "nvim ~/mycfg";
-        "nixsw" = "sudo nixos-rebuild switch --flake ~/mycfg";
 
       };
 
@@ -204,6 +203,10 @@ in
           # View function: use mdterm for markdown, view for everything else
           v() {
             command v "$@"
+          }
+
+          nixsw() {
+            sudo nixos-rebuild switch --flake "path:$HOME/mycfg#$(hostname)"
           }
 
           # Source Home Manager session variables

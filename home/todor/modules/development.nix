@@ -73,10 +73,15 @@ in
       zed-editor
       warp-terminal
       amp-cli
+      llmAgentsPkgs.kilocode-cli
       llmAgentsPkgs.codex
       llmAgentsPkgs.claude-code
-      crush # AI coding agent for terminal
-      llmAgentsPkgs.kilocode-cli
+      llmAgentsPkgs.hermes-agent
+      llmAgentsPkgs.hunk
+      llmAgentsPkgs.skills
+      llmAgentsPkgs.openspec
+      llmAgentsPkgs.openspecui
+      llmAgentsPkgs.fence
       jq # for jsontools plugin
       unstablePkgs.neovim # Neovim 0.12 until it lands in the 25.11 branch
       jiratui

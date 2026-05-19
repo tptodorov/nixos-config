@@ -26,3 +26,5 @@ result
 *.log
 .cache/nix
 .codex
+.tmp-cache/nix
+.tmp-home
