@@ -13,6 +13,21 @@ let
     system = pkgs.stdenv.hostPlatform.system;
     config = config.nixpkgs.config;
   };
+  direnvPackage =
+    if isDarwin then
+      pkgs.direnv.overrideAttrs (_: {
+        # direnv 2.37.1 currently dies in its upstream Fish test on Darwin.
+        doCheck = false;
+      })
+    else
+      pkgs.direnv;
+  misePackage =
+    if isDarwin then
+      pkgs.mise.override {
+        direnv = direnvPackage;
+      }
+    else
+      pkgs.mise;
   mkCodexPrefixRule = pattern: ''prefix_rule(pattern=${builtins.toJSON pattern}, decision="allow")'';
   codexHomeManagerRules =
     lib.concatMapStringsSep "\n" mkCodexPrefixRule [
@@ -65,7 +80,7 @@ in
     [
       # shell productivity (cross-platform)
       devenv
-      mise
+      misePackage
       nil
       gopass
       nixd
@@ -353,14 +368,7 @@ in
     direnv = {
       enable = true;
       enableZshIntegration = true;
-      package =
-        if isDarwin then
-          pkgs.direnv.overrideAttrs (_: {
-            # direnv 2.37.1 currently dies in its upstream Fish test on Darwin.
-            doCheck = false;
-          })
-        else
-          pkgs.direnv;
+      package = direnvPackage;
       nix-direnv.enable = true;
       silent = true;
       # stdlib = ''

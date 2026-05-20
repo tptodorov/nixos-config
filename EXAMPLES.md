@@ -128,7 +128,6 @@ cp home/todor/secrets/local.nix.example home/alice/secrets/
 # home/todor/secrets/local.nix
 {
   home.sessionVariables = {
-    GITHUB_TOKEN = "ghp_developer_token";
     OPENAI_API_KEY = "sk-dev-key";
     AWS_PROFILE = "development";
   };
@@ -140,7 +139,6 @@ cp home/todor/secrets/local.nix.example home/alice/secrets/
 # home/alice/secrets/local.nix
 {
   home.sessionVariables = {
-    GITHUB_TOKEN = "ghp_alice_token";
     JUPYTER_TOKEN = "jupyter-secret";
     KAGGLE_USERNAME = "alice_kaggle";
     KAGGLE_KEY = "kaggle-api-key";
