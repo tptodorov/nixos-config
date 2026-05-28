@@ -178,6 +178,8 @@
               ];
             }
             inputs.home-manager.nixosModules.home-manager
+          ]
+          ++ [
             ./hosts/blackbox
           ];
         };
@@ -197,6 +199,8 @@
               ];
             }
             inputs.home-manager.nixosModules.home-manager
+          ]
+          ++ [
             ./hosts/blade
           ];
         };

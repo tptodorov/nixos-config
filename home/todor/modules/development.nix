@@ -91,6 +91,7 @@ in
       llmAgentsPkgs.kilocode-cli
       llmAgentsPkgs.codex
       llmAgentsPkgs.claude-code
+      llmAgentsPkgs.agent-browser
       llmAgentsPkgs.hermes-agent
       llmAgentsPkgs.hunk
       llmAgentsPkgs.skills
