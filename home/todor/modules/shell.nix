@@ -206,7 +206,12 @@ in
           }
 
           nixsw() {
-            sudo nixos-rebuild switch --flake "path:$HOME/mycfg#$(hostname)"
+            ${
+              if isDarwin then
+                ''sudo darwin-rebuild switch --flake "$HOME/mycfg#DR94XJ1435-Todor-Peychev-Todorov"''
+              else
+                ''sudo nixos-rebuild switch --flake "path:$HOME/mycfg#$(hostname)"''
+            }
           }
 
           # Source Home Manager session variables
