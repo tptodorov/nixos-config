@@ -289,19 +289,36 @@
           system = "aarch64-darwin";
           modules = [
             ./hosts/mac
-            {
-              home-manager.useUserPackages = true;
-              home-manager.extraSpecialArgs = {
-                inherit inputs;
-                laptop = true; # MacBook Pro is a laptop
-              };
-              home-manager.users."todor.todorov" = import ./home/todor/mac.nix;
-              home-manager.backupFileExtension = "bak";
-              users.users."todor.todorov" = {
-                name = "todor.todorov";
-                home = "/Users/todor.todorov";
-              };
-            }
+            (
+              { pkgs, ... }:
+              {
+                home-manager.useUserPackages = true;
+                home-manager.extraSpecialArgs = {
+                  inherit inputs;
+                  laptop = true; # MacBook Pro is a laptop
+                };
+                home-manager.users."todor.todorov" = import ./home/todor/mac.nix;
+                home-manager.backupCommand = pkgs.writeShellScript "home-manager-backup" ''
+                  set -euo pipefail
+
+                  target="''${1:?missing target path}"
+                  timestamp="$(${pkgs.coreutils}/bin/date +%Y%m%d-%H%M%S)"
+                  backup="$target.bak-$timestamp"
+                  counter=1
+
+                  while [ -e "$backup" ]; do
+                    backup="$target.bak-$timestamp-$counter"
+                    counter=$((counter + 1))
+                  done
+
+                  ${pkgs.coreutils}/bin/mv -- "$target" "$backup"
+                '';
+                users.users."todor.todorov" = {
+                  name = "todor.todorov";
+                  home = "/Users/todor.todorov";
+                };
+              }
+            )
           ];
           specialArgs = {
             inherit inputs;
