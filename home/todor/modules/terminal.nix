@@ -397,7 +397,8 @@
       "f7>l" = "goto_session langcache";
       "f7>n" = "goto_session nixos";
       "f7>-" = "goto_session -1";
-      "kitty_mod+a" = "launch zsh -c  'direnv exec ~/redislabsdev/langcache codex'";
+      "ctrl+shift+a" = "launch --cwd=last_reported zsh -l -i -c codex";
+      "ctrl+shift+c" = "launch --cwd=last_reported zsh -l -i -c claude";
     };
   };
 }
