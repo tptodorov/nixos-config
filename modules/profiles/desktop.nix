@@ -51,6 +51,10 @@
 
   # Enable Niri and Sway window managers
   programs = {
+    appimage = {
+      enable = true;
+      binfmt = true;
+    };
     xwayland.enable = true;
     niri = {
       enable = lib.mkDefault true;
