@@ -84,13 +84,19 @@ in
       llmAgentsPkgs.codex
       llmAgentsPkgs.claude-code
       llmAgentsPkgs.agent-browser
-      llmAgentsPkgs.hermes-agent
       llmAgentsPkgs.hunk
       llmAgentsPkgs.but
       llmAgentsPkgs.skills
       llmAgentsPkgs.openspec
       llmAgentsPkgs.openspecui
       llmAgentsPkgs.fence
+      llmAgentsPkgs.workmux
+      llmAgentsPkgs.rtk
+      llmAgentsPkgs.oh-my-codex
+      llmAgentsPkgs.gastown
+      llmAgentsPkgs.beads
+      llmAgentsPkgs.beads-viewer
+      llmAgentsPkgs.pi
       jq # for jsontools plugin
       unstablePkgs.neovim # Neovim 0.12 until it lands in the 25.11 branch
       jiratui
@@ -142,6 +148,14 @@ in
       erlang_28
       beam28Packages.elixir_1_19
 
+      # PHP development (cross-platform)
+      php
+      phpactor
+
+      # BEAM development (cross-platform)
+      erlang_28
+      beam28Packages.elixir_1_19
+
       # Lua development (for Neovim config, cross-platform)
       lua-language-server
 
@@ -152,7 +166,7 @@ in
       lazygit
       git-town
       # Docker and container tools (cross-platform)
-      docker
+      docker_29
       docker-compose
       lazydocker # TUI Docker client
     ]
@@ -361,14 +375,6 @@ in
     # Development environment
     direnv = {
       enable = true;
-      enableZshIntegration = true;
-      package = direnvPackage;
-      nix-direnv.enable = true;
-      silent = true;
-      # stdlib = ''
-      #   # Add devenv integration for use_devenv in .envrc files
-      #   use_devenv() {
-      #     watch_file devenv.nix
       #     watch_file devenv.yaml
       #     watch_file devenv.lock
       #     eval "$(devenv print-dev-env)"

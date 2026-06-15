@@ -8,6 +8,7 @@
   # Docker - Container runtime
   virtualisation.docker = {
     enable = true;
+    package = pkgs.docker_29;
     daemon.settings = {
       log-driver = "json-file";
       log-opts = {
