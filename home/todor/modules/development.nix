@@ -21,13 +21,6 @@ let
       })
     else
       pkgs.direnv;
-  misePackage =
-    if isDarwin then
-      pkgs.mise.override {
-        direnv = direnvPackage;
-      }
-    else
-      pkgs.mise;
   mkCodexPrefixRule = pattern: ''prefix_rule(pattern=${builtins.toJSON pattern}, decision="allow")'';
   codexHomeManagerRules =
     lib.concatMapStringsSep "\n" mkCodexPrefixRule [
@@ -80,7 +73,6 @@ in
     [
       # shell productivity (cross-platform)
       devenv
-      misePackage
       nil
       gopass
       nixd
@@ -94,6 +86,7 @@ in
       llmAgentsPkgs.agent-browser
       llmAgentsPkgs.hermes-agent
       llmAgentsPkgs.hunk
+      llmAgentsPkgs.but
       llmAgentsPkgs.skills
       llmAgentsPkgs.openspec
       llmAgentsPkgs.openspecui
