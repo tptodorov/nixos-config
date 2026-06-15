@@ -51,8 +51,8 @@ in
       nixfmt-tree
       google-cloud-sdk
 
-      # Supporting packages for Oh My Zsh plugins
-      gopass # for pass plugin
+      # Shell support tools
+      gopass
       fd
       fzf
 
@@ -85,28 +85,26 @@ in
       tcpdump # packet capture
     ];
 
+  home.file.".cache/zsh/.keep".text = "";
+
   programs = {
     # Shell and utilities
     zsh = {
       enable = true;
-      oh-my-zsh = {
-        enable = true;
-        plugins = [
-          "git"
-          "history"
-          "pass"
-          "jsontools"
-          "colorize"
-        ];
-        # Removed plugins for faster startup:
-        # - z: replaced by zoxide (already enabled, faster)
-        # - brew: only useful on macOS with Homebrew
-        # - docker: heavy completion loading - use lazy-load instead
-        # - aws: heavy completion loading - use lazy-load instead
-        # - kubectl: heavy completion loading - use lazy-load instead
-        # - bun: minimal benefit
-        # - tmux: minimal benefit, aliases can be added manually
-      };
+      enableCompletion = true;
+      completionInit = ''
+        autoload -Uz compinit
+        zstyle ':completion:*' use-cache on
+        zstyle ':completion:*' cache-path "''${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompcache"
+
+        zcompdump="''${ZDOTDIR:-$HOME}/.zcompdump"
+        if [[ -n "''${zcompdump}"(#qNmh-24) ]]; then
+          compinit -C -i -d "''${zcompdump}"
+        else
+          compinit -i -d "''${zcompdump}"
+        fi
+        unset zcompdump
+      '';
 
       # History configuration
       history = {
@@ -165,6 +163,7 @@ in
         # Development tools
         "lg" = "lazygit";
         "b" = "bun";
+        "tm" = "tmux new -A -s main";
 
         "gt" = "git-town";
         "gts" = "git-town switch";
@@ -180,13 +179,11 @@ in
 
       initContent = lib.mkMerge [
         (lib.mkBefore ''
-          # Skip compaudit permission checks - significant performance gain
-          ZSH_DISABLE_COMPFIX=true
-          # gcloud zsh completions (must be before compinit/oh-my-zsh)
+          # gcloud zsh completions must be on fpath before compinit.
           fpath=(${pkgs.google-cloud-sdk}/share/zsh/site-functions $fpath)
         '')
 
-        # Initialize shell environment (runs after Oh My Zsh)
+        # Initialize shell environment after completion setup
         ''
           # Source Nix daemon profile for proper PATH setup
           if [ -e /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]; then
@@ -196,8 +193,43 @@ in
           # Add custom paths (standard Nix paths are handled automatically)
           export PATH="$HOME/.local/bin:$HOME/go/bin:$HOME/.npm-packages/bin:$HOME/.cargo/bin:$PATH"
 
-          if command -v mise >/dev/null 2>&1; then
-            eval "$(mise activate zsh)"
+          if [[ -o interactive && -t 0 && -t 1 && $options[zle] = on ]]; then
+            __load_fzf_zsh() {
+              unfunction __load_fzf_zsh 2>/dev/null || true
+              bindkey '^I' expand-or-complete
+              source <(${pkgs.fzf}/bin/fzf --zsh)
+            }
+
+            __fzf_lazy_widget() {
+              local widget="$1"
+              shift
+              __load_fzf_zsh
+              if (( ''${+widgets[$widget]} )); then
+                zle "$widget" "$@"
+              else
+                zle redisplay
+              fi
+            }
+
+            __fzf_lazy_file_widget() { __fzf_lazy_widget fzf-file-widget "$@"; }
+            __fzf_lazy_cd_widget() { __fzf_lazy_widget fzf-cd-widget "$@"; }
+            __fzf_lazy_history_widget() { __fzf_lazy_widget fzf-history-widget "$@"; }
+            __fzf_lazy_completion_widget() { __fzf_lazy_widget fzf-completion "$@"; }
+
+            zle -N __fzf_lazy_file_widget
+            zle -N __fzf_lazy_cd_widget
+            zle -N __fzf_lazy_history_widget
+            zle -N __fzf_lazy_completion_widget
+            bindkey -M emacs '^T' __fzf_lazy_file_widget
+            bindkey -M viins '^T' __fzf_lazy_file_widget
+            bindkey -M vicmd '^T' __fzf_lazy_file_widget
+            bindkey -M emacs '\ec' __fzf_lazy_cd_widget
+            bindkey -M viins '\ec' __fzf_lazy_cd_widget
+            bindkey -M vicmd '\ec' __fzf_lazy_cd_widget
+            bindkey -M emacs '^R' __fzf_lazy_history_widget
+            bindkey -M viins '^R' __fzf_lazy_history_widget
+            bindkey -M vicmd '^R' __fzf_lazy_history_widget
+            bindkey '^I' __fzf_lazy_completion_widget
           fi
 
           # View function: use mdterm for markdown, view for everything else
@@ -218,13 +250,6 @@ in
           if [ -e "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
             . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
           fi
-
-          ${lib.optionalString isDarwin ''
-            # Add the default SSH key to Apple's keychain-backed agent.
-            if [ -f "$HOME/.ssh/id_ed25519" ]; then
-              /usr/bin/ssh-add --apple-use-keychain "$HOME/.ssh/id_ed25519" 2>/dev/null || true
-            fi
-          ''}
 
           # Lazy-load heavy completions (only loaded when first used)
           if command -v kubectl &>/dev/null; then
@@ -258,7 +283,10 @@ in
     ripgrep.enable = true;
     htop.enable = true;
     zoxide.enable = true;
-    fzf.enable = true;
+    fzf = {
+      enable = true;
+      enableZshIntegration = false;
+    };
     eza.enable = true;
     starship = {
       enable = true;
@@ -409,6 +437,9 @@ in
         "*" = {
           addKeysToAgent = "yes";
           identityFile = "~/.ssh/id_ed25519";
+          extraOptions = lib.optionalAttrs isDarwin {
+            UseKeychain = "yes";
+          };
         };
       };
     };

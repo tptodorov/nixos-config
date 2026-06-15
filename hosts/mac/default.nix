@@ -31,6 +31,13 @@
   homebrew.enable = true;
   system.tools.darwin-rebuild.enable = true;
 
+  # Home Manager owns interactive zsh completion setup with a cached compinit.
+  programs.zsh = {
+    enable = true;
+    enableGlobalCompInit = false;
+    enableBashCompletion = false;
+  };
+
   # reduce distrations
   system.startup.chime = false;
 

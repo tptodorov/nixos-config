@@ -301,6 +301,10 @@
                 home-manager.backupCommand = pkgs.writeShellScript "home-manager-backup" ''
                   set -euo pipefail
 
+                  if [ "$#" -eq 0 ]; then
+                    exit 0
+                  fi
+
                   target="''${1:?missing target path}"
                   timestamp="$(${pkgs.coreutils}/bin/date +%Y%m%d-%H%M%S)"
                   backup="$target.bak-$timestamp"
