@@ -34,6 +34,12 @@
     # Firmware updates
     fwupd.enable = true;
 
+    # Plex Media Server for browsing/streaming the local video library.
+    plex = {
+      enable = true;
+      openFirewall = true;
+    };
+
     # Printing - CUPS with Epson XP-630 support
     printing = {
       enable = true;
@@ -83,7 +89,14 @@
 
   };
 
-  # Shared directory for videos served over DLNA to the Samsung TV.
+  # Give Plex read access to the shared video directory and GPU devices for transcoding.
+  users.users.plex.extraGroups = [
+    "users"
+    "video"
+    "render"
+  ];
+
+  # Shared directory for videos served over DLNA/Plex to the local network.
   systemd.tmpfiles.rules = [
     "d /srv/media 2775 root users - -"
     "d /srv/media/video 2775 root users - -"

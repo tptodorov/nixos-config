@@ -21,6 +21,12 @@
     # Printing
     printing.enable = true;
 
+    # Plex Media Server for browsing/streaming the local video library.
+    plex = {
+      enable = true;
+      openFirewall = true;
+    };
+
     # RDP (Remote Desktop Protocol)
     xrdp = {
       enable = true;
@@ -34,6 +40,19 @@
       openFirewall = true;
     };
   };
+
+  # Give Plex read access to the shared video directory and GPU devices for transcoding.
+  users.users.plex.extraGroups = [
+    "users"
+    "video"
+    "render"
+  ];
+
+  # Shared directory for videos served over Plex to the local network.
+  systemd.tmpfiles.rules = [
+    "d /srv/media 2775 root users - -"
+    "d /srv/media/video 2775 root users - -"
+  ];
 
   # System settings
   time.timeZone = "Europe/Zurich";
