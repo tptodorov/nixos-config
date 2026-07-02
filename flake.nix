@@ -100,11 +100,11 @@
 
     # dms: Dank Material Shell (GNOME Shell extension)
     # - Material Design-inspired GNOME Shell theme and layout
-    # - Used by: Can be enabled in GNOME desktop environment
+    # - Used by: Niri/Sway sessions (not GNOME)
     # - Depends on: dgop (Dank GNOME Overlay Package)
-    # - Version: main branch
+    # - Pinned to v1.4.6 to prevent breakage from main branch HEAD
     dms = {
-      url = "github:AvengeMedia/DankMaterialShell";
+      url = "github:AvengeMedia/DankMaterialShell/v1.4.6";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -112,7 +112,7 @@
     # - Dependency for DankMaterialShell
     # - Provides GNOME-related packages and overlays
     # - Used by: dms input (required dependency)
-    # - Version: main branch
+    # - Version: follows DMS v1.4.6
     dgop = {
       url = "github:AvengeMedia/dgop";
       inputs.nixpkgs.follows = "nixpkgs";
