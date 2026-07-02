@@ -96,6 +96,7 @@ in
       llmAgentsPkgs.gastown
       llmAgentsPkgs.beads
       llmAgentsPkgs.beads-viewer
+      llmAgentsPkgs.mardi-gras
       llmAgentsPkgs.pi
       jq # for jsontools plugin
       unstablePkgs.neovim # Neovim 0.12 until it lands in the 25.11 branch
