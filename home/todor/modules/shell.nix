@@ -275,6 +275,10 @@ in
               aws "$@"
             }
           fi
+
+          if command -v workmux &>/dev/null; then
+            eval "$(workmux completions zsh)"
+          fi
         ''
       ];
     };

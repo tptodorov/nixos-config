@@ -357,11 +357,52 @@
       };
     };
   };
+
+  xdg.configFile = {
+    "kitty/tab_bar.py".text = ''
+      from kitty.fast_data_types import get_boss
+
+      def draw_title(data):
+          tab = get_boss().tab_for_id(data['tab'].tab_id)
+          if tab:
+              for window in tab:
+                  status = window.user_vars.get("workmux_status", "")
+                  if status:
+                      return " " + status
+          return ""
+    '';
+
+    "kitty/workmux_watcher.py".text = ''
+      from kitty.boss import Boss
+      from kitty.window import Window
+
+      def on_focus_change(boss: Boss, window: Window, data: dict) -> None:
+          if not data.get("focused"):
+              return
+          if window.user_vars.get("workmux_auto_clear") == "1":
+              boss.call_remote_control(window, (
+                  "set-user-vars", f"--match=id:{window.id}",
+                  "workmux_status=", "workmux_auto_clear=",
+              ))
+
+      def on_set_user_var(boss: Boss, window: Window, data: dict) -> None:
+          if data.get("key") == "workmux_status":
+              tm = boss.os_window_map.get(window.os_window_id)
+              if tm is not None:
+                  tm.update_tab_bar_data()
+                  tm.mark_tab_bar_dirty()
+    '';
+  };
+
   programs.kitty = {
     enable = true;
     settings = {
       # Fonts - Regular for normal, ExtraBold for bold to maximize contrast
       font_family = "Iosevka Nerd Font Mono";
+      # Workmux kitty backend
+      allow_remote_control = "yes";
+      listen_on = "unix:/tmp/kitty-{kitty_pid}";
+
       font_size = if laptop then 14 else 20;
       bold_font_weight = 700;
 
@@ -375,13 +416,15 @@
       copy_on_select = true;
 
       # Window layout
-      enabled_layouts = "*";
+      enabled_layouts = "splits,stack";
 
       # macOS specific
       macos_option_as_alt = true;
       macos_thicken_font = 0.0;
 
-      tab_title_template = "{session_name} {title}";
+      tab_bar_style = "powerline";
+      tab_title_template = "{index}: {session_name} {title}{custom}";
+      watcher = "workmux_watcher.py";
     };
 
     # Use predefined Tokyo Night theme
@@ -397,8 +440,19 @@
       "f7>l" = "goto_session langcache";
       "f7>n" = "goto_session nixos";
       "f7>-" = "goto_session -1";
-      "ctrl+shift+a" = "launch --cwd=last_reported zsh -l -i -c codex";
-      "ctrl+shift+c" = "launch --cwd=last_reported zsh -l -i -c claude";
+      "ctrl+shift+space>1" = "goto_tab 1";
+      "ctrl+shift+space>2" = "goto_tab 2";
+      "ctrl+shift+space>3" = "goto_tab 3";
+      "ctrl+shift+space>4" = "goto_tab 4";
+      "ctrl+shift+space>5" = "goto_tab 5";
+      "ctrl+shift+space>6" = "goto_tab 6";
+      "ctrl+shift+space>7" = "goto_tab 7";
+      "ctrl+shift+space>8" = "goto_tab 8";
+      "ctrl+shift+space>9" = "goto_tab 9";
+      "ctrl+shift+space>a" = "launch --cwd=last_reported zsh -l -i -c codex";
+      "ctrl+shift+space>c" = "launch --cwd=last_reported zsh -l -i -c claude";
+      "ctrl+shift+space>w" =
+        "launch --type=overlay-main --cwd=last_reported zsh -l -i -c 'workmux dashboard'";
     };
   };
 }

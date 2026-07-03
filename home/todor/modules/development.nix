@@ -21,6 +21,21 @@ let
       })
     else
       pkgs.direnv;
+  workmuxConfig = (pkgs.formats.yaml { }).generate "workmux-config.yaml" {
+    nerdfont = true;
+    merge_strategy = "rebase";
+    merge_keep = true;
+    agent = "codex";
+    panes = [
+      {
+        command = "<agent>";
+        focus = true;
+      }
+      {
+        split = "horizontal";
+      }
+    ];
+  };
   mkCodexPrefixRule = pattern: ''prefix_rule(pattern=${builtins.toJSON pattern}, decision="allow")'';
   codexHomeManagerRules =
     lib.concatMapStringsSep "\n" mkCodexPrefixRule [
@@ -165,6 +180,7 @@ in
       git
       gh
       lazygit
+      delta
       git-town
       # Docker and container tools (cross-platform)
       docker_29
@@ -203,7 +219,7 @@ in
               "bold"
             ];
             inactiveBorderColor = [ "black" ];
-            selectedLineBgColor = [ "default" ];
+            selectedLineBgColor = [ "reverse" ];
           };
           showRandomTip = false;
         };
@@ -214,6 +230,13 @@ in
           # Keep auto-refresh enabled but increase interval to reduce startup blocking
           autoRefresh = true;
           fetchAll = false;
+          pagers = [
+            {
+              name = "delta";
+              colorArg = "always";
+              pager = "delta --dark --paging=never";
+            }
+          ];
         };
         customCommands = [
           {
@@ -384,6 +407,8 @@ in
     };
 
   };
+
+  xdg.configFile."workmux/config.yaml".source = workmuxConfig;
 
   # File configurations
   home.file = {
