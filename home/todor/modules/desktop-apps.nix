@@ -287,10 +287,17 @@
     binding = "<Super>t";
   };
 
-  # Move window to monitor — physical Ctrl+Alt+Super+PageUp/PageDown
-  # Left/Right are hardware-ghosted with 3 modifiers on this keyboard
-  # keyd swaps Alt↔Super, so GNOME sees <Primary><Super><Alt>
+  # GNOME window/app switching.
   dconf.settings."org/gnome/desktop/wm/keybindings" = {
+    switch-applications = [
+      "<Alt>Tab"
+    ];
+    switch-applications-backward = [
+      "<Shift><Alt>Tab"
+    ];
+
+    # Move window to monitor — physical Ctrl+Alt+Super+PageUp/PageDown
+    # Left/Right are hardware-ghosted with 3 modifiers on this keyboard
     move-to-monitor-left = [ "<Primary><Super><Alt>Prior" ];
     move-to-monitor-right = [ "<Primary><Super><Alt>Next" ];
   };

@@ -12,6 +12,7 @@
         # Install terminal emulators without Home Manager managing configs in standalone mode
         alacritty
         kitty
+        wezterm
       ]
       ++ lib.optionals (!pkgs.stdenv.isDarwin) [
         ghostty
@@ -128,6 +129,143 @@
         keybind = ctrl+shift+f5=reload_config
         keybind = ctrl+shift+y=toggle_readonly
         keybind = ctrl+shift+period=inspector:toggle
+      '';
+    };
+
+    file.".config/wezterm/wezterm.lua" = {
+      text = ''
+        local wezterm = require("wezterm")
+        local act = wezterm.action
+        local config = wezterm.config_builder()
+
+        config.font = wezterm.font { family = "Iosevka NFM" }
+        config.font_size = ${if laptop then "14" else "20"}
+
+        config.color_scheme = 'tokyonight'
+
+        config.default_prog = { "zsh" }
+        config.enable_wayland = true
+        config.window_close_confirmation = "NeverPrompt"
+        config.window_padding = {
+          left = 0,
+          right = 0,
+          top = 0,
+          bottom = 0,
+        }
+        config.cursor_blink_rate = 0
+        config.default_cursor_style = "SteadyBlock"
+        config.hide_mouse_cursor_when_typing = true
+        config.scrollback_lines = 10000
+        config.send_composed_key_when_left_alt_is_pressed = false
+        config.send_composed_key_when_right_alt_is_pressed = false
+        config.window_decorations = "NONE"
+        config.use_fancy_tab_bar = true
+        config.tab_bar_at_bottom = true
+        config.tab_max_width = 64
+        config.mouse_bindings = {
+          {
+            event = { Up = { streak = 1, button = "Left" } },
+            mods = "NONE",
+            action = act.CompleteSelection("ClipboardAndPrimarySelection"),
+          },
+          {
+            event = { Up = { streak = 2, button = "Left" } },
+            mods = "NONE",
+            action = act.CompleteSelection("ClipboardAndPrimarySelection"),
+          },
+          {
+            event = { Up = { streak = 3, button = "Left" } },
+            mods = "NONE",
+            action = act.CompleteSelection("ClipboardAndPrimarySelection"),
+          },
+        }
+
+        wezterm.on("format-tab-title", function(tab)
+          local title = tab.active_pane.title
+          if title == nil or title == "" then
+            title = "zsh"
+          end
+          return " " .. wezterm.mux.get_active_workspace() .. " " .. title .. " "
+        end)
+
+        config.keys = {
+          {
+            key = "Tab",
+            mods = "CTRL",
+            action = act.ActivateTabRelative(1),
+          },
+          {
+            key = "Tab",
+            mods = "CTRL|SHIFT",
+            action = act.ActivateTabRelative(-1),
+          },
+          {
+            key = "Enter",
+            mods = "CTRL|SHIFT",
+            action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }),
+          },
+          {
+            key = "]",
+            mods = "CTRL|SHIFT",
+            action = act.ActivatePaneDirection("Right"),
+          },
+          {
+            key = "[",
+            mods = "CTRL|SHIFT",
+            action = act.ActivatePaneDirection("Left"),
+          },
+          {
+            key = "l",
+            mods = "CTRL|SHIFT",
+            action = act.RotatePanes("Clockwise"),
+          },
+          {
+            key = "a",
+            mods = "CTRL|SHIFT",
+            action = act.SpawnCommandInNewTab({
+              args = { "zsh", "-l", "-i", "-c", "codex" },
+            }),
+          },
+          {
+            key = "c",
+            mods = "CTRL|SHIFT",
+            action = act.SpawnCommandInNewTab({
+              args = { "zsh", "-l", "-i", "-c", "claude" },
+            }),
+          },
+          {
+            key = "F7",
+            mods = "NONE",
+            action = act.ActivateKeyTable({
+              name = "session_mode",
+              one_shot = true,
+              timeout_milliseconds = 1000,
+            }),
+          },
+        }
+
+        config.key_tables = {
+          session_mode = {
+            {
+              key = "/",
+              action = act.ShowLauncherArgs({ flags = "FUZZY|WORKSPACES" }),
+            },
+            {
+              key = "l",
+              action = act.SwitchToWorkspace({ name = "langcache" }),
+            },
+            {
+              key = "n",
+              action = act.SwitchToWorkspace({ name = "nixos" }),
+            },
+            {
+              key = "-",
+              action = act.SwitchWorkspaceRelative(-1),
+            },
+          },
+        }
+
+        return config
       '';
     };
   };
@@ -433,6 +571,8 @@
     # Key mappings
     keybindings = {
       "ctrl+shift+enter" = "launch --location=split --cwd=last_reported";
+      "ctrl+tab" = "next_tab";
+      "ctrl+shift+tab" = "previous_tab";
       "kitty_mod+]" = "next_window";
       "kitty_mod+[" = "previous_window";
       "kitty_mod+l" = "next_layout";

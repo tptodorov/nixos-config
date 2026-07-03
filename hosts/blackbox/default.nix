@@ -18,7 +18,6 @@
     # Configuration profiles
     ../../modules/profiles/base.nix
     ../../modules/profiles/desktop.nix
-    ../../modules/profiles/apfs.nix
     ../../modules/profiles/snap.nix
     ../../modules/profiles/gaming.nix
 

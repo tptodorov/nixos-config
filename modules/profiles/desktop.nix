@@ -7,10 +7,6 @@
   ...
 }:
 {
-  imports = [
-    # Mac-style keyboard remapping
-    ./keyd-mac.nix
-  ];
   # Desktop environment configuration
   services = {
     # Display Manager configuration

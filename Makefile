@@ -7,8 +7,8 @@ NIXUSER ?= todor
 MAKEFILE_DIR := $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
 
 # The name of the nixosConfiguration in the flake
-# Available NixOS hosts: blackbox, pero, vm-aarch64
-NIXNAME ?= vm
+# Available NixOS hosts: blackbox, blade
+NIXNAME ?= blade
 
 # The name of the homeConfiguration for standalone Home Manager
 # Available: todor (x86_64), todor-aarch64 (ARM64)
@@ -36,7 +36,6 @@ help:
 	@echo "  make test NIXNAME=<host>      - Test configuration (no switch)"
 	@echo "  make blackbox                 - Apply blackbox (NixOS desktop)"
 	@echo "  make blade                    - Apply blade (NixOS laptop)"
-	@echo "  make vm                       - Apply vm-aarch64 (NixOS VM)"
 	@echo "  make mac                      - Apply mac (nix-darwin)"
 	@echo ""
 	@echo "Standalone Home Manager (Arch, Ubuntu, etc.):"
@@ -47,7 +46,7 @@ help:
 	@echo "  make home-switch HMNAME=<cfg> - Apply specific configuration"
 	@echo ""
 	@echo "Available Configurations:"
-	@echo "  NixOS hosts:     blackbox, blade, vm-aarch64"
+	@echo "  NixOS hosts:     blackbox, blade"
 	@echo "  nix-darwin:      mac"
 	@echo "  Home Manager:    todor (x86_64), todor-aarch64 (ARM64)"
 	@echo ""
@@ -104,15 +103,12 @@ home-switch-backup:
 	home-manager switch --flake ".#${HMNAME}" -b backup
 
 # Quick shortcuts for specific hosts
-.PHONY: blackbox blade vm mac home home-aarch64
+.PHONY: blackbox blade mac home home-aarch64
 blackbox:
 	$(MAKE) switch NIXNAME=blackbox
 
 blade:
 	$(MAKE) switch NIXNAME=blade
-
-vm:
-	$(MAKE) switch NIXNAME=vm-aarch64
 
 mac:
 	$(MAKE) switch NIXNAME=DR94XJ1435-Todor-Peychev-Todorov
@@ -139,7 +135,6 @@ build-all:
 	@echo "Building all NixOS configurations..."
 	nix build '.#nixosConfigurations.blackbox.config.system.build.toplevel'
 	nix build '.#nixosConfigurations.blade.config.system.build.toplevel'
-	nix build '.#nixosConfigurations.vm-aarch64.config.system.build.toplevel'
 	@echo "All configurations built successfully"
 
 # Validate all configurations

@@ -6,9 +6,8 @@ This document provides an overview of all configured systems and their profiles.
 
 | Host | Type | Form Factor | Profiles | Home Manager |
 |------|------|-------------|----------|--------------|
-| **blackbox** | NixOS | Desktop | base, desktop, apfs, snap, gaming | todor |
+| **blackbox** | NixOS | Desktop | base, desktop, snap, gaming | todor |
 | **blade** | NixOS | Laptop | base, desktop, laptop, snap, gaming | todor |
-| **vm-aarch64** | NixOS | VM | base, desktop | todor |
 
 ## Darwin Hosts
 
@@ -37,7 +36,7 @@ Core system configuration including:
 - Essential packages (vim, git, ripgrep, etc.)
 
 ### Desktop Profile (`modules/profiles/desktop.nix`)
-Applied to: **blackbox, blade, vm-aarch64**
+Applied to: **blackbox, blade**
 
 Desktop environment including:
 - COSMIC Desktop (default greeter)
@@ -46,7 +45,6 @@ Desktop environment including:
 - PipeWire audio
 - Hardware acceleration
 - Flatpak support
-- Mac-style keyboard remapping (keyd-mac)
 
 ### Laptop Profile (`modules/profiles/laptop.nix`)
 Applied to: **blade**
@@ -58,13 +56,6 @@ Laptop-specific features:
 - Touchpad configuration
 - Backlight control (light)
 - WiFi power saving management
-
-### APFS Profile (`modules/profiles/apfs.nix`)
-Applied to: **blackbox**
-
-macOS interoperability:
-- APFS filesystem support (for reading Apple partitions)
-- Useful when dual-booting with macOS
 
 ### Snap Profile (`modules/profiles/snap.nix`)
 Applied to: **blackbox, blade**
@@ -80,11 +71,6 @@ Gaming-related packages and optimizations.
 Applied to: **All NixOS hosts** (auto-determined)
 
 Conditionally applies form-factor-specific settings based on `formFactor` option.
-
-### keyd-mac Profile (`modules/profiles/keyd-mac.nix`)
-Auto-imported by: **desktop.nix**
-
-Mac-style keyboard remapping (Cmd+C for copy, etc.) on all desktop systems.
 
 ## Quick Reference
 
