@@ -108,7 +108,7 @@ This repository is structured to support **multiple NixOS hosts** and **multiple
   - **COSMIC** - System76's Rust-based desktop
 - **Shell**: Zsh with Oh My Zsh
 - **Editors**: Neovim (LazyVim), Zed Editor
-- **Terminal**: Ghostty, Kitty, Rio
+- **Terminal**: Kitty, WezTerm
 - **Development Tools**: Claude Code, direnv, devenv, git, lazygit
 
 ### Development Environment
@@ -191,10 +191,10 @@ Niri is a scrollable-tiling Wayland compositor with a unique horizontal workspac
 - swww-daemon (wallpaper)
 - Clipboard history watchers
 - Blueman & NetworkManager applets
-- Ghostty, Brave, Spotify
+- Kitty, Brave, Spotify
 
 **Essential Keybindings:**
-- `Mod+Return` / `Mod+T` - Terminal (Ghostty)
+- `Mod+Return` / `Mod+T` - Terminal (Kitty)
 - `Mod+Q` - Close window
 - `Mod+Space` - Application launcher (Wofi)
 - `Mod+E` - File manager (Nautilus)

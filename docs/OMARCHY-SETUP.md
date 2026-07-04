@@ -110,7 +110,7 @@ home-manager generations | head -2 | tail -1 | awk '{print $NF}' | xargs -I{} {}
 - All user packages and applications
 - Dotfiles and configuration files
 - Development tools (git, nvim, zsh, etc.)
-- Terminal emulators (Ghostty, Kitty)
+- Terminal emulators (Kitty, WezTerm)
 - Desktop applications (Brave, Spotify, etc.)
 - Niri and Hyprland configurations (if Wayland is available on Omarchy)
 

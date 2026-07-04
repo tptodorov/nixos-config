@@ -262,6 +262,11 @@
     exec = "nautilus";
     exec-arg = "";
   };
+  dconf.settings."org/gnome/desktop/input-sources" = {
+    # GNOME/XKB-level Alt↔Super swap. This makes the physical Alt/Option key
+    # act as Super without running keyd.
+    xkb-options = [ "altwin:swap_alt_win" ];
+  };
 
   # GNOME custom keybindings
   dconf.settings."org/gnome/settings-daemon/plugins/media-keys" = {
@@ -290,10 +295,10 @@
   # GNOME window/app switching.
   dconf.settings."org/gnome/desktop/wm/keybindings" = {
     switch-applications = [
-      "<Alt>Tab"
+      "<Super>Tab"
     ];
     switch-applications-backward = [
-      "<Shift><Alt>Tab"
+      "<Shift><Super>Tab"
     ];
 
     # Move window to monitor — physical Ctrl+Alt+Super+PageUp/PageDown

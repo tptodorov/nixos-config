@@ -93,9 +93,7 @@
 
     # Window rules - disable borders for terminal apps
     windowrule=tag:2,isnoborder:1,appid:^org\.wezfurlong\.wezterm$
-    windowrule=tag:2,isnoborder:1,appid:^Alacritty$
     windowrule=tag:2,isnoborder:1,appid:^zen$
-    windowrule=tag:2,isnoborder:1,appid:^com\.mitchellh\.ghostty$
     windowrule=tag:2,isnoborder:1,appid:^kitty$
 
     # Window rules - floating for DMS widgets (quickshell)
