@@ -15,6 +15,8 @@
       "lp" # For printer access
       "docker" # For Docker access
       "video" # For camera/webcam access
+      "input" # For Voxtype modifier-release guard
+      "ydotool" # For GNOME Wayland keyboard simulation
     ];
     shell = pkgs.zsh;
     initialPassword = "todor";

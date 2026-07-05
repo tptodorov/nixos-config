@@ -51,6 +51,7 @@
       enable = true;
       binfmt = true;
     };
+    ydotool.enable = true;
     xwayland.enable = true;
     niri = {
       enable = lib.mkDefault true;
@@ -85,6 +86,8 @@
     # Browser support packages
     libva
     libva-utils
+    vulkan-loader
+    vulkan-tools
 
     # Disk management
     gparted

@@ -137,6 +137,11 @@
     # - Keep its own pinned nixpkgs for cache compatibility with upstream CI
     llm-agents.url = "github:numtide/llm-agents.nix";
 
+    # voxtype: official voice-to-text flake
+    # - Used by: Desktop Voxtype setup
+    # - Package: vulkan variant per upstream NixOS installation docs
+    voxtype.url = "github:peteonrails/voxtype/v0.7.1";
+
   };
 
   outputs =
