@@ -72,7 +72,7 @@ nvim
 The script copies your LazyVim config with:
 - Language support (TypeScript, Go, Rust, Nix)
 - LSP servers configured (nil_ls, gopls, rust_analyzer, ts_ls, lua_ls, etc.)
-- Tokyonight colorscheme
+- Catppuccin Macchiato colorscheme
 - Proper lockfile handling for NixOS environments
 
 ## ⌨️ Keybindings & Features

@@ -3,6 +3,125 @@
   laptop ? false,
   ...
 }:
+let
+  weztermConfig = ''
+    local wezterm = require("wezterm")
+    local act = wezterm.action
+    local config = wezterm.config_builder()
+
+
+    -- REQUIRED: Connect to unix mux server on startup
+    -- This ensures WEZTERM_UNIX_SOCKET is consistent across all panes
+    config.default_gui_startup_args = { 'connect', 'unix' }
+
+    -- REQUIRED: Configure unix_domains for the mux server
+    config.unix_domains = {
+      { name = 'unix' },
+    }
+
+    config.font = wezterm.font { family = "Iosevka NFM" }
+    config.font_size = ${if laptop then "14" else "20"}
+
+    config.color_scheme = "Catppuccin Macchiato"
+
+    config.default_prog = { "zsh" }
+    config.enable_wayland = true
+    config.window_close_confirmation = "NeverPrompt"
+    config.window_padding = {
+      left = 0,
+      right = 0,
+      top = 0,
+      bottom = 0,
+    }
+    config.cursor_blink_rate = 0
+    config.default_cursor_style = "SteadyBlock"
+    config.hide_mouse_cursor_when_typing = true
+    config.scrollback_lines = 10000
+    config.send_composed_key_when_left_alt_is_pressed = false
+    config.send_composed_key_when_right_alt_is_pressed = false
+    config.window_decorations = "RESIZE"
+    config.use_fancy_tab_bar = false
+    config.tab_bar_at_bottom = true
+    config.tab_max_width = 64
+    config.leader = { key = 'Space', mods = 'CTRL|SHIFT', timeout_milliseconds = 1000 }
+
+    local split_right = act.SplitHorizontal({ domain = "CurrentPaneDomain" })
+    local split_down = act.SplitVertical({ domain = "CurrentPaneDomain" })
+
+    wezterm.on("format-tab-title", function(tab)
+      local title = tab.active_pane.title
+      if title == nil or title == "" then
+        title = "zsh"
+      end
+      return " " .. wezterm.mux.get_active_workspace() .. " " .. title .. " "
+    end)
+
+    config.keys = {
+      -- CORRECT: Uses the current pane's domain (mux server)
+      { key = 't', mods = 'SUPER', action = act.SpawnTab('CurrentPaneDomain') },
+      {
+        key = "Tab",
+        mods = "CTRL",
+        action = act.ActivateTabRelative(1),
+      },
+      {
+        key = "Tab",
+        mods = "CTRL|SHIFT",
+        action = act.ActivateTabRelative(-1),
+      },
+      {
+        key = "Enter",
+        mods = "CTRL|SHIFT",
+        action = split_right,
+      },
+      {
+        key = "Enter",
+        mods = "SUPER|SHIFT",
+        action = split_right,
+      },
+      {
+        key = "Enter",
+        mods = "CTRL|SHIFT|ALT",
+        action = split_down,
+      },
+      {
+        key = "Enter",
+        mods = "SUPER|SHIFT|ALT",
+        action = split_down,
+      },
+      {
+        key = "l",
+        mods = "CTRL|SHIFT",
+        action = act.RotatePanes("Clockwise"),
+      },
+      {
+        key = "a",
+        mods = "CTRL|SHIFT",
+        action = act.SplitPane({
+          command = { args = { "zsh", "-l", "-i", "-c", "codex" },},
+          direction = "Right",
+        }),
+      },
+      {
+        key = "c",
+        mods = "CTRL|SHIFT",
+        action = act.SplitPane({
+          command = { args = { "zsh", "-l", "-i", "-c", "claude" },},
+          direction = "Right",
+        }),
+      },
+      {
+        key = "w",
+        mods = "LEADER",
+        action = act.SpawnCommandInNewTab({
+          args = { "zsh", "-l", "-i", "-c", "workmux dashboard" },
+        }),
+      },
+    }
+
+    return config
+  '';
+in
 {
   home = {
     packages = with pkgs; [
@@ -10,111 +129,9 @@
       wezterm
     ];
 
-    file.".config/wezterm/wezterm.lua" = {
-      text = ''
-        local wezterm = require("wezterm")
-        local act = wezterm.action
-        local config = wezterm.config_builder()
-
-
-        -- REQUIRED: Connect to unix mux server on startup
-        -- This ensures WEZTERM_UNIX_SOCKET is consistent across all panes
-        config.default_gui_startup_args = { 'connect', 'unix' }
-
-        -- REQUIRED: Configure unix_domains for the mux server
-        config.unix_domains = {
-          { name = 'unix' },
-        }
-
-        config.font = wezterm.font { family = "Iosevka NFM" }
-        config.font_size = ${if laptop then "14" else "20"}
-
-        config.color_scheme = "Catppuccin Macchiato"
-
-        config.default_prog = { "zsh" }
-        config.enable_wayland = true
-        config.window_close_confirmation = "NeverPrompt"
-        config.window_padding = {
-          left = 0,
-          right = 0,
-          top = 0,
-          bottom = 0,
-        }
-        config.cursor_blink_rate = 0
-        config.default_cursor_style = "SteadyBlock"
-        config.hide_mouse_cursor_when_typing = true
-        config.scrollback_lines = 10000
-        config.send_composed_key_when_left_alt_is_pressed = false
-        config.send_composed_key_when_right_alt_is_pressed = false
-        config.window_decorations = "RESIZE"
-        config.use_fancy_tab_bar = false
-        config.tab_bar_at_bottom = false
-        config.tab_max_width = 64
-        config.leader = { key = '<', mods = 'CTRL', timeout_milliseconds = 1000 }
-
-        wezterm.on("format-tab-title", function(tab)
-          local title = tab.active_pane.title
-          if title == nil or title == "" then
-            title = "zsh"
-          end
-          return " " .. wezterm.mux.get_active_workspace() .. " " .. title .. " "
-        end)
-
-        config.keys = {
-          -- CORRECT: Uses the current pane's domain (mux server)
-          { key = 't', mods = 'SUPER', action = act.SpawnTab('CurrentPaneDomain') },
-          {
-            key = "Tab",
-            mods = "CTRL",
-            action = act.ActivateTabRelative(1),
-          },
-          {
-            key = "Tab",
-            mods = "CTRL|SHIFT",
-            action = act.ActivateTabRelative(-1),
-          },
-          {
-            key = "Enter",
-            mods = "CTRL|SHIFT",
-            action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }),
-          },
-          {
-            key = "Enter",
-            mods = "CTRL|SHIFT|ALT",
-            action = act.SplitVertical({ domain = "CurrentPaneDomain" }),
-          },
-          {
-            key = "l",
-            mods = "CTRL|SHIFT",
-            action = act.RotatePanes("Clockwise"),
-          },
-          {
-            key = "a",
-            mods = "CTRL|SHIFT",
-            action = act.SplitPane({
-              command = { args = { "zsh", "-l", "-i", "-c", "codex" },},
-              direction = "Right",
-            }),
-          },
-          {
-            key = "c",
-            mods = "CTRL|SHIFT",
-            action = act.SplitPane({
-              command = { args = { "zsh", "-l", "-i", "-c", "claude" },},
-              direction = "Right",
-            }),
-          },
-          {
-            key = "w",
-            mods = "LEADER",
-            action = act.SpawnCommandInNewTab({
-              args = { "zsh", "-l", "-i", "-c", "workmux dashboard" },
-            }),
-          },
-        }
-
-        return config
-      '';
+    file = {
+      ".config/wezterm/wezterm.lua".text = weztermConfig;
+      ".wezterm.lua".text = weztermConfig;
     };
   };
 
@@ -187,8 +204,8 @@
       watcher = "workmux_watcher.py";
     };
 
-    # Use predefined Tokyo Night theme
-    themeFile = "tokyo_night_night";
+    # Use predefined Catppuccin Macchiato theme
+    themeFile = "Catppuccin-Macchiato";
 
     # Key mappings
     keybindings = {

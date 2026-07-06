@@ -330,6 +330,15 @@ in
       # Vim-friendly prefix key (Ctrl-a instead of Ctrl-b)
       prefix = "C-a";
 
+      plugins = [
+        {
+          plugin = pkgs.tmuxPlugins.catppuccin;
+          extraConfig = ''
+            set -g @catppuccin_flavor "macchiato"
+          '';
+        }
+      ];
+
       # Additional tmux configuration
       extraConfig = ''
         # Vim-style pane switching
@@ -379,26 +388,6 @@ in
 
         # Don't exit copy mode when dragging with mouse
         unbind -T copy-mode-vi MouseDragEnd1Pane
-
-        # Status bar styling
-        set -g status-bg colour235
-        set -g status-fg colour136
-        set -g status-left-length 20
-        set -g status-left '#[fg=colour166]#S #[fg=colour245]| '
-        set -g status-right '#[fg=colour245]%d %b %R'
-
-        # Window status styling
-        setw -g window-status-current-style 'fg=colour81 bg=colour238 bold'
-        setw -g window-status-current-format ' #I#[fg=colour250]:#[fg=colour255]#W#[fg=colour50]#F '
-        setw -g window-status-style 'fg=colour138 bg=colour235 none'
-        setw -g window-status-format ' #I#[fg=colour237]:#[fg=colour250]#W#[fg=colour244]#F '
-
-        # Pane border styling
-        set -g pane-border-style 'fg=colour238'
-        set -g pane-active-border-style 'fg=colour81'
-
-        # Message styling
-        set -g message-style 'fg=colour232 bg=colour166 bold'
 
         # Reduce escape time for better vim experience
         set -sg escape-time 0
