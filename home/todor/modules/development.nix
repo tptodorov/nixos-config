@@ -16,19 +16,23 @@ let
   voxtypePkgs = inputs.voxtype.packages.${pkgs.stdenv.hostPlatform.system} or { };
   voxtypeVulkan = voxtypePkgs.vulkan or null;
   voxtypeUnwrapped = voxtypePkgs.voxtype-vulkan-unwrapped or null;
-  voxtypeRuntimePath = lib.makeBinPath [
-    pkgs.which
-    pkgs.wtype
-    pkgs.wl-clipboard
-    pkgs.ydotool
-    pkgs.xdotool
-    pkgs.xclip
-    pkgs.libnotify
-    pkgs.pciutils
-    pkgs.dotool
-  ];
+  voxtypeRuntimePath = lib.makeBinPath (
+    [
+      pkgs.which
+    ]
+    ++ lib.optionals isLinux [
+      pkgs.wtype
+      pkgs.wl-clipboard
+      pkgs.ydotool
+      pkgs.xdotool
+      pkgs.xclip
+      pkgs.libnotify
+      pkgs.pciutils
+      pkgs.dotool
+    ]
+  );
   voxtypePackage =
-    if voxtypeVulkan != null && voxtypeUnwrapped != null then
+    if isLinux && voxtypeVulkan != null && voxtypeUnwrapped != null then
       pkgs.symlinkJoin {
         name = "voxtype-vulkan-wrapped";
         paths = [
@@ -43,8 +47,10 @@ let
             --prefix PATH : ${voxtypeRuntimePath}
         '';
       }
+    else if isLinux then
+      llmAgentsPkgs.voxtype
     else
-      llmAgentsPkgs.voxtype;
+      null;
   direnvPackage =
     if isDarwin then
       pkgs.direnv.overrideAttrs (_: {
@@ -145,7 +151,6 @@ in
       llmAgentsPkgs.beads-viewer
       llmAgentsPkgs.mardi-gras
       llmAgentsPkgs.pi
-      voxtypePackage
       jq # for jsontools plugin
       unstablePkgs.neovim # Neovim 0.12 until it lands in the 25.11 branch
       jiratui
@@ -220,6 +225,7 @@ in
       docker-compose
       lazydocker # TUI Docker client
     ]
+    ++ lib.optional (voxtypePackage != null) voxtypePackage
     ++ lib.optionals isLinux [
       # Linux-only packages
       pinentry-bemenu # Wayland-native pinentry for gopass/age
