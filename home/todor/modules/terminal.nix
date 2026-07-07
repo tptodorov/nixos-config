@@ -57,6 +57,11 @@ let
     end)
 
     config.keys = {
+      {
+        key = "phys:Space",
+        mods = "CTRL|SHIFT",
+        action = act.DisableDefaultAssignment,
+      },
       -- CORRECT: Uses the current pane's domain (mux server)
       { key = 't', mods = 'SUPER', action = act.SpawnTab('CurrentPaneDomain') },
       {
@@ -115,6 +120,13 @@ let
         mods = "LEADER",
         action = act.SpawnCommandInNewTab({
           args = { "zsh", "-l", "-i", "-c", "workmux dashboard" },
+        }),
+      },
+      {
+        key = "d",
+        mods = "LEADER",
+        action = act.SpawnCommandInNewTab({
+          args = { "zsh", "-l", "-i", "-c", "workmux dashboard -d" },
         }),
       },
     }
