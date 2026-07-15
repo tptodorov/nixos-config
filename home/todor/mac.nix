@@ -8,6 +8,7 @@
     ./modules/development.nix
     ./modules/shell.nix
     ./modules/terminal.nix
+    ./modules/wtf.nix
   ];
 
   # Nixpkgs configuration

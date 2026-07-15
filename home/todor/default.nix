@@ -13,6 +13,7 @@
     ./modules/nixvim.nix
     ./modules/shell.nix
     ./modules/terminal.nix
+    ./modules/wtf.nix
   ]
   ++ lib.optionals (!standalone) [
     # Desktop modules (only for NixOS, not for standalone Home Manager)
