@@ -39,6 +39,8 @@ let
     config.scrollback_lines = 10000
     config.send_composed_key_when_left_alt_is_pressed = false
     config.send_composed_key_when_right_alt_is_pressed = false
+    config.enable_csi_u_key_encoding = true
+    config.enable_kitty_keyboard = true
     config.window_decorations = "RESIZE"
     config.use_fancy_tab_bar = false
     config.tab_bar_at_bottom = true
@@ -73,6 +75,11 @@ let
         key = "Tab",
         mods = "CTRL|SHIFT",
         action = act.ActivateTabRelative(-1),
+      },
+      {
+        key = "Enter",
+        mods = "SHIFT",
+        action = act.SendString("\x1b[13;2u"),
       },
       {
         key = "Enter",
