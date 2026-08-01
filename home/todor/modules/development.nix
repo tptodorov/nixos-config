@@ -175,7 +175,6 @@ in
       llmAgentsPkgs.workmux
       llmAgentsPkgs.herdr
       llmAgentsPkgs.rtk
-      llmAgentsPkgs.oh-my-codex
       llmAgentsPkgs.gastown
       llmAgentsPkgs.beads
       llmAgentsPkgs.beads-viewer
