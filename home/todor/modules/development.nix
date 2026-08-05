@@ -144,6 +144,7 @@ in
       llmAgentsPkgs.openspecui
       llmAgentsPkgs.fence
       llmAgentsPkgs.workmux
+      llmAgentsPkgs.herdr
       llmAgentsPkgs.rtk
       llmAgentsPkgs.oh-my-codex
       llmAgentsPkgs.gastown

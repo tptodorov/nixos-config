@@ -51,11 +51,18 @@ let
     local split_down = act.SplitVertical({ domain = "CurrentPaneDomain" })
 
     wezterm.on("format-tab-title", function(tab)
-      local title = tab.active_pane.title
+      local title = tab.tab_title
+      if title == nil or title == "" then
+        title = tab.active_pane.title
+      end
       if title == nil or title == "" then
         title = "zsh"
       end
-      return " " .. wezterm.mux.get_active_workspace() .. " " .. title .. " "
+      local workspace = wezterm.mux.get_active_workspace()
+      if workspace == nil or workspace == "" or workspace == "default" then
+        return " " .. title .. " "
+      end
+      return " " .. workspace .. " " .. title .. " "
     end)
 
     config.keys = {
@@ -218,8 +225,8 @@ in
       macos_option_as_alt = true;
       macos_thicken_font = 0.0;
 
-      tab_bar_style = "powerline";
-      tab_title_template = "{index}: {session_name} {title}{custom}";
+      tab_bar_style = "slant";
+      tab_title_template = "{index}: {session_name + ' ' if session_name and session_name != 'default' else ''}{title}{custom}";
       watcher = "workmux_watcher.py";
     };
 
