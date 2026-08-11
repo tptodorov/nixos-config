@@ -59,6 +59,32 @@ let
       })
     else
       pkgs.direnv;
+  # ponytail: replace these local packages if llm-agents.nix packages the tools.
+  codeburnPackage = pkgs.writeShellApplication {
+    name = "codeburn";
+    runtimeInputs = [ pkgs.nodejs ];
+    text = ''
+      exec npm exec --yes --package=codeburn@0.9.20 -- codeburn "$@"
+    '';
+  };
+  driftPackage = unstablePkgs.rustPlatform.buildRustPackage rec {
+    pname = "drift";
+    version = "0.22.0";
+    src = unstablePkgs.fetchCrate {
+      pname = "drift-tui";
+      inherit version;
+      hash = "sha256-TnWjmIHyGfX00LqmI4ZIJD92CY+mfPjpo2qDYjUNTes=";
+    };
+    cargoHash = "sha256-yjgWoYAAKBwxLYVkM9Xt3r/WFe1ws28hdYIstOErS38=";
+    doCheck = false;
+  };
+  revdiffPackage = pkgs.writeShellApplication {
+    name = "revdiff";
+    runtimeInputs = [ unstablePkgs.go ];
+    text = ''
+      exec go run -ldflags "-X main.revision=v1.12.0" github.com/umputun/revdiff/app@v1.12.0 "$@"
+    '';
+  };
   workmuxConfig = (pkgs.formats.yaml { }).generate "workmux-config.yaml" {
     nerdfont = true;
     merge_strategy = "rebase";
@@ -133,6 +159,9 @@ in
       zed-editor
       warp-terminal
       amp-cli
+      codeburnPackage
+      driftPackage
+      revdiffPackage
       llmAgentsPkgs.kilocode-cli
       llmAgentsPkgs.codex
       llmAgentsPkgs.claude-code
@@ -151,6 +180,7 @@ in
       llmAgentsPkgs.beads
       llmAgentsPkgs.beads-viewer
       llmAgentsPkgs.mardi-gras
+      llmAgentsPkgs.omp
       llmAgentsPkgs.pi
       jq # for jsontools plugin
       unstablePkgs.neovim # Neovim 0.12 until it lands in the 25.11 branch

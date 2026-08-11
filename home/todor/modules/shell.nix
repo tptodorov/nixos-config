@@ -279,6 +279,8 @@ in
           if command -v workmux &>/dev/null; then
             eval "$(workmux completions zsh)"
           fi
+
+          source <(herdr completion zsh)
         ''
       ];
     };
