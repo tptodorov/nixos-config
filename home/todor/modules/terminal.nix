@@ -19,7 +19,8 @@ let
       { name = 'unix' },
     }
 
-    config.font = wezterm.font { family = "Iosevka NFM" }
+    config.font_dirs = { "${pkgs.nerd-fonts.zed-mono}/share/fonts/truetype/NerdFonts/ZedMono" }
+    config.font = wezterm.font { family = "ZedMono Nerd Font Mono" }
     config.font_size = ${if laptop then "14" else "20"}
 
     config.color_scheme = "Catppuccin Macchiato"
@@ -28,10 +29,10 @@ let
     config.enable_wayland = true
     config.window_close_confirmation = "NeverPrompt"
     config.window_padding = {
-      left = 0,
-      right = 0,
-      top = 0,
-      bottom = 0,
+      left = 14,
+      right = 14,
+      top = 12,
+      bottom = 12,
     }
     config.cursor_blink_rate = 0
     config.default_cursor_style = "SteadyBlock"
@@ -39,7 +40,6 @@ let
     config.scrollback_lines = 10000
     config.send_composed_key_when_left_alt_is_pressed = false
     config.send_composed_key_when_right_alt_is_pressed = false
-    config.enable_csi_u_key_encoding = true
     config.enable_kitty_keyboard = true
     config.window_decorations = "RESIZE"
     config.use_fancy_tab_bar = false
@@ -125,7 +125,7 @@ let
         key = "c",
         mods = "CTRL|SHIFT",
         action = act.SplitPane({
-          command = { args = { "zsh", "-l", "-i", "-c", "claude" },},
+          command = { args = { "zsh", "-l", "-i", "-c", "claude --allow-dangerously-skip-permissions" },},
           direction = "Right",
         }),
       },

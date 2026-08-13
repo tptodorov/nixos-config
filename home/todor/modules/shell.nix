@@ -280,6 +280,10 @@ in
             eval "$(workmux completions zsh)"
           fi
 
+          if [[ -n "$WEZTERM_PANE" ]]; then
+            source ${pkgs.wezterm}/etc/profile.d/wezterm.sh
+          fi
+
           source <(herdr completion zsh)
         ''
       ];
