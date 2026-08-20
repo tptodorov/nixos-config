@@ -28,9 +28,9 @@ Add one independent command hook to each existing event in
 | `Stop` | `/usr/bin/osascript -e 'beep 1'` | Signal that the main agent finished |
 | `PermissionRequest` | `/usr/bin/osascript -e 'beep 1'` | Signal that Codex needs user input |
 
-Each handler uses `"async": true` and `"timeout": 3`. A sound failure must not
-delay or alter the agent lifecycle. The existing workmux handlers remain separate
-and continue to run concurrently.
+Each handler uses `"timeout": 3`. The installed Codex 0.146 does not support
+asynchronous hooks, so the short native sound command runs synchronously with a
+bounded timeout. The existing workmux handlers remain separate.
 
 ## Scope
 
@@ -46,9 +46,10 @@ This change affects Codex only. It does not:
 
 1. Validate `~/.codex/hooks.json` as JSON.
 2. Confirm the two existing workmux handlers are unchanged.
-3. Start a new Codex session, review the changed hook definitions with `/hooks`,
-   and trust them.
-4. Confirm one sound on a main-agent stop and one sound on a permission request.
+3. Start a new Codex session and confirm it does not report an unsupported async
+   hook.
+4. Review the changed hook definitions with `/hooks` and trust them.
+5. Confirm one sound on a main-agent stop and one sound on a permission request.
 
 ## Rollback
 
