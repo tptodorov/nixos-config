@@ -21,7 +21,7 @@
       action = {
         __type = "enum";
         variant = "Spawn";
-        value = [ "${pkgs.kitty}/bin/kitty" ];
+        value = [ "${pkgs.wezterm}/bin/wezterm" ];
       };
     }
     # Super+Shift+V -> Clipboard history

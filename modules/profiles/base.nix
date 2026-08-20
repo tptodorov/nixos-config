@@ -99,6 +99,11 @@
   networking.networkmanager.enable = lib.mkDefault true;
   networking.enableIPv6 = lib.mkDefault true;
 
+  # Keep the clock synchronized and let systemd-timedated update the timezone
+  # automatically instead of pinning a fixed timezone in the system config.
+  services.timesyncd.enable = true;
+  services.tzupdate.enable = true;
+
   # Enable OpenSSH daemon
   services.openssh = {
     enable = lib.mkDefault true;

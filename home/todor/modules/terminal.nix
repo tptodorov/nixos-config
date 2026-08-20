@@ -24,6 +24,13 @@ let
     config.font_size = ${if laptop then "14" else "20"}
 
     config.color_scheme = "Catppuccin Macchiato"
+    config.inactive_pane_hsb = {
+      saturation = 0.75,
+      brightness = 0.55,
+    }
+    config.colors = {
+      split = "#f5a97f",
+    }
 
     config.default_prog = { "zsh" }
     config.enable_wayland = true
@@ -82,6 +89,26 @@ let
         key = "Tab",
         mods = "CTRL|SHIFT",
         action = act.ActivateTabRelative(-1),
+      },
+      {
+        key = "LeftArrow",
+        mods = "CTRL|SHIFT",
+        action = act.ActivatePaneDirection("Left"),
+      },
+      {
+        key = "RightArrow",
+        mods = "CTRL|SHIFT",
+        action = act.ActivatePaneDirection("Right"),
+      },
+      {
+        key = "UpArrow",
+        mods = "CTRL|SHIFT",
+        action = act.ActivatePaneDirection("Up"),
+      },
+      {
+        key = "DownArrow",
+        mods = "CTRL|SHIFT",
+        action = act.ActivatePaneDirection("Down"),
       },
       {
         key = "Enter",

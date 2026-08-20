@@ -322,7 +322,7 @@ in
   # Enable dconf for GNOME apps
   dconf.enable = true;
   dconf.settings."org/gnome/desktop/default-applications/terminal" = {
-    exec = "kitty";
+    exec = "wezterm";
     exec-arg = "";
   };
   dconf.settings."org/gnome/desktop/default-applications/file-manager" = {
@@ -341,6 +341,7 @@ in
       "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/voxtype/"
       "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/nautilus/"
       "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/terminal/"
+      "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/terminal-alt/"
     ];
   };
   dconf.settings."org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/voxtype" = {
@@ -355,8 +356,13 @@ in
   };
   dconf.settings."org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/terminal" = {
     name = "Terminal";
-    command = "kitty";
+    command = "wezterm";
     binding = "<Super>t";
+  };
+  dconf.settings."org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/terminal-alt" = {
+    name = "Terminal";
+    command = "wezterm";
+    binding = "<Alt>t";
   };
 
   # GNOME window/app switching.

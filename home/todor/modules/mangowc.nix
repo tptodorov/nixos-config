@@ -50,7 +50,7 @@
     # Environment setup for systemd services
 
     exec-once=dms ipc call keybinds toggle mangowc
-    exec-once=kitty
+    exec-once=wezterm
     exec-once=dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
     exec-once=systemctl --user start mango-session.target
 
@@ -269,7 +269,8 @@
     # OUR CUSTOM BINDS
     # Basic keybindings
     bind=SUPER,slash,spawn,dms ipc call keybinds toggle mangowc
-    bind=SUPER,Return,spawn,kitty
+    bind=SUPER,Return,spawn,wezterm
+    bind=ALT,t,spawn,wezterm
     bind=SUPER,Q,killclient,
     bind=SUPER,W,spawn,${pkgs.nautilus}/bin/nautilus
     bind=SUPER,S,spawn,${pkgs.brave}/bin/brave

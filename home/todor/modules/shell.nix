@@ -38,8 +38,20 @@ let
           -c 'autocmd FocusGained,BufEnter,CursorHold,CursorHoldI * checktime' \
           -c 'augroup END' \
           "$file"
-        ;;
+      ;;
     esac
+  '';
+  openCmd = pkgs.writeShellScriptBin "open" ''
+    if [ "$#" -eq 0 ]; then
+      echo "Usage: open <file|directory|url> [...]" >&2
+      exit 1
+    fi
+
+    status=0
+    for target in "$@"; do
+      ${pkgs.xdg-utils}/bin/xdg-open "$target" || status="$?"
+    done
+    exit "$status"
   '';
 in
 {
@@ -84,6 +96,7 @@ in
       traceroute
       mtr # advanced traceroute
       tcpdump # packet capture
+      openCmd
     ];
 
   home.file.".cache/zsh/.keep".text = "";
@@ -491,7 +504,7 @@ in
   home.sessionVariables = {
     # Non-sensitive environment variables for todor
     BROWSER = "brave";
-    TERMINAL = "kitty";
+    TERMINAL = "wezterm";
 
     # User-specific preferences
     EDITOR = "nvim";

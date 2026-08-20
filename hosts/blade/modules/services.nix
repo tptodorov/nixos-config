@@ -118,7 +118,6 @@
   };
 
   # System settings
-  time.timeZone = "Europe/Zurich";
   i18n.defaultLocale = "en_US.UTF-8";
 
   # Nix configuration

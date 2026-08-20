@@ -13,7 +13,7 @@
     checkConfig = false; # Disable config validation
     config = rec {
       modifier = "Mod4"; # Super key
-      terminal = "kitty";
+      terminal = "${pkgs.wezterm}/bin/wezterm";
       menu = "dms ipc call spotlight toggle";
 
       # Keyboard layout - matching Niri config
@@ -38,6 +38,7 @@
         # Terminal
         "${modifier}+Return" = "exec ${terminal}";
         "${modifier}+t" = "exec ${terminal}";
+        "Mod1+t" = "exec ${terminal}";
 
         # Application launcher
         "${modifier}+space" = "exec ${menu}";
@@ -160,7 +161,7 @@
           command = "sh -c '${pkgs.wl-clipboard}/bin/wl-paste --type image --watch ${pkgs.cliphist}/bin/cliphist store'";
         }
         {
-          command = "${pkgs.kitty}/bin/kitty";
+          command = "${pkgs.wezterm}/bin/wezterm";
           always = false;
         }
         {
