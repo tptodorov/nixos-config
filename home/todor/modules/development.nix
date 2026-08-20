@@ -51,14 +51,6 @@ let
       llmAgentsPkgs.voxtype
     else
       null;
-  direnvPackage =
-    if isDarwin then
-      pkgs.direnv.overrideAttrs (_: {
-        # direnv 2.37.1 currently dies in its upstream Fish test on Darwin.
-        doCheck = false;
-      })
-    else
-      pkgs.direnv;
   # ponytail: replace these local packages if llm-agents.nix packages the tools.
   codeburnPackage = pkgs.writeShellApplication {
     name = "codeburn";
@@ -459,11 +451,13 @@ in
     # Development environment
     direnv = {
       enable = true;
-      #     watch_file devenv.yaml
-      #     watch_file devenv.lock
-      #     eval "$(devenv print-dev-env)"
-      #   }
-      # '';
+      # Without this, direnv's stock `use flake` shells out to
+      # `nix print-dev-env` on every cd into a flake repo (~0.6s warm, ~4.2s
+      # whenever a tracked file changed, since a git+file: flake's tree hash
+      # invalidates Nix's eval cache). nix-direnv caches the evaluated dev env
+      # in .direnv/ keyed on flake.nix/flake.lock, so editing source files
+      # never invalidates it -- measured ~0.35s and flat.
+      nix-direnv.enable = true;
     };
 
   };
