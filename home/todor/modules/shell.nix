@@ -1,4 +1,5 @@
 {
+  config,
   pkgs,
   lib,
   ...
@@ -190,8 +191,8 @@ in
             . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
           fi
 
-          # Add custom paths (standard Nix paths are handled automatically)
-          export PATH="$HOME/.local/bin:$HOME/go/bin:$HOME/.npm-packages/bin:$HOME/.cargo/bin:$PATH"
+          # Keep Home Manager packages ahead of Homebrew in interactive shells.
+          export PATH="$HOME/.local/bin:$HOME/go/bin:$HOME/.npm-packages/bin:$HOME/.cargo/bin:${config.home.profileDirectory}/bin:$PATH"
 
           if [[ -o interactive && -t 0 && -t 1 && $options[zle] = on ]]; then
             __load_fzf_zsh() {

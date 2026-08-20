@@ -12,6 +12,11 @@ else
   exit 1
 fi
 
+if ! command -v nix-instantiate >/dev/null 2>&1; then
+  echo "pre-commit: nix-instantiate is required but not installed" >&2
+  exit 1
+fi
+
 files=()
 while IFS= read -r -d '' file; do
   files+=("$file")
@@ -22,4 +27,9 @@ if [ "${#files[@]}" -eq 0 ]; then
 fi
 
 "$formatter" "${files[@]}"
+
+for file in "${files[@]}"; do
+  nix-instantiate --parse "$file" >/dev/null
+done
+
 git add -- "${files[@]}"
