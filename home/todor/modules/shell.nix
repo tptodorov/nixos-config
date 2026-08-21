@@ -103,7 +103,7 @@ in
     ".cache/zsh/.keep".text = "";
   }
   // lib.optionalAttrs isDarwin {
-    ".zprofile".force = true;
+    "${config.home.homeDirectory}/.zprofile".force = true;
   };
 
   programs = {
