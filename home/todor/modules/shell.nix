@@ -99,13 +99,22 @@ in
       openCmd
     ];
 
-  home.file.".cache/zsh/.keep".text = "";
+  home.file = {
+    ".cache/zsh/.keep".text = "";
+  }
+  // lib.optionalAttrs isDarwin {
+    ".zprofile".force = true;
+  };
 
   programs = {
     # Shell and utilities
     zsh = {
       enable = true;
       enableCompletion = true;
+      profileExtra = lib.optionalString isDarwin ''
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+        export PATH="''${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+      '';
       completionInit = ''
         autoload -Uz compinit
         zstyle ':completion:*' use-cache on
@@ -522,6 +531,8 @@ in
         SSH_ASKPASS_REQUIRE = "prefer";
       }
     else
-      { }
+      {
+        SSH_KEY_PATH = "${config.home.homeDirectory}/.ssh/id_ed25519";
+      }
   );
 }
