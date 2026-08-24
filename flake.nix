@@ -137,6 +137,32 @@
     # - Keep its own pinned nixpkgs for cache compatibility with upstream CI
     llm-agents.url = "github:numtide/llm-agents.nix";
 
+    # Agent skills installed into ~/.agents/skills by Home Manager
+    mattpocock-skills = {
+      url = "github:mattpocock/skills";
+      flake = false;
+    };
+
+    ponytail-skills = {
+      url = "github:DietrichGebert/ponytail";
+      flake = false;
+    };
+
+    graphify-skills = {
+      url = "github:Graphify-Labs/graphify";
+      flake = false;
+    };
+
+    archify-skills = {
+      url = "github:tt-a1i/archify";
+      flake = false;
+    };
+
+    understand-anything = {
+      url = "github:Egonex-AI/Understand-Anything";
+      flake = false;
+    };
+
     # voxtype: official voice-to-text flake
     # - Used by: Desktop Voxtype setup
     # - Package: vulkan variant per upstream NixOS installation docs

@@ -136,6 +136,111 @@ let
       [ "statix" ]
     ]
     + "\n";
+  mattPocockSkillPaths = [
+    "skills/engineering/ask-matt"
+    "skills/engineering/diagnosing-bugs"
+    "skills/engineering/grill-with-docs"
+    "skills/engineering/triage"
+    "skills/engineering/improve-codebase-architecture"
+    "skills/engineering/setup-matt-pocock-skills"
+    "skills/engineering/tdd"
+    "skills/engineering/to-spec"
+    "skills/engineering/to-tickets"
+    "skills/engineering/wayfinder"
+    "skills/engineering/implement"
+    "skills/engineering/prototype"
+    "skills/engineering/research"
+    "skills/engineering/domain-modeling"
+    "skills/engineering/codebase-design"
+    "skills/engineering/code-review"
+    "skills/engineering/resolving-merge-conflicts"
+    "skills/engineering/wizard"
+    "skills/productivity/grill-me"
+    "skills/productivity/grilling"
+    "skills/productivity/handoff"
+    "skills/productivity/teach"
+    "skills/productivity/to-questionnaire"
+    "skills/productivity/wait-what"
+    "skills/productivity/writing-for-agents"
+  ];
+  ponytailSkillPaths = [
+    "skills/ponytail"
+    "skills/ponytail-audit"
+    "skills/ponytail-debt"
+    "skills/ponytail-gain"
+    "skills/ponytail-help"
+    "skills/ponytail-review"
+  ];
+  archifySkillPaths = [
+    "archify"
+  ];
+  understandAnythingSkillPaths = [
+    "skills/understand"
+    "skills/understand-chat"
+    "skills/understand-dashboard"
+    "skills/understand-diff"
+    "skills/understand-domain"
+    "skills/understand-explain"
+    "skills/understand-figma"
+    "skills/understand-knowledge"
+    "skills/understand-onboard"
+  ];
+  graphifySkill = pkgs.runCommandLocal "graphify-skill" { } ''
+    mkdir -p "$out/graphify"
+    cp ${inputs.graphify-skills}/graphify/skill.md "$out/graphify/SKILL.md"
+  '';
+  understandAnythingPlugin = pkgs.stdenv.mkDerivation (finalAttrs: {
+    pname = "understand-anything-plugin";
+    version = "2.9.4";
+    src = inputs.understand-anything + "/understand-anything-plugin";
+
+    nativeBuildInputs = [
+      pkgs.nodejs
+      pkgs.pnpm.configHook
+      pkgs.pnpm
+    ];
+
+    pnpmDeps = pkgs.fetchPnpmDeps {
+      inherit (finalAttrs) pname version src;
+      pnpm = pkgs.pnpm;
+      fetcherVersion = 3;
+      hash = "sha256-Zq6rdL+DJ3J9fm5yNPtHPygHTfIbOSLaX3M5emat+RY=";
+    };
+
+    buildPhase = ''
+      runHook preBuild
+      pnpm --filter @understand-anything/core build
+      runHook postBuild
+    '';
+
+    installPhase = ''
+      runHook preInstall
+      mkdir -p "$out"
+      cp -R . "$out/"
+      runHook postInstall
+    '';
+  });
+  mkAgentSkillLinks =
+    source: paths:
+    lib.listToAttrs (
+      map (
+        path:
+        let
+          name = builtins.baseNameOf path;
+        in
+        {
+          name = ".agents/skills/${name}";
+          value.source = source + "/${path}";
+        }
+      ) paths
+    );
+  mattPocockSkillLinks = mkAgentSkillLinks inputs.mattpocock-skills mattPocockSkillPaths;
+  ponytailSkillLinks = mkAgentSkillLinks inputs.ponytail-skills ponytailSkillPaths;
+  archifySkillLinks = mkAgentSkillLinks inputs.archify-skills archifySkillPaths;
+  understandAnythingSkillLinks = mkAgentSkillLinks understandAnythingPlugin understandAnythingSkillPaths;
+  graphifySkillLinks = {
+    ".agents/skills/graphify".source = graphifySkill + "/graphify";
+  };
 in
 {
   # Development tools and environment
@@ -207,6 +312,7 @@ in
       kubectl # for kubectl plugin
       bun # for bun plugin
       nodejs # for npm plugin
+      pnpm # for Understand Anything skill fallbacks
       nodePackages.typescript-language-server # TypeScript LSP
 
       # Rust development (cross-platform)
@@ -482,6 +588,14 @@ in
         name = Todor Todorov
         email = 98095+tptodorov@users.noreply.github.com
     '';
+  }
+  // mattPocockSkillLinks
+  // ponytailSkillLinks
+  // archifySkillLinks
+  // understandAnythingSkillLinks
+  // graphifySkillLinks
+  // {
+    ".understand-anything-plugin".source = understandAnythingPlugin;
   };
 
   # Environment variables
