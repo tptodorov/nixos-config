@@ -78,6 +78,20 @@ let
         mods = "CTRL|SHIFT",
         action = act.DisableDefaultAssignment,
       },
+      -- WORKAROUND: WezTerm's built-in PasteFrom("Clipboard") action doesn't
+      -- reliably reach panes attached via a unix-domain mux connection (see
+      -- https://github.com/wezterm/wezterm/issues/3968). Shell out to
+      -- pbpaste and inject the text directly instead.
+      {
+        key = "v",
+        mods = "SUPER",
+        action = wezterm.action_callback(function(window, pane)
+          local success, stdout = wezterm.run_child_process({ "pbpaste" })
+          if success then
+            window:perform_action(act.SendString(stdout), pane)
+          end
+        end),
+      },
       -- CORRECT: Uses the current pane's domain (mux server)
       { key = 't', mods = 'SUPER', action = act.SpawnTab('CurrentPaneDomain') },
       {
@@ -152,7 +166,7 @@ let
         key = "c",
         mods = "CTRL|SHIFT",
         action = act.SplitPane({
-          command = { args = { "zsh", "-l", "-i", "-c", "claude --allow-dangerously-skip-permissions" },},
+          command = { args = { "zsh", "-l", "-i", "-c", "claude --permission-mode auto" },},
           direction = "Right",
         }),
       },
@@ -185,6 +199,69 @@ in
     file = {
       ".config/wezterm/wezterm.lua".text = weztermConfig;
       ".wezterm.lua".text = weztermConfig;
+    };
+  };
+
+  programs.ghostty = {
+    enable = true;
+    package = if pkgs.stdenv.hostPlatform.isDarwin then pkgs.ghostty-bin else pkgs.ghostty;
+    enableZshIntegration = true;
+
+    settings = {
+      command = "zsh";
+      theme = "Catppuccin Macchiato";
+      "font-family" = "ZedMono Nerd Font Mono";
+      "font-size" = if laptop then 14 else 20;
+
+      "cursor-style" = "block";
+      "cursor-style-blink" = false;
+      "mouse-hide-while-typing" = true;
+      "scrollback-limit" = 10000000;
+
+      "window-padding-x" = 14;
+      "window-padding-y" = 12;
+      "window-show-tab-bar" = "always";
+      "window-new-tab-position" = "end";
+      "window-inherit-working-directory" = true;
+      "tab-inherit-working-directory" = true;
+      "split-inherit-working-directory" = true;
+      "confirm-close-surface" = false;
+
+      "macos-option-as-alt" = true;
+      "shell-integration" = "zsh";
+
+      "split-divider-color" = "#f5a97f";
+      "unfocused-split-opacity" = 0.75;
+
+      keybind = [
+        "super+v=paste_from_clipboard"
+        "super+t=new_tab"
+        "ctrl+tab=next_tab"
+        "ctrl+shift+tab=previous_tab"
+
+        "ctrl+shift+arrow_left=goto_split:left"
+        "ctrl+shift+arrow_right=goto_split:right"
+        "ctrl+shift+arrow_up=goto_split:up"
+        "ctrl+shift+arrow_down=goto_split:down"
+
+        "shift+enter=csi:13;2u"
+        "ctrl+shift+enter=new_split:right"
+        "super+shift+enter=new_split:right"
+        "ctrl+alt+shift+enter=new_split:down"
+        "super+alt+shift+enter=new_split:down"
+
+        "ctrl+shift+space>1=goto_tab:1"
+        "ctrl+shift+space>2=goto_tab:2"
+        "ctrl+shift+space>3=goto_tab:3"
+        "ctrl+shift+space>4=goto_tab:4"
+        "ctrl+shift+space>5=goto_tab:5"
+        "ctrl+shift+space>6=goto_tab:6"
+        "ctrl+shift+space>7=goto_tab:7"
+        "ctrl+shift+space>8=goto_tab:8"
+        "ctrl+shift+space>9=goto_tab:9"
+
+        "global:cmd+option+grave_accent=toggle_quick_terminal"
+      ];
     };
   };
 
@@ -282,7 +359,7 @@ in
       "ctrl+shift+space>8" = "goto_tab 8";
       "ctrl+shift+space>9" = "goto_tab 9";
       "ctrl+shift+space>a" = "launch --cwd=last_reported zsh -l -i -c codex";
-      "ctrl+shift+space>c" = "launch --cwd=last_reported zsh -l -i -c claude";
+      "ctrl+shift+space>c" = "launch --cwd=last_reported zsh -l -i -c 'claude --permission-mode auto'";
       "ctrl+shift+space>w" =
         "launch --type=overlay-main --cwd=last_reported zsh -l -i -c 'workmux dashboard'";
     };
