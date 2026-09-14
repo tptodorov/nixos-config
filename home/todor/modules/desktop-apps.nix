@@ -105,6 +105,13 @@ in
       libreoffice-fresh # LibreOffice suite (Writer, Calc, Impress, Draw, etc.)
       geary # Email client
 
+      # IDEs and dev/design tools
+      jetbrains.goland # Go IDE
+      vscode
+      figma-linux # Unofficial Figma desktop client
+      postman # API client
+      remmina # Remote desktop client (RDP/VNC/SSH)
+
       # Scanning applications (for Epson XP-630)
       simple-scan # GNOME's simple scanner application
       xsane # Advanced scanner application

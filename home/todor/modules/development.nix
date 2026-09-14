@@ -136,44 +136,9 @@ let
       [ "statix" ]
     ]
     + "\n";
-  mattPocockSkillPaths = [
-    "skills/engineering/ask-matt"
-    "skills/engineering/diagnosing-bugs"
-    "skills/engineering/grill-with-docs"
-    "skills/engineering/triage"
-    "skills/engineering/improve-codebase-architecture"
-    "skills/engineering/setup-matt-pocock-skills"
-    "skills/engineering/tdd"
-    "skills/engineering/to-spec"
-    "skills/engineering/to-tickets"
-    "skills/engineering/wayfinder"
-    "skills/engineering/implement"
-    "skills/engineering/prototype"
-    "skills/engineering/research"
-    "skills/engineering/domain-modeling"
-    "skills/engineering/codebase-design"
-    "skills/engineering/code-review"
-    "skills/engineering/resolving-merge-conflicts"
-    "skills/engineering/wizard"
-    "skills/productivity/grill-me"
-    "skills/productivity/grilling"
-    "skills/productivity/handoff"
-    "skills/productivity/teach"
-    "skills/productivity/to-questionnaire"
-    "skills/productivity/wait-what"
-    "skills/productivity/writing-for-agents"
-  ];
-  ponytailSkillPaths = [
-    "skills/ponytail"
-    "skills/ponytail-audit"
-    "skills/ponytail-debt"
-    "skills/ponytail-gain"
-    "skills/ponytail-help"
-    "skills/ponytail-review"
-  ];
-  archifySkillPaths = [
-    "archify"
-  ];
+  # Note: mattpocock/skills, DietrichGebert/ponytail, and tt-a1i/archify are
+  # installed via the `skills` CLI (see home/todor/modules/agents.nix), not
+  # vendored here.
   understandAnythingSkillPaths = [
     "skills/understand"
     "skills/understand-chat"
@@ -234,9 +199,6 @@ let
         }
       ) paths
     );
-  mattPocockSkillLinks = mkAgentSkillLinks inputs.mattpocock-skills mattPocockSkillPaths;
-  ponytailSkillLinks = mkAgentSkillLinks inputs.ponytail-skills ponytailSkillPaths;
-  archifySkillLinks = mkAgentSkillLinks inputs.archify-skills archifySkillPaths;
   understandAnythingSkillLinks = mkAgentSkillLinks understandAnythingPlugin understandAnythingSkillPaths;
   graphifySkillLinks = {
     ".agents/skills/graphify".source = graphifySkill + "/graphify";
@@ -589,9 +551,6 @@ in
         email = 98095+tptodorov@users.noreply.github.com
     '';
   }
-  // mattPocockSkillLinks
-  // ponytailSkillLinks
-  // archifySkillLinks
   // understandAnythingSkillLinks
   // graphifySkillLinks
   // {

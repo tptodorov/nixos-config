@@ -5,6 +5,7 @@
 {
   imports = [
     # User modules
+    ./modules/agents.nix
     ./modules/development.nix
     ./modules/shell.nix
     ./modules/terminal.nix

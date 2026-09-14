@@ -26,6 +26,7 @@
     ../../modules/profiles/laptop.nix
     ../../modules/profiles/snap.nix
     ../../modules/profiles/gaming.nix
+    ../../modules/profiles/headscale.nix
 
     # Host-specific modules
     # ./modules/kernel.nix

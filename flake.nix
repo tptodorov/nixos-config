@@ -137,24 +137,12 @@
     # - Keep its own pinned nixpkgs for cache compatibility with upstream CI
     llm-agents.url = "github:numtide/llm-agents.nix";
 
-    # Agent skills installed into ~/.agents/skills by Home Manager
-    mattpocock-skills = {
-      url = "github:mattpocock/skills";
-      flake = false;
-    };
-
-    ponytail-skills = {
-      url = "github:DietrichGebert/ponytail";
-      flake = false;
-    };
-
+    # Agent skills installed into ~/.agents/skills by Home Manager.
+    # Note: mattpocock/skills, DietrichGebert/ponytail, and tt-a1i/archify
+    # are installed via the `skills` CLI instead (see
+    # home/todor/modules/agents.nix), not as flake inputs.
     graphify-skills = {
       url = "github:Graphify-Labs/graphify";
-      flake = false;
-    };
-
-    archify-skills = {
-      url = "github:tt-a1i/archify";
       flake = false;
     };
 
@@ -200,6 +188,7 @@
         blackbox = nixpkgs.lib.nixosSystem {
           specialArgs = {
             inherit inputs outputs;
+            headscaleServer = true; # Runs the headscale control server for the tailnet
           };
           modules = [
             {
@@ -221,6 +210,7 @@
             inherit inputs outputs;
             laptop = true;
             standalone = false;
+            headscaleServer = false; # Tailnet client only; blackbox runs the control server
           };
           modules = [
             {
@@ -315,7 +305,7 @@
       };
 
       darwinConfigurations = {
-        # my redis mac book pro
+        # work MacBook Pro
         "DR94XJ1435-Todor-Peychev-Todorov" = nix-darwin.lib.darwinSystem {
           system = "aarch64-darwin";
           modules = [

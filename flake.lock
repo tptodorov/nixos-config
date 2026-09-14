@@ -1,21 +1,5 @@
 {
   "nodes": {
-    "archify-skills": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1787335287,
-        "narHash": "sha256-hwd7L3/ba3fKuYDzK299sA5J9rtqd8oL+/m7LFUQrsk=",
-        "owner": "tt-a1i",
-        "repo": "archify",
-        "rev": "95e8a3a9d50136bc34e1093edbca7d4a52e974aa",
-        "type": "github"
-      },
-      "original": {
-        "owner": "tt-a1i",
-        "repo": "archify",
-        "type": "github"
-      }
-    },
     "bun2nix": {
       "inputs": {
         "flake-parts": [
@@ -384,22 +368,6 @@
         "type": "github"
       }
     },
-    "mattpocock-skills": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1787309793,
-        "narHash": "sha256-FPAAotNqA5aHrFDlj/XddoLs4TDKi+4J5H/mvevlOlk=",
-        "owner": "mattpocock",
-        "repo": "skills",
-        "rev": "5b15a47f2d7150f545fbcacbfe381787fc0230dc",
-        "type": "github"
-      },
-      "original": {
-        "owner": "mattpocock",
-        "repo": "skills",
-        "type": "github"
-      }
-    },
     "niri": {
       "inputs": {
         "niri-stable": "niri-stable",
@@ -707,22 +675,6 @@
         "type": "github"
       }
     },
-    "ponytail-skills": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1786139041,
-        "narHash": "sha256-bGdXvzhWPwGdz3T2Yh2h6lf+3PBRFAfdBxP5pESmCHI=",
-        "owner": "DietrichGebert",
-        "repo": "ponytail",
-        "rev": "2ed6c52c9d7e5e56942508591085fd45dea277d3",
-        "type": "github"
-      },
-      "original": {
-        "owner": "DietrichGebert",
-        "repo": "ponytail",
-        "type": "github"
-      }
-    },
     "quickshell": {
       "inputs": {
         "nixpkgs": [
@@ -747,7 +699,6 @@
     },
     "root": {
       "inputs": {
-        "archify-skills": "archify-skills",
         "dgop": "dgop",
         "disko": "disko",
         "dms": "dms",
@@ -756,7 +707,6 @@
         "home-manager": "home-manager",
         "jujutsu": "jujutsu",
         "llm-agents": "llm-agents",
-        "mattpocock-skills": "mattpocock-skills",
         "niri": "niri",
         "nix-darwin": "nix-darwin",
         "nix-snapd": "nix-snapd",
@@ -764,7 +714,6 @@
         "nixpkgs": "nixpkgs_4",
         "nixpkgsUnstable": "nixpkgsUnstable",
         "nixvim": "nixvim",
-        "ponytail-skills": "ponytail-skills",
         "understand-anything": "understand-anything",
         "voxtype": "voxtype",
         "zig": "zig"
