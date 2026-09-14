@@ -18,6 +18,18 @@
     };
   };
 
+  # Local VM runtime for installing and testing desktop OS images.
+  virtualisation.libvirtd = {
+    enable = true;
+    qemu = {
+      package = pkgs.qemu_kvm;
+      swtpm.enable = true;
+    };
+  };
+
+  virtualisation.spiceUSBRedirection.enable = true;
+  programs.virt-manager.enable = true;
+
   # System services configuration
   security.rtkit.enable = true;
 
@@ -33,6 +45,12 @@
 
     # Firmware updates
     fwupd.enable = true;
+
+    # Local LLM runtime for embeddings and model experimentation.
+    ollama = {
+      enable = true;
+      loadModels = [ "nomic-embed-text" ];
+    };
 
     # Plex Media Server for browsing/streaming the local video library.
     plex = {
@@ -132,4 +150,12 @@
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
+
+  environment.systemPackages = with pkgs; [
+    ollama
+    qemu_kvm
+    quickemu
+    virt-manager
+    virt-viewer
+  ];
 }

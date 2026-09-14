@@ -214,7 +214,7 @@ in
           fi
 
           # Keep Home Manager packages ahead of Homebrew in interactive shells.
-          export PATH="$HOME/.local/bin:$HOME/go/bin:$HOME/.npm-packages/bin:$HOME/.cargo/bin:${config.home.profileDirectory}/bin:$PATH"
+          export PATH="$HOME/.local/bin:$HOME/go/bin:$HOME/.npm-packages/bin:$HOME/.cargo/bin:$HOME/.cache/.bun/bin:${config.home.profileDirectory}/bin:$PATH"
 
           if [[ -o interactive && -t 0 && -t 1 && $options[zle] = on ]]; then
             __load_fzf_zsh() {

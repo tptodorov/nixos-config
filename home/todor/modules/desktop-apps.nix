@@ -12,6 +12,7 @@ let
   voxtypePkgs = inputs.voxtype.packages.${pkgs.stdenv.hostPlatform.system} or { };
   voxtypeVulkan = voxtypePkgs.vulkan or null;
   voxtypeUnwrapped = voxtypePkgs.voxtype-vulkan-unwrapped or null;
+  voxtypeWhisperModel = "base.en";
   voxtypeRuntimePath = lib.makeBinPath [
     pkgs.which
     pkgs.wtype
@@ -158,10 +159,49 @@ in
       ''}
     '';
 
-    disableBrokenVoxtypeOsd = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    configureVoxtypeModel = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      CONFIG="$HOME/.config/voxtype/config.toml"
+      MODEL="${voxtypeWhisperModel}"
+
+      if [ ! -f "$CONFIG" ]; then
+        $DRY_RUN_CMD mkdir -p "$(dirname "$CONFIG")"
+        $DRY_RUN_CMD printf 'engine = "whisper"\n\n[whisper]\nmodel = "%s"\nlanguage = "en"\n' "$MODEL" > "$CONFIG"
+      else
+        if grep -q '^engine = ' "$CONFIG"; then
+          $DRY_RUN_CMD sed -i 's|^engine = .*|engine = "whisper"|' "$CONFIG"
+        else
+          $DRY_RUN_CMD sed -i '1iengine = "whisper"' "$CONFIG"
+        fi
+
+        if grep -q '^model = ' "$CONFIG"; then
+          $DRY_RUN_CMD sed -i "s|^model = .*|model = \"$MODEL\"|" "$CONFIG"
+        else
+          $DRY_RUN_CMD printf '\n[whisper]\nmodel = "%s"\nlanguage = "en"\n' "$MODEL" >> "$CONFIG"
+        fi
+      fi
+    '';
+
+    disableBrokenVoxtypeOsd = lib.hm.dag.entryAfter [ "configureVoxtypeModel" ] ''
       CONFIG="$HOME/.config/voxtype/config.toml"
       if [ -f "$CONFIG" ] && ! grep -q '^\[osd\]' "$CONFIG"; then
         $DRY_RUN_CMD printf '\n[osd]\nenabled = false\n' >> "$CONFIG"
+      fi
+    '';
+
+    disableVoxtypeNotifications = lib.hm.dag.entryAfter [ "disableBrokenVoxtypeOsd" ] ''
+      CONFIG="$HOME/.config/voxtype/config.toml"
+      if [ -f "$CONFIG" ]; then
+        if ! grep -q '^\[output\.notification\]' "$CONFIG"; then
+          $DRY_RUN_CMD printf '\n[output.notification]\non_recording_start = false\non_recording_stop = false\non_transcription = false\n' >> "$CONFIG"
+        else
+          for key in on_recording_start on_recording_stop on_transcription; do
+            if grep -q "^$key = " "$CONFIG"; then
+              $DRY_RUN_CMD sed -i "s|^$key = .*|$key = false|" "$CONFIG"
+            else
+              $DRY_RUN_CMD sed -i "/^\[output\.notification\]/a$key = false" "$CONFIG"
+            fi
+          done
+        fi
       fi
     '';
 

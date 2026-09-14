@@ -14,6 +14,7 @@
       "scanner" # For scanner access
       "lp" # For printer access
       "docker" # For Docker access
+      "libvirtd" # For managing local VMs
       "video" # For camera/webcam access
       "input" # For Voxtype modifier-release guard
       "ydotool" # For GNOME Wayland keyboard simulation
