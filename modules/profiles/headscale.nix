@@ -11,10 +11,7 @@
   ...
 }:
 let
-  # TODO: point this at the real, publicly resolvable hostname for the
-  # headscale server (DNS record + port-forward/reverse-proxy to that host).
-  # Must match on every client.
-  serverDomain = "headscale.example.com";
+  serverDomain = "headscale.peychev.com";
   serverUrl = "https://${serverDomain}";
 in
 {
@@ -62,7 +59,7 @@ in
 
   security.acme = lib.mkIf headscaleServer {
     acceptTerms = true;
-    defaults.email = "you@example.com"; # TODO: set your personal ACME contact email
+    defaults.email = "todor@peychev.com";
   };
 
   networking.firewall.allowedTCPPorts = lib.mkIf headscaleServer [
