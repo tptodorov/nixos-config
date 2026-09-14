@@ -44,7 +44,7 @@ let
     text = ''
       set -euo pipefail
 
-      env_file="''${WTF_JIRA_ENV_FILE:-$HOME/redislabsdev/langcache/.env.mcp}"
+      env_file="''${WTF_JIRA_ENV_FILE:-$HOME/.config/wtf/jira.env}"
       if [ ! -f "$env_file" ]; then
         echo "Missing Jira env file: $env_file"
         exit 0
