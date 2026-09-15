@@ -16,6 +16,8 @@
 let
   llmAgentsPkgs = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system};
   skillsBin = "${llmAgentsPkgs.skills}/bin/skills";
+  skillsPath = lib.makeBinPath [ pkgs.git ];
+  skillAgentArgs = "-a codex -a claude-code";
 
   # Skill packages installed via the `skills` CLI itself (skills.md registry
   # tool, not a Nix flake input) so they land in every agent's skill
@@ -57,13 +59,13 @@ let
     let
       skillArgs =
         if skills == null then
-          "--all"
+          "${skillAgentArgs} -y -s '*'"
         else
-          "-a '*' -y " + lib.concatMapStringsSep " " (name: "-s ${name}") skills;
+          "${skillAgentArgs} -y " + lib.concatMapStringsSep " " (name: "-s ${name}") skills;
     in
     ''
       if [ ! -e "$HOME/.agents/skills/${marker}" ]; then
-        $DRY_RUN_CMD ${skillsBin} add ${repo} -g ${skillArgs} || true
+        PATH="${skillsPath}:$PATH" $DRY_RUN_CMD ${skillsBin} add ${repo} -g ${skillArgs} || true
       fi
     '';
 in

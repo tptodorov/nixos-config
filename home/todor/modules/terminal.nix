@@ -29,7 +29,7 @@ let
       brightness = 0.55,
     }
     config.colors = {
-      split = "#f5a97f",
+      split = "#6e738d",
     }
 
     config.default_prog = { "zsh" }
@@ -230,7 +230,7 @@ in
       "macos-option-as-alt" = true;
       "shell-integration" = "zsh";
 
-      "split-divider-color" = "#f5a97f";
+      "split-divider-color" = "#6e738d";
       "unfocused-split-opacity" = 0.75;
 
       keybind = [
