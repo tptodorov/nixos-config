@@ -51,6 +51,15 @@ let
       llmAgentsPkgs.voxtype
     else
       null;
+  skillsPackage = pkgs.symlinkJoin {
+    name = "skills-wrapped";
+    paths = [ llmAgentsPkgs.skills ];
+    nativeBuildInputs = [ pkgs.makeWrapper ];
+    postBuild = ''
+      wrapProgram $out/bin/skills \
+        --prefix PATH : ${lib.makeBinPath [ pkgs.git ]}
+    '';
+  };
   # ponytail: replace these local packages if llm-agents.nix packages the tools.
   codeburnPackage = pkgs.writeShellApplication {
     name = "codeburn";
@@ -227,7 +236,7 @@ in
       llmAgentsPkgs.agent-browser
       llmAgentsPkgs.hunk
       llmAgentsPkgs.but
-      llmAgentsPkgs.skills
+      skillsPackage
       llmAgentsPkgs.openspec
       llmAgentsPkgs.openspecui
       llmAgentsPkgs.fence

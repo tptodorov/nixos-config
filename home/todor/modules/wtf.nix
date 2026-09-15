@@ -110,11 +110,11 @@ in
     wtf:
       colors:
         border:
-          focusable: steelblue
-          focused: orange
-          normal: gray
-        title: white
-        text: white
+          focusable: "#8aadf4"
+          focused: "#b7bdf8"
+          normal: "#6e738d"
+        title: "#cad3f5"
+        text: "#cad3f5"
       grid:
         columns: [58, 100]
         rows: [28]

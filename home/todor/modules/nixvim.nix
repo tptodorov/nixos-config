@@ -172,7 +172,7 @@
 
     # Extra plugins (not available as built-in options)
     extraPlugins = with pkgs.vimPlugins; [
-      tokyonight-nvim
+      catppuccin-nvim
     ];
 
     # Plugins
@@ -268,7 +268,7 @@
         enable = true;
         settings = {
           options = {
-            theme = "tokyonight";
+            theme = "catppuccin-macchiato";
           };
         };
       };
@@ -340,14 +340,14 @@
       -- Additional Lua configuration can go here
       vim.opt.fillchars = { eob = " " }
 
-      -- Configure tokyonight colorscheme
-      require("tokyonight").setup({
-        style = "night",
+      -- Configure Catppuccin Macchiato colorscheme
+      require("catppuccin").setup({
+        flavour = "macchiato",
         transparent = false,
       })
 
       -- Set colorscheme
-      vim.cmd.colorscheme("tokyonight")
+      vim.cmd.colorscheme("catppuccin-macchiato")
     '';
   };
 }

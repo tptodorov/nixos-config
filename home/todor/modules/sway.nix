@@ -186,49 +186,49 @@
         outer = 5;
       };
 
-      # Colors - Material Design Dark theme (matching DMS)
+      # Colors - Catppuccin Macchiato
       colors = {
         focused = {
-          border = "#1db8f8";
-          background = "#121212";
-          text = "#ffffff";
-          indicator = "#1db8f8";
-          childBorder = "#1db8f8";
+          border = "#b7bdf8";
+          background = "#24273a";
+          text = "#cad3f5";
+          indicator = "#8aadf4";
+          childBorder = "#b7bdf8";
         };
         focusedInactive = {
-          border = "#424242";
-          background = "#1e1e1e";
-          text = "#bdbdbd";
-          indicator = "#616161";
-          childBorder = "#424242";
+          border = "#494d64";
+          background = "#1e2030";
+          text = "#b8c0e0";
+          indicator = "#6e738d";
+          childBorder = "#494d64";
         };
         unfocused = {
-          border = "#212121";
-          background = "#121212";
-          text = "#757575";
-          indicator = "#303030";
-          childBorder = "#212121";
+          border = "#363a4f";
+          background = "#24273a";
+          text = "#939ab7";
+          indicator = "#494d64";
+          childBorder = "#363a4f";
         };
         urgent = {
-          border = "#ff5252";
-          background = "#ff5252";
-          text = "#ffffff";
-          indicator = "#ff5252";
-          childBorder = "#ff5252";
+          border = "#ed8796";
+          background = "#ed8796";
+          text = "#24273a";
+          indicator = "#ed8796";
+          childBorder = "#ed8796";
         };
         placeholder = {
-          border = "#212121";
-          background = "#121212";
-          text = "#757575";
-          indicator = "#303030";
-          childBorder = "#212121";
+          border = "#363a4f";
+          background = "#24273a";
+          text = "#939ab7";
+          indicator = "#494d64";
+          childBorder = "#363a4f";
         };
-        background = "#121212";
+        background = "#24273a";
       };
 
       output = {
         "*" = {
-          bg = "#000000 solid_color";
+          bg = "#24273a solid_color";
         };
       };
     };
