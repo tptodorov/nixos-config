@@ -10,9 +10,8 @@
 let
   llmAgentsPkgs = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system};
   voxtypePkgs = inputs.voxtype.packages.${pkgs.stdenv.hostPlatform.system} or { };
-  voxtypeVulkan = voxtypePkgs.vulkan or null;
-  voxtypeUnwrapped = voxtypePkgs.voxtype-vulkan-unwrapped or null;
-  voxtypeWhisperModel = "base.en";
+  voxtypeOnnx = voxtypePkgs.onnx or null;
+  voxtypeParakeetModel = "parakeet-tdt-0.6b-v3";
   voxtypeRuntimePath = lib.makeBinPath [
     pkgs.which
     pkgs.wtype
@@ -25,15 +24,10 @@ let
     pkgs.dotool
   ];
   voxtypePackage =
-    if voxtypeVulkan != null && voxtypeUnwrapped != null then
+    if voxtypeOnnx != null then
       pkgs.symlinkJoin {
-        name = "voxtype-vulkan-wrapped";
-        paths = [
-          (voxtypeUnwrapped.overrideAttrs (_: {
-            # v0.7.1's check phase compiles an ONNX example without its optional ort dependency.
-            doCheck = false;
-          }))
-        ];
+        name = "voxtype-onnx-wrapped";
+        paths = [ voxtypeOnnx ];
         nativeBuildInputs = [ pkgs.makeWrapper ];
         postBuild = ''
           wrapProgram $out/bin/voxtype \
@@ -42,6 +36,7 @@ let
       }
     else
       llmAgentsPkgs.voxtype;
+  isX86Linux = pkgs.stdenv.hostPlatform.isLinux && pkgs.stdenv.hostPlatform.isx86_64;
 in
 {
   # Desktop applications and GUI tools
@@ -89,17 +84,10 @@ in
       # Messenger applications
       telegram-desktop
       signal-desktop
-      viber
       wasistlos
-      zoom-us # Video conferencing
-      slack # Team communication
 
       # Notifications
       libnotify # notify-send command
-
-      # Audio applications
-      spotify
-      discord
 
       # Productivity applications
       obsidian
@@ -122,7 +110,12 @@ in
       xournalpp # Annotate and markup PDFs, handwriting support
       evince # GNOME PDF viewer with basic annotation
     ]
-    ++ lib.optionals (pkgs.stdenv.hostPlatform.isLinux && pkgs.stdenv.hostPlatform.isx86_64) [
+    ++ lib.optionals isX86Linux [
+      viber
+      zoom-us # Video conferencing
+      slack # Team communication
+      spotify
+      discord
       dropbox
     ];
 
@@ -161,22 +154,31 @@ in
 
     configureVoxtypeModel = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       CONFIG="$HOME/.config/voxtype/config.toml"
-      MODEL="${voxtypeWhisperModel}"
+      MODEL="${voxtypeParakeetModel}"
 
       if [ ! -f "$CONFIG" ]; then
         $DRY_RUN_CMD mkdir -p "$(dirname "$CONFIG")"
-        $DRY_RUN_CMD printf 'engine = "whisper"\n\n[whisper]\nmodel = "%s"\nlanguage = "en"\n' "$MODEL" > "$CONFIG"
+        $DRY_RUN_CMD printf 'engine = "parakeet"\n\n[parakeet]\nmodel = "%s"\nmodel_type = "tdt"\n' "$MODEL" > "$CONFIG"
       else
         if grep -q '^engine = ' "$CONFIG"; then
-          $DRY_RUN_CMD sed -i 's|^engine = .*|engine = "whisper"|' "$CONFIG"
+          $DRY_RUN_CMD sed -i 's|^engine = .*|engine = "parakeet"|' "$CONFIG"
         else
-          $DRY_RUN_CMD sed -i '1iengine = "whisper"' "$CONFIG"
+          $DRY_RUN_CMD sed -i '1iengine = "parakeet"' "$CONFIG"
         fi
 
-        if grep -q '^model = ' "$CONFIG"; then
-          $DRY_RUN_CMD sed -i "s|^model = .*|model = \"$MODEL\"|" "$CONFIG"
+        if grep -q '^\[parakeet\]' "$CONFIG"; then
+          if sed -n '/^\[parakeet\]/,/^\[/{ p; }' "$CONFIG" | grep -q '^model = '; then
+            $DRY_RUN_CMD sed -i "/^\[parakeet\]/,/^\[/{ s|^model = .*|model = \"$MODEL\"|; }" "$CONFIG"
+          else
+            $DRY_RUN_CMD sed -i '/^\[parakeet\]/amodel = "'"$MODEL"'"' "$CONFIG"
+          fi
+          if sed -n '/^\[parakeet\]/,/^\[/{ p; }' "$CONFIG" | grep -q '^model_type = '; then
+            $DRY_RUN_CMD sed -i '/^\[parakeet\]/,/^\[/{ s|^model_type = .*|model_type = "tdt"|; }' "$CONFIG"
+          else
+            $DRY_RUN_CMD sed -i '/^\[parakeet\]/amodel_type = "tdt"' "$CONFIG"
+          fi
         else
-          $DRY_RUN_CMD printf '\n[whisper]\nmodel = "%s"\nlanguage = "en"\n' "$MODEL" >> "$CONFIG"
+          $DRY_RUN_CMD printf '\n[parakeet]\nmodel = "%s"\nmodel_type = "tdt"\n' "$MODEL" >> "$CONFIG"
         fi
       fi
     '';

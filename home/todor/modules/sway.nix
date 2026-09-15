@@ -5,6 +5,9 @@
   laptop ? false,
   ...
 }:
+let
+  isX86Linux = pkgs.stdenv.hostPlatform.isLinux && pkgs.stdenv.hostPlatform.isx86_64;
+in
 {
   # Sway window manager configuration
   wayland.windowManager.sway = {
@@ -168,6 +171,8 @@
           command = "${pkgs.brave}/bin/brave";
           always = false;
         }
+      ]
+      ++ lib.optionals isX86Linux [
         {
           command = "${pkgs.spotify}/bin/spotify";
           always = false;
@@ -289,19 +294,23 @@
   # are NOT set here to avoid conflicts with GNOME or other desktop sessions.
 
   # Sway-specific packages
-  home.packages = with pkgs; [
-    sway
-    swaybg
-    swayidle
-    swaylock
-    wl-clipboard
-    cliphist
-    grim
-    slurp
-    xwayland-satellite
-    kitty
-    spotify
-    openssh
-    dbus
-  ];
+  home.packages =
+    with pkgs;
+    [
+      sway
+      swaybg
+      swayidle
+      swaylock
+      wl-clipboard
+      cliphist
+      grim
+      slurp
+      xwayland-satellite
+      kitty
+      openssh
+      dbus
+    ]
+    ++ lib.optionals isX86Linux [
+      spotify
+    ];
 }

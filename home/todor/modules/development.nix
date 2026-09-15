@@ -14,8 +14,7 @@ let
     config = config.nixpkgs.config;
   };
   voxtypePkgs = inputs.voxtype.packages.${pkgs.stdenv.hostPlatform.system} or { };
-  voxtypeVulkan = voxtypePkgs.vulkan or null;
-  voxtypeUnwrapped = voxtypePkgs.voxtype-vulkan-unwrapped or null;
+  voxtypeOnnx = voxtypePkgs.onnx or null;
   voxtypeRuntimePath = lib.makeBinPath (
     [
       pkgs.which
@@ -32,15 +31,10 @@ let
     ]
   );
   voxtypePackage =
-    if isLinux && voxtypeVulkan != null && voxtypeUnwrapped != null then
+    if isLinux && voxtypeOnnx != null then
       pkgs.symlinkJoin {
-        name = "voxtype-vulkan-wrapped";
-        paths = [
-          (voxtypeUnwrapped.overrideAttrs (_: {
-            # v0.7.1's check phase compiles an ONNX example without its optional ort dependency.
-            doCheck = false;
-          }))
-        ];
+        name = "voxtype-onnx-wrapped";
+        paths = [ voxtypeOnnx ];
         nativeBuildInputs = [ pkgs.makeWrapper ];
         postBuild = ''
           wrapProgram $out/bin/voxtype \
@@ -59,6 +53,157 @@ let
       wrapProgram $out/bin/skills \
         --prefix PATH : ${lib.makeBinPath [ pkgs.git ]}
     '';
+  };
+  orcaVersion = "1.4.203";
+  orcaSources = {
+    aarch64-darwin = pkgs.fetchurl {
+      url = "https://github.com/stablyai/orca/releases/download/v${orcaVersion}/Orca-${orcaVersion}-arm64-mac.zip";
+      hash = "sha256-ocW+tRm8JvOnJLmQ9qKaTXx4anWI5Rjygb2qY0qiDxQ=";
+    };
+    x86_64-darwin = pkgs.fetchurl {
+      url = "https://github.com/stablyai/orca/releases/download/v${orcaVersion}/Orca-${orcaVersion}-mac.zip";
+      hash = "sha256-b/fzZWMWYwPVmXcFrnEQbuPjtW6qztPCdKmO9z0c70E=";
+    };
+    x86_64-linux = pkgs.fetchurl {
+      url = "https://github.com/stablyai/orca/releases/download/v${orcaVersion}/orca-ide_${orcaVersion}_amd64.deb";
+      hash = "sha256-dRXrYSY2QInMMJSrZRJcR4rol+2XLi1fPR0vcNW4fjs=";
+    };
+    aarch64-linux = pkgs.fetchurl {
+      url = "https://github.com/stablyai/orca/releases/download/v${orcaVersion}/orca-ide_${orcaVersion}_arm64.deb";
+      hash = "sha256-FxQP6mLYcjN+q1bFUad9Qg7s38Gx+6dA22w2aeB1Pxo=";
+    };
+  };
+  orcaSrc =
+    orcaSources.${pkgs.stdenv.hostPlatform.system}
+      or (throw "Orca is not packaged for ${pkgs.stdenv.hostPlatform.system}");
+  orcaPackage =
+    if isDarwin then
+      pkgs.stdenvNoCC.mkDerivation {
+        pname = "orca";
+        version = orcaVersion;
+        src = orcaSrc;
+        dontFixup = true;
+        nativeBuildInputs = [
+          pkgs.makeWrapper
+          pkgs.unzip
+        ];
+        sourceRoot = ".";
+        installPhase = ''
+          runHook preInstall
+
+          mkdir -p "$out/Applications" "$out/bin"
+          cp -R Orca.app "$out/Applications/Orca.app"
+          /usr/bin/codesign --force --deep --sign - "$out/Applications/Orca.app"
+          makeWrapper /usr/bin/open "$out/bin/orca" \
+            --add-flags "-n" \
+            --add-flags "$out/Applications/Orca.app" \
+            --add-flags "--args"
+
+          runHook postInstall
+        '';
+        meta = {
+          description = "Agent development environment for running coding agents in parallel";
+          homepage = "https://www.onorca.dev/";
+          license = lib.licenses.mit;
+          mainProgram = "orca";
+          platforms = [
+            "aarch64-darwin"
+            "x86_64-darwin"
+          ];
+        };
+      }
+    else
+      pkgs.stdenv.mkDerivation {
+        pname = "orca";
+        version = orcaVersion;
+        src = orcaSrc;
+        nativeBuildInputs = [
+          pkgs.autoPatchelfHook
+          pkgs.dpkg
+          pkgs.makeWrapper
+        ];
+        buildInputs = [
+          pkgs.alsa-lib
+          pkgs.at-spi2-atk
+          pkgs.at-spi2-core
+          pkgs.cairo
+          pkgs.cups
+          pkgs.dbus
+          pkgs.expat
+          pkgs.glib
+          pkgs.gtk3
+          pkgs.libdrm
+          pkgs.libgbm
+          pkgs.libxkbcommon
+          pkgs.mesa
+          pkgs.nss
+          pkgs.pango
+          pkgs.xorg.libX11
+          pkgs.xorg.libxcb
+          pkgs.xorg.libXcomposite
+          pkgs.xorg.libXdamage
+          pkgs.xorg.libXext
+          pkgs.xorg.libXfixes
+          pkgs.xorg.libXrandr
+        ];
+        installPhase = ''
+          runHook preInstall
+
+          mkdir -p "$out/bin" "$out/opt"
+          cp -R usr/* "$out"
+          cp -R opt/* "$out/opt"
+          wrapProgram "$out/opt/Orca/orca-ide" "$out/bin/orca"
+          substituteInPlace "$out/share/applications/orca-ide.desktop" \
+            --replace-fail "/opt/Orca/orca-ide" "orca"
+
+          runHook postInstall
+        '';
+        meta = {
+          description = "Agent development environment for running coding agents in parallel";
+          homepage = "https://www.onorca.dev/";
+          license = lib.licenses.mit;
+          mainProgram = "orca";
+          platforms = [
+            "aarch64-linux"
+            "x86_64-linux"
+          ];
+        };
+      };
+  omnigentVersion = "0.13.0";
+  omnigentRuntimeInputs = [
+    pkgs.git
+    pkgs.nodejs
+    pkgs.pnpm
+    pkgs.python312
+    pkgs.tmux
+    pkgs.uv
+  ]
+  ++ lib.optionals isLinux [
+    pkgs.bubblewrap
+  ];
+  mkOmnigentLauncher =
+    name:
+    pkgs.writeShellApplication {
+      inherit name;
+      runtimeInputs = omnigentRuntimeInputs;
+      text = ''
+        export UV_PYTHON_DOWNLOADS=never
+        exec uv tool run --from omnigent==${omnigentVersion} --python ${pkgs.python312}/bin/python3.12 ${name} "$@"
+      '';
+    };
+  omnigentPackage = pkgs.symlinkJoin {
+    name = "omnigent-${omnigentVersion}";
+    paths = [
+      (mkOmnigentLauncher "omnigent")
+      (mkOmnigentLauncher "omni")
+    ];
+    meta = {
+      description = "Open-source meta-harness for AI coding agents";
+      homepage = "https://omnigent.ai/";
+      license = lib.licenses.asl20;
+      mainProgram = "omni";
+      platforms = lib.platforms.darwin ++ lib.platforms.linux;
+    };
   };
   # ponytail: replace these local packages if llm-agents.nix packages the tools.
   codeburnPackage = pkgs.writeShellApplication {
@@ -237,6 +382,8 @@ in
       llmAgentsPkgs.hunk
       llmAgentsPkgs.but
       skillsPackage
+      orcaPackage
+      omnigentPackage
       llmAgentsPkgs.openspec
       llmAgentsPkgs.openspecui
       llmAgentsPkgs.fence

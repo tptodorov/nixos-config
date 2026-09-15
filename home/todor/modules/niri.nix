@@ -6,6 +6,9 @@
   laptop ? false,
   ...
 }:
+let
+  isX86Linux = pkgs.stdenv.hostPlatform.isLinux && pkgs.stdenv.hostPlatform.isx86_64;
+in
 {
   # Niri window manager configuration
   # NOTE: Application packages are defined in desktop-apps.nix and other topic-based modules
@@ -124,8 +127,10 @@
     spawn-at-startup "sh" "-c" "${pkgs.wl-clipboard}/bin/wl-paste --type image --watch ${pkgs.cliphist}/bin/cliphist store"
     spawn-at-startup "${pkgs.wezterm}/bin/wezterm"
     spawn-at-startup "${pkgs.brave}/bin/brave"
-    spawn-at-startup "${pkgs.spotify}/bin/spotify"
-    spawn-at-startup "sh" "-c" "env GDK_SCALE=2 GDK_DPI_SCALE=1 ${pkgs.viber}/bin/viber"
+    ${lib.optionalString isX86Linux ''
+      spawn-at-startup "${pkgs.spotify}/bin/spotify"
+      spawn-at-startup "sh" "-c" "env GDK_SCALE=2 GDK_DPI_SCALE=1 ${pkgs.viber}/bin/viber"
+    ''}
     spawn-at-startup "sh" "-c" "env GDK_SCALE=2 GDK_DPI_SCALE=1 ${pkgs.wasistlos}/bin/wasistlos"
     // spawn-at-startup "${pkgs.brave}/bin/brave" "--app=https://mail.notion.so/"
     // spawn-at-startup "${pkgs.brave}/bin/brave" "--app=https://calendar.notion.so/"

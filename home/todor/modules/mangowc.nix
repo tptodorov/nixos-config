@@ -6,6 +6,9 @@
   laptop ? false,
   ...
 }:
+let
+  isX86Linux = pkgs.stdenv.hostPlatform.isLinux && pkgs.stdenv.hostPlatform.isx86_64;
+in
 {
   # MangoWC window manager configuration
   # NOTE: Application packages are defined in desktop-apps.nix and other topic-based modules
@@ -112,8 +115,10 @@
     exec-once=sh -c "${pkgs.wl-clipboard}/bin/wl-paste --type image --watch ${pkgs.cliphist}/bin/cliphist store"
     exec-once=${pkgs.brave}/bin/brave
     exec-once=sh -c "dms ipc wallpaper set ~/.config/asset/3.jpg"
-    exec-once=${pkgs.spotify}/bin/spotify
-    exec-once=${pkgs.viber}/bin/viber
+    ${lib.optionalString isX86Linux ''
+      exec-once=${pkgs.spotify}/bin/spotify
+      exec-once=${pkgs.viber}/bin/viber
+    ''}
     exec-once=${pkgs.wasistlos}/bin/wasistlos
     exec-once=${pkgs.brave}/bin/brave --app=https://mail.notion.so/
     exec-once=${pkgs.brave}/bin/brave --app=https://calendar.notion.so/
