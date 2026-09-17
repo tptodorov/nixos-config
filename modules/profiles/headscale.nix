@@ -38,6 +38,10 @@ in
       dns = {
         magic_dns = true;
         base_domain = "ts.${serverDomain}";
+        nameservers.global = [
+          "1.1.1.1"
+          "8.8.8.8"
+        ];
       };
     };
   };
