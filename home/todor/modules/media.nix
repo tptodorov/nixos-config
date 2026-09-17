@@ -38,7 +38,7 @@ in
     transmission_4-gtk # Torrent client with GTK interface
     (lib.lowPrio sox) # Sound processing tool (lowPrio to avoid conflict with gotools' play binary)
     openai-whisper # OpenAI Whisper speech recognition
-    mmtTool # Media management tool for GoPro and other action cameras
+    # mmtTool # Media management tool for GoPro and other action cameras (temporarily disabled due to Go proxy network issues)
   ];
 
   programs = {
