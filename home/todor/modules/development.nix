@@ -152,7 +152,7 @@ let
           mkdir -p "$out/bin" "$out/opt"
           cp -R usr/* "$out"
           cp -R opt/* "$out/opt"
-          wrapProgram "$out/opt/Orca/orca-ide" "$out/bin/orca"
+          makeWrapper "$out/opt/Orca/orca-ide" "$out/bin/orca"
           substituteInPlace "$out/share/applications/orca-ide.desktop" \
             --replace-fail "/opt/Orca/orca-ide" "orca"
 
