@@ -29,7 +29,7 @@
     ../../modules/profiles/headscale.nix
 
     # Host-specific modules
-    # ./modules/kernel.nix
+    ./modules/kernel.nix
     ./modules/networking.nix
     ./modules/services.nix
 
