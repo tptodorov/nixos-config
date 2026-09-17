@@ -92,6 +92,10 @@
     # Disk management
     gparted
 
+    # Bluetooth management
+    bluez # Bluetooth protocol stack
+    bluez-tools # CLI tools (bt-adapter, bt-device, etc.)
+
     # Rust toolchain (needed for COSMIC and other Rust apps)
     (fenix.complete.withComponents [
       "cargo"
@@ -116,6 +120,19 @@
   hardware.graphics = {
     enable = true;
   };
+
+  # Bluetooth support
+  hardware.bluetooth = {
+    enable = true;
+    powerOnBoot = true;
+    settings = {
+      General = {
+        Enable = "Source,Sink,Media,Socket";
+        Experimental = true; # Enable experimental features (battery reporting, etc.)
+      };
+    };
+  };
+  services.blueman.enable = true; # GUI Bluetooth manager
 
   # Removable media support
   services.udisks2.enable = true;
