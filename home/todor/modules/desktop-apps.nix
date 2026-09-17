@@ -242,6 +242,49 @@ in
       };
     };
 
+    # Voxtype daemon configuration.
+    # Managed here so the schema stays valid across upgrades: the root Config
+    # struct requires [hotkey], [audio] and output.mode, and voxtype refuses to
+    # start if any are missing.
+    configFile."voxtype/config.toml".text = ''
+      engine = "parakeet"
+
+      [hotkey]
+      # Recording is driven by compositor/GNOME keybindings via
+      # `voxtype record toggle`, not by voxtype's own evdev grab.
+      enabled = false
+      mode = "toggle"
+
+      [audio]
+      device = "default"
+      sample_rate = 16000
+      max_duration_secs = 60
+
+      [parakeet]
+      model = "${voxtypeParakeetModel}"
+      model_type = "tdt"
+
+      # Reject recordings with no detected speech before they reach the model.
+      # Without this, near-silent captures make Parakeet hallucinate -- it
+      # emitted Portuguese ("Desculpa, ne?") from an English-only model on a
+      # silent 2s clip. Energy backend needs no extra model download.
+      [vad]
+      enabled = true
+      backend = "energy"
+
+      [osd]
+      enabled = false
+
+      [output]
+      mode = "type"
+      fallback_to_clipboard = true
+
+      [output.notification]
+      on_recording_start = false
+      on_recording_stop = false
+      on_transcription = false
+    '';
+
     configFile."autostart/voxtype.desktop".text = ''
       [Desktop Entry]
       Type=Application
@@ -445,5 +488,35 @@ in
 
   systemd.user.sessionVariables = {
     YDOTOOL_SOCKET = "/run/ydotoold/socket";
+  };
+
+  # Set internal-microphone capture gain.
+  #
+  # PipeWire owns this card's ALSA controls and maps its single source volume
+  # onto the "Capture" (0..+30 dB) and "Internal Mic Boost" (0..+30 dB) chain,
+  # so amixer writes here get overwritten -- the pulse volume is the only
+  # effective knob.
+  #
+  # 40% measured against normal speech at desk distance: peak -11.0 dBFS,
+  # noise floor -28.1 dB, 0.00% clipping. 50%+ pushes peaks to -0.4 dBFS and
+  # starts clipping at 60%; 30% works but leaves only ~5 dB of speech-over-floor
+  # spread. Transcription was accurate at all four levels, so 40% is chosen for
+  # headroom rather than intelligibility. Raise if you move further from the box.
+  systemd.user.services.mic-gain = lib.mkIf (!standalone) {
+    Unit = {
+      Description = "Set internal microphone capture gain to a non-clipping level";
+      After = [ "pipewire.service" ];
+      Wants = [ "pipewire.service" ];
+    };
+    Service = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      ExecStart = "${pkgs.writeShellScript "set-mic-gain" ''
+        src=alsa_input.pci-0000_c5_00.6.analog-stereo
+        ${pkgs.pulseaudio}/bin/pactl list short sources | grep -q "$src" || exit 0
+        ${pkgs.pulseaudio}/bin/pactl set-source-volume "$src" 40%
+      ''}";
+    };
+    Install.WantedBy = [ "default.target" ];
   };
 }

@@ -125,6 +125,9 @@ in
     spawn-at-startup "sh" "-c" "$HOME/.config/niri/scripts/ssh-agent-init.sh"
     spawn-at-startup "sh" "-c" "${pkgs.wl-clipboard}/bin/wl-paste --type text --watch ${pkgs.cliphist}/bin/cliphist store"
     spawn-at-startup "sh" "-c" "${pkgs.wl-clipboard}/bin/wl-paste --type image --watch ${pkgs.cliphist}/bin/cliphist store"
+    // Voice dictation daemon. The GNOME autostart entry is OnlyShowIn=GNOME,
+    // so niri needs its own launch for Super+D to have a daemon to signal.
+    spawn-at-startup "sh" "-c" "env YDOTOOL_SOCKET=/run/ydotoold/socket voxtype --no-hotkey --driver=ydotool,wtype daemon"
     spawn-at-startup "${pkgs.wezterm}/bin/wezterm"
     spawn-at-startup "${pkgs.brave}/bin/brave"
     ${lib.optionalString isX86Linux ''
@@ -173,6 +176,10 @@ in
         Super+E hotkey-overlay-title="File Manager" { spawn "${pkgs.nautilus}/bin/nautilus"; }
         Super+S hotkey-overlay-title="Web Browser" { spawn "${pkgs.brave}/bin/brave"; }
         Super+A hotkey-overlay-title="Email Client" { spawn "${pkgs.brave}/bin/brave" "--app=https://mail.notion.so/" ; }
+
+        // Voice dictation: toggles the voxtype daemon's recording state.
+        // Matches the GNOME <Super>d binding in desktop-apps.nix.
+        Super+D hotkey-overlay-title="Dictate" { spawn "voxtype" "record" "toggle"; }
 
         // Window management (vim-style)
         Super+H { focus-column-left; }

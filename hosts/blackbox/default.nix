@@ -18,11 +18,13 @@
     # Configuration profiles
     ../../modules/profiles/base.nix
     ../../modules/profiles/desktop.nix
+    ../../modules/profiles/gnome.nix
     ../../modules/profiles/snap.nix
     ../../modules/profiles/gaming.nix
     ../../modules/profiles/headscale.nix
 
     # Host-specific modules
+    ./modules/kernel.nix
     ./modules/networking.nix
     ./modules/services.nix
 
