@@ -25,6 +25,7 @@
 
     # Host-specific modules
     ./modules/kernel.nix
+    ./modules/noctalia.nix
     ./modules/networking.nix
     ./modules/services.nix
 

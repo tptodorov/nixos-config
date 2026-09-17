@@ -156,6 +156,20 @@
     # - Package: vulkan variant per upstream NixOS installation docs
     voxtype.url = "github:peteonrails/voxtype/v0.7.1";
 
+    # noctalia: Wayland desktop shell (v5)
+    # - Used by: blackbox, experimental, runs under the Umbriel session only
+    # - Overlaps with DMS (both draw a bar/panels); never run both at once
+    # - No nixpkgs.follows: upstream warns it breaks their binary cache by
+    #   changing derivation hashes (docs.noctalia.dev getting-started/nixos)
+    noctalia.url = "github:noctalia-dev/noctalia";
+
+    # umbriel: Wayland compositor from the Noctalia project
+    umbriel.url = "github:noctalia-dev/umbriel";
+
+    # noctalia-greeter: greetd login screen (staged, not enabled)
+    # - Not in our nixpkgs, so the project flake is required
+    noctalia-greeter.url = "github:noctalia-dev/noctalia-greeter";
+
   };
 
   outputs =

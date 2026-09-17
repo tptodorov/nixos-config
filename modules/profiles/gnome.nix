@@ -7,12 +7,15 @@
   services.xserver.enable = true;
   services.desktopManager.gnome.enable = true;
 
-  # Use GDM as the display manager (replaces greetd from desktop.nix)
-  services.displayManager.gdm.enable = true;
-  services.displayManager.defaultSession = lib.mkForce "gnome";
+  # Use GDM as the display manager (replaces greetd from desktop.nix).
+  # mkOverride 60 beats desktop.nix's normal-priority definitions (1000; lower
+  # numbers win) but still loses to a host that sets mkForce (50), so a host can
+  # opt into a different greeter without this profile having to know about it.
+  services.displayManager.gdm.enable = lib.mkOverride 60 true;
+  services.displayManager.defaultSession = lib.mkOverride 60 "gnome";
 
   # Disable greetd (conflicts with GDM)
-  services.greetd.enable = lib.mkForce false;
+  services.greetd.enable = lib.mkOverride 60 false;
 
   # Re-enable GNOME keyring (desktop.nix disables it for tiling WM setups)
   security.pam.services.login.enableGnomeKeyring = lib.mkForce true;
