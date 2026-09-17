@@ -67,7 +67,26 @@ in
   # Umbriel's own config, kept here rather than in home/todor/modules so the
   # whole experiment stays in one blackbox-only file.
   home-manager.users.todor = {
-    imports = [ inputs.umbriel.homeModules.default ];
+    imports = [
+      inputs.umbriel.homeModules.default
+      inputs.noctalia.homeModules.default
+    ];
+
+    programs.noctalia = {
+      enable = true;
+      package = inputs.noctalia.packages.${system}.default;
+      # Seeds ~/.config/noctalia/config.toml, which is separate from the
+      # runtime ~/.local/state/noctalia/settings.toml that Noctalia owns and
+      # rewrites. Upstream states these stay overridable from the settings
+      # menu, so pinning the theme here does not make the shell read-only.
+      # Catppuccin matches the Catppuccin Macchiato already used by nixvim,
+      # tmux, wezterm, ghostty, kitty and sway.
+      settings.theme = {
+        mode = "dark";
+        source = "builtin";
+        builtin = "Catppuccin";
+      };
+    };
 
     programs.umbriel = {
       enable = true;
