@@ -70,12 +70,10 @@ in
     };
   };
 
-  # Fix PATH for systemd service to find quickshell (qs)
-  systemd.user.services.dms.Service.Environment = [
-    "PATH=${
-      lib.makeBinPath [ inputs.dms.packages.${system}.quickshell ]
-    }:/run/current-system/sw/bin"
-  ];
+  # Note: PATH override for dms.service is intentionally removed.
+  # Since systemd.enable = false above, the DMS module doesn't create the full service.
+  # Adding Environment here would create an incomplete service file (no ExecStart).
+  # DMS is started via niri/sway spawn commands which inherit the correct PATH.
 
   # Lock screen before suspend (lid close, power button, etc.)
   # logind triggers suspend directly, bypassing DMS, so we hook into
