@@ -370,12 +370,20 @@ focus on different displays.
 | F2 | `Control+Option+Up/Down` | Move/reorder up/down in the workspace | `window-move-up/down` |
 | F2 | `Control+Option+Return` | Toggle maximize | `window-toggle-maximize-to-edges` |
 | F3 | `Control+Option+Shift+Left/Right` | Move window to previous/next display | `window-move-to-output-previous/next` |
-| F3 | `Control+Option+Shift+Up/Down` | Move window to previous/next workspace | `window-move-to-workspace-previous/next` |
+| F2 | `Hyper+Up/Down` | Move window to previous/next workspace | `window-move-to-workspace-previous/next` |
 | F3 | `Control+Option+F` | Toggle fullscreen | `window-toggle-fullscreen` |
 | F3 | `Control+Option+C` | Center floating window | `window-center` |
 | F3 | `Primary+M` | Minimize | `window-move-to-scratchpad` |
 
 The cross-display/workspace arrow family is conditional.
+
+**Revised 2026-09-18 after live use.** Moving a window between workspaces
+moved from `Control+Option+Shift+Up/Down` to `Hyper+Up/Down`. With Hyper on
+Caps, `Hyper+Left/Right` is already workspace switching, so `Hyper+Up/Down`
+is both free and the chord the hand actually reaches for; the three-modifier
+original was pressed as Caps by reflex and silently hit the workspace-switch
+layer instead. Display movement keeps the original chord because no Hyper
+arrow pair remains free for it.
 
 **Gate resolved 2026-09-18: use the preferred arrow family.** All four chords
 were captured from the Flow84 at the evdev layer:
@@ -574,6 +582,7 @@ daemon, lock screen or wallpaper daemon.
 | Half-window directions | Omit from shared core | Umbriel exposes width/height extents, not the edge-placement semantics used on macOS. |
 | Scratchpad show/restore | Platform-local F4 only if needed | The shared action is minimize; recovery mechanics differ by platform. |
 | Thirds and quarters | Omit | Explicitly unused. |
+| Cheatsheet "Hyper" label and a Displays section | Not possible upstream | `buildChordLabel` appends each modifier bit unconditionally, and `groupForActionImpl` assigns sections by action type in C++. Neither has a config surface, and section 14 forbids patching. Display moves therefore appear under "Move & size". |
 | Close, floating, pinned, overview and session quit | Omit | Application, Noctalia UI and CLI paths exist; do not allocate speculative chords. |
 | Grow/shrink and maximize height | Omit | Lower frequency and no agreed shared semantic. |
 | Globe/Fn and global F1–F15 | Omit | Hardware-dependent or owned by development tools. |

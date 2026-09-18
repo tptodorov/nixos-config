@@ -400,10 +400,16 @@ in
           "Ctrl+Alt+Up" = "window-move-up";
           "Ctrl+Alt+Down" = "window-move-down";
           "Ctrl+Alt+Return" = "window-toggle-maximize-to-edges";
+          # Moving a window between workspaces sits on Hyper+Up/Down rather
+          # than the spec's Control+Option+Shift+Arrow: with Hyper on Caps,
+          # Hyper+Left/Right is already workspace switching, so Up/Down is the
+          # chord the hand actually reaches for and it was otherwise unused.
+          "Ctrl+Alt+Shift+Super+Up" = "window-move-to-workspace-previous";
+          "Ctrl+Alt+Shift+Super+Down" = "window-move-to-workspace-next";
+          # Display movement keeps the spec chord: Hyper+Left/Right is taken
+          # by workspace switching, so there is no Hyper pair free for it.
           "Ctrl+Alt+Shift+Left" = "window-move-to-output-previous";
           "Ctrl+Alt+Shift+Right" = "window-move-to-output-next";
-          "Ctrl+Alt+Shift+Up" = "window-move-to-workspace-previous";
-          "Ctrl+Alt+Shift+Down" = "window-move-to-workspace-next";
           "Ctrl+Alt+F" = "window-toggle-fullscreen";
           "Ctrl+Alt+C" = "window-center";
           "Mod+M" = "window-move-to-scratchpad";
