@@ -132,6 +132,11 @@ The Linux implementation must:
 - retain the shortcut-inhibition safety escape;
 - correct stale greeter comments in `flake.nix` and the module.
 
+Out of scope but fixed alongside this work (`861dc2b`): Noctalia seeds its
+built-in Lock and Monitor-off idle behaviors **disabled**, so the screensaver
+never activated under Umbriel. The module now enables them explicitly. Any
+future `[idle]` change belongs in the same Nix-declared settings block.
+
 Keep Niri as the greeter's default session during this rollout. Switching the
 default to Umbriel is a separate one-line follow-up after acceptance.
 
@@ -157,14 +162,27 @@ physical map; each platform should use its native implementation vocabulary.
 
 The normative tables use physical role names:
 
-| Role | macOS | Linux PC keyboard after remapping |
+| Role | macOS | Linux after remapping |
 | --- | --- | --- |
-| Primary | Command | Key in the Command position: physical Alt, logical Super/`Mod` |
-| Option | Option | Key in the Option position: physical Super, logical Alt |
+| Primary | Command | Key in the Command position, logical Super/`Mod` |
+| Option | Option | Key in the Option position, logical Alt |
 | Control | Control | Control |
 | Hyper | Caps | Caps via keyd, emitting Control+Alt+Shift+Super |
 
 This naming makes the shared map independent of keycap labels.
+
+**Verified on `blackbox` 2026-09-18.** The attached keyboard is a Lofree
+Flow84 (Bluetooth, `05ac:024f`) in Apple mode, and it already emits the
+required roles natively:
+
+| Physical key | Emits |
+| --- | --- |
+| Command, next to spacebar | `LEFTMETA` — Primary |
+| Option, left of Command | `LEFTALT` — Option |
+| Control, leftmost | `LEFTCTRL` |
+
+Confirmed independently by Umbriel's bare `Mod` binding: pressing Command
+opens the Noctalia launcher, so Command is already `Mod`/Super.
 
 ### 5.2 Caps as Hyper
 
@@ -173,8 +191,8 @@ Add keyd at the NixOS layer:
 ```nix
 services.keyd = {
   enable = true;
-  keyboards.default = {
-    ids = [ "*" ];
+  keyboards.flow84 = {
+    ids = [ "05ac:024f" ];
     settings.main.capslock = "layer(hyper)";
     extraConfig = ''
       [hyper:C-A-S-M]
@@ -183,9 +201,24 @@ services.keyd = {
 };
 ```
 
-Caps has no tap action and must not toggle Caps Lock. Test the system-wide
-mapping in Umbriel, Niri and GNOME. If `keyd monitor` shows that `"*"` captures
-an unwanted virtual keyboard, replace it with observed physical device IDs.
+Caps has no tap action and must not toggle Caps Lock.
+
+**Implemented and verified 2026-09-18** (commit `2e09f31`). The device is
+scoped by id rather than `"*"` because this machine also exposes a
+`ydotoold virtual device` keyboard; grabbing it would put keyd in the path of
+Voxtype's synthetic typing. keyd logs the intended split at startup:
+
+```text
+DEVICE: match    05ac:024f:...  /etc/keyd/flow84.conf   (Flow84-L@Lofree)
+DEVICE: ignoring 2333:6666:...  (ydotoold virtual device)
+```
+
+Evidence, read from the `keyd virtual keyboard` device:
+
+- `Caps+D` emits `LEFTALT+LEFTCTRL+LEFTMETA+LEFTSHIFT+D`;
+- repeated bare taps leave `/sys/class/leds/*::capslock/brightness` at `0`.
+
+Niri and GNOME remain to be checked per section 13.3.
 
 ### 5.3 Linux keyboard layout
 
@@ -195,11 +228,19 @@ general.mod_key = "Super";
 input.keyboard = {
   layout = "us,bg";
   variant = ",phonetic";
-  options = "altwin:swap_alt_win";
   repeat_rate = 50;
   repeat_delay = 250;
 };
 ```
+
+**`altwin:swap_alt_win` is deliberately absent.** It existed to correct a PC
+keyboard whose Command-position key is physical Alt. The Flow84 is in Apple
+mode and already emits Command as `LEFTMETA`, so applying the swap would
+invert Primary and Option and send every `Primary+` chord to the wrong key.
+
+This makes the setting keyboard-dependent: a true PC keyboard attached to
+`blackbox` would need the swap. `input.keyboard.options` is global, so handle
+that case with a per-device keyd rule rather than by re-adding the swap here.
 
 Do not copy `grp:rwin_toggle` into Umbriel. Hyper letter bindings must be
 tested under both US and Bulgarian layouts.
@@ -304,10 +345,25 @@ focus on different displays.
 | F3 | `Control+Option+C` | Center floating window | `window-center` |
 | F3 | `Primary+M` | Minimize | `window-move-to-scratchpad` |
 
-The cross-display/workspace arrow family is conditional. Before implementation,
-verify all four physical chords with `wev` on every regular keyboard. If any
-chord is missing or ambiguous, do not bind a partial arrow family. Use this
-complete fallback instead:
+The cross-display/workspace arrow family is conditional.
+
+**Gate resolved 2026-09-18: use the preferred arrow family.** All four chords
+were captured from the Flow84 at the evdev layer:
+
+```text
+LEFTALT+LEFTCTRL+LEFTSHIFT+LEFT
+LEFTALT+LEFTCTRL+LEFTSHIFT+RIGHT
+LEFTALT+LEFTCTRL+LEFTSHIFT+UP
+LEFTALT+LEFTCTRL+LEFTSHIFT+DOWN
+```
+
+One caveat for re-testing: pressing all four keys simultaneously yields only
+`Shift+arrow`, which looks like ghosting but is Bluetooth HID report ordering.
+Hold the three modifiers first, then tap the arrow, and the full chord arrives
+every time.
+
+Per section 14 the fallback below must therefore stay unbound. It remains
+documented for a future keyboard that fails the same test:
 
 | Tier | Physical chord | Shared action |
 | --- | --- | --- |
@@ -501,10 +557,10 @@ Build the complete `blackbox` closure before one activation.
 
 ### Group 1 — physical foundation
 
-1. Verify `Control+Option+Shift+Arrow` with `wev` on every regular keyboard and
-   select either the full preferred family or the full fallback.
-2. Add keyd Hyper, explicit `Mod = Super`, US/Bulgarian layout and the
-   Alt/Super swap.
+1. ~~Verify `Control+Option+Shift+Arrow`~~ **Done.** All four chords pass; the
+   preferred arrow family is selected and the fallback stays unbound.
+2. Add keyd Hyper — **done** (`2e09f31`) — plus explicit `Mod = Super` and the
+   US/Bulgarian layout. The Alt/Super swap is dropped: see section 5.3.
 3. Set the dynamic workspace floor to nine on every regular output.
 4. Make WezTerm's Primary copy/paste handling cross-platform.
 

@@ -24,6 +24,20 @@
 }:
 let
   system = pkgs.stdenv.hostPlatform.system;
+
+  # Spec section 7.1: Primary copy/cut/paste are emitted as the conventional
+  # alternate clipboard events, never as Ctrl+C/X/V.
+  wtype = "${pkgs.wtype}/bin/wtype";
+
+  # Spec section 7.4: application commands defined once.
+  shortcutApps = {
+    mail = "${pkgs.gtk3}/bin/gtk-launch notion-mail";
+    calendar = "${pkgs.gtk3}/bin/gtk-launch notion-calendar";
+    terminal = "${pkgs.wezterm}/bin/wezterm";
+    browser = "${pkgs.brave}/bin/brave";
+    files = "${pkgs.nautilus}/bin/nautilus";
+    notes = "${pkgs.obsidian}/bin/obsidian";
+  };
 in
 {
   imports = [
@@ -153,45 +167,127 @@ in
         # Dell P2723QE, 27" 3840x2160. At scale 1 the desktop is unusably
         # small; 1.5 gives a 2560x1440 logical size, matching the fractional
         # scaling used for this panel elsewhere.
+        # Spec section 5.3. mod_key is stated explicitly rather than relying
+        # on Umbriel's default, and altwin:swap_alt_win is deliberately absent:
+        # the Lofree Flow84 runs in Apple mode and already emits Command as
+        # LEFTMETA, so the swap would invert the Primary and Option roles.
+        general.mod_key = "Super";
+
+        input.keyboard = {
+          layout = "us,bg";
+          variant = ",phonetic";
+          repeat_rate = 50;
+          repeat_delay = 250;
+        };
+
         output."HDMI-A-1" = {
           mode = "3840x2160@60";
           scale = 1.5;
+          # Spec section 7.2: keep workspaces dynamic but guarantee positions
+          # 1-9 exist so Hyper+1..9 always has a target.
+          min_workspaces = 9;
         };
 
-        # Umbriel ships the cheatsheet-toggle action but binds no key to it by
-        # default, so the keybind overlay was unreachable without the CLI.
-        # Mod+slash matches the DMS keybind overlay under mangowc.
+        # Spec section 7. Defining [keybinds] REPLACES Umbriel's built-in
+        # table, so every retained binding is explicit here.
         #
-        # NOTE: defining [keybinds] REPLACES the entire built-in set rather than
-        # extending it, so the defaults that matter are restated here.
+        # Role mapping on this host (verified 2026-09-18):
+        #   Primary = Command key = logical Super = "Mod"
+        #   Option  = Option key  = logical Alt
+        #   Hyper   = Caps via keyd = Ctrl+Alt+Shift+Super, written literally
+        #             as "Ctrl+Alt+Shift+Super" because Umbriel treats "Mod"
+        #             and "Super" as distinct tokens.
         keybinds = {
-          "Mod+slash" = "cheatsheet-toggle";
-          "Mod+Shift+slash" = "cheatsheet-toggle";
+          # --- 7.1 Edit -------------------------------------------------
+          # Copy/cut/paste go through wtype's alternate clipboard chords.
+          # Never inject Ctrl+C/X/V globally: in a terminal that is SIGINT.
+          "Mod+C" = "spawn:${wtype} -M ctrl -k Insert -m ctrl";
+          "Mod+X" = "spawn:${wtype} -M shift -k Delete -m shift";
+          "Mod+V" = "spawn:${wtype} -M shift -k Insert -m shift";
+          "Mod+Shift+V" = "spawn:noctalia msg panel-toggle clipboard";
+          "Ctrl+Alt+Shift+Super+D" = "spawn:voxtype record toggle";
+          "Ctrl+Alt+Shift+Super+L" = "keyboard-layout-next";
+          # Physically Option+Command+Space, mirroring the macOS input-source
+          # chord in docs/MACOS-SHORTCUTS.md. Kept alongside Hyper+L rather
+          # than replacing it: Hyper+L is the shared cross-platform mnemonic.
+          "Alt+Mod+Space" = "keyboard-layout-next";
+          "Ctrl+Alt+Shift+Super+Slash" = "cheatsheet-toggle";
 
-          # Restated defaults (see examples/config.toml in the umbriel repo)
-          "Mod+Return" = "spawn:wezterm";
-          "Mod" = "spawn:noctalia msg panel-toggle launcher";
-          "Mod+Q" = "window-close";
-          "Mod+Left" = "window-focus-left";
-          "Mod+Down" = "window-focus-down";
-          "Mod+Up" = "window-focus-up";
-          "Mod+Right" = "window-focus-right";
-          "Mod+H" = "window-focus-left";
-          "Mod+J" = "window-focus-down";
-          "Mod+K" = "window-focus-up";
-          "Mod+L" = "window-focus-right";
-          "Mod+Shift+Left" = "column-move-left";
-          "Mod+Shift+Down" = "window-move-down";
-          "Mod+Shift+Up" = "window-move-up";
-          "Mod+Shift+Right" = "column-move-right";
-          "Mod+T" = "window-toggle-floating";
-          "Mod+P" = "window-toggle-pinned";
-          "Mod+M" = "window-toggle-maximize-to-edges";
-          "Mod+F" = "window-toggle-fullscreen";
-          "Mod+Ctrl+F" = "window-toggle-maximize";
-          "Mod+O" = "overview-toggle";
-          "Mod+Escape" = "session-quit";
-          "Mod+F1" = "window-focus-next";
+          # --- 7.2 Navigate ---------------------------------------------
+          "Mod+Ctrl+Left" = "window-focus-left";
+          "Mod+Ctrl+Right" = "window-focus-right";
+          "Mod+Ctrl+Up" = "window-focus-up";
+          "Mod+Ctrl+Down" = "window-focus-down";
+          "Ctrl+Alt+Shift+Super+Left" = "workspace-previous";
+          "Ctrl+Alt+Shift+Super+Right" = "workspace-next";
+          "Ctrl+Alt+Shift+Super+1" = "workspace-switch:1";
+          "Ctrl+Alt+Shift+Super+2" = "workspace-switch:2";
+          "Ctrl+Alt+Shift+Super+3" = "workspace-switch:3";
+          "Ctrl+Alt+Shift+Super+4" = "workspace-switch:4";
+          "Ctrl+Alt+Shift+Super+5" = "workspace-switch:5";
+          "Ctrl+Alt+Shift+Super+6" = "workspace-switch:6";
+          "Ctrl+Alt+Shift+Super+7" = "workspace-switch:7";
+          "Ctrl+Alt+Shift+Super+8" = "workspace-switch:8";
+          "Ctrl+Alt+Shift+Super+9" = "workspace-switch:9";
+
+          # --- 7.3 Arrange ----------------------------------------------
+          # Preferred arrow family: all four chords verified on the Flow84.
+          "Ctrl+Alt+Left" = "column-move-left";
+          "Ctrl+Alt+Right" = "column-move-right";
+          "Ctrl+Alt+Up" = "window-move-up";
+          "Ctrl+Alt+Down" = "window-move-down";
+          "Ctrl+Alt+Return" = "window-toggle-maximize-to-edges";
+          "Ctrl+Alt+Shift+Left" = "window-move-to-output-previous";
+          "Ctrl+Alt+Shift+Right" = "window-move-to-output-next";
+          "Ctrl+Alt+Shift+Up" = "window-move-to-workspace-previous";
+          "Ctrl+Alt+Shift+Down" = "window-move-to-workspace-next";
+          "Ctrl+Alt+F" = "window-toggle-fullscreen";
+          "Ctrl+Alt+C" = "window-center";
+          "Mod+M" = "window-move-to-scratchpad";
+
+          # --- 7.4 Invoke -----------------------------------------------
+          "Mod+Space" = "spawn:noctalia msg panel-toggle launcher";
+          "Ctrl+Alt+Shift+Super+Return" = "spawn:${shortcutApps.terminal}";
+          "Ctrl+Alt+Shift+Super+B" = "spawn:${shortcutApps.browser}";
+          "Ctrl+Alt+Shift+Super+E" = "spawn:${shortcutApps.files}";
+          "Ctrl+Alt+Shift+Super+O" = "spawn:${shortcutApps.notes}";
+          "Ctrl+Alt+Shift+Super+M" = "spawn:${shortcutApps.mail}";
+          "Ctrl+Alt+Shift+Super+C" = "spawn:${shortcutApps.calendar}";
+          "Ctrl+Alt+Shift+Super+P" =
+            "spawn:${pkgs.xdg-utils}/bin/xdg-open https://github.com/pulls";
+
+          # --- 7.5 System -----------------------------------------------
+          "Ctrl+Alt+Shift+Super+Escape" = {
+            action = "shortcuts-inhibit-toggle";
+            allow_when_inhibited = true;
+            repeat = false;
+          };
+          "XF86AudioRaiseVolume" = {
+            action = "spawn:noctalia msg volume-up";
+            allow_when_locked = true;
+          };
+          "XF86AudioLowerVolume" = {
+            action = "spawn:noctalia msg volume-down";
+            allow_when_locked = true;
+          };
+          "XF86AudioMute" = {
+            action = "spawn:noctalia msg volume-mute";
+            repeat = false;
+            allow_when_locked = true;
+          };
+          "XF86AudioMicMute" = {
+            action = "spawn:noctalia msg mic-mute";
+            repeat = false;
+            allow_when_locked = true;
+          };
+          "XF86MonBrightnessUp" = {
+            action = "spawn:noctalia msg brightness-up 10";
+            allow_when_locked = true;
+          };
+          "XF86MonBrightnessDown" = {
+            action = "spawn:noctalia msg brightness-down 10";
+            allow_when_locked = true;
+          };
         };
       };
     };
