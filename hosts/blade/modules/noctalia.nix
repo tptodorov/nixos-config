@@ -1,25 +1,32 @@
-# Noctalia/Umbriel desktop setup for blade.
-#
-# Reuse blackbox's WM and shortcut map intentionally: the goal is for blade to
-# feel the same at the keyboard. The local settings below only add blade's
-# built-in keyboard and internal display.
+# Host adapter for the shared Noctalia/Umbriel desktop profile.
 {
   ...
 }:
 {
   imports = [
-    ../../blackbox/modules/noctalia.nix
+    ../../../modules/profiles/noctalia.nix
   ];
 
-  # Caps Lock as Hyper on the built-in Lenovo keyboard. Keep the Flow84 mapping
-  # from the imported blackbox module too, so the external keyboard behaves the
-  # same when paired with blade.
-  services.keyd.keyboards.blade-internal = {
-    ids = [ "0001:0001" ];
-    settings.main.capslock = "layer(hyper)";
-    extraConfig = ''
-      [hyper:C-A-S-M]
-    '';
+  services.keyd.keyboards = {
+    # Caps Lock as Hyper on the built-in Lenovo keyboard.
+    blade-internal = {
+      ids = [ "0001:0001" ];
+      settings.main.capslock = "layer(hyper)";
+      extraConfig = ''
+        [hyper:C-A-S-M]
+      '';
+    };
+
+    # Keep the external Flow84 behavior identical to blackbox when paired with
+    # blade. Scope by id rather than "*" so keyd does not grab ydotoold's
+    # virtual keyboard.
+    flow84 = {
+      ids = [ "05ac:024f" ];
+      settings.main.capslock = "layer(hyper)";
+      extraConfig = ''
+        [hyper:C-A-S-M]
+      '';
+    };
   };
 
   home-manager.users.todor.programs.umbriel.settings.output."eDP-1" = {

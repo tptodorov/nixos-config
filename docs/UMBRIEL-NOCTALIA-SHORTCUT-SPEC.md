@@ -4,7 +4,7 @@ Status: **approved for Linux implementation**
 
 Last updated: 2026-09-18
 
-Linux target: `blackbox`
+Linux targets: `blackbox`, `blade`
 
 Source inventory: [`MACOS-SHORTCUTS.md`](./MACOS-SHORTCUTS.md)
 
@@ -25,8 +25,9 @@ The existing pinned stack remains unchanged:
 - Noctalia `8c52cb71b5bcafbf67bfb8e659f1fc45f882a008`;
 - Noctalia Greeter `d9fe1d7851464a923020d39efae8a6e3561f0d63`;
 - Noctalia starts only with `umbriel-session.target`;
-- Umbriel, Noctalia, the greeter, XWayland and the 4K output are already
-  configured in `hosts/blackbox/modules/noctalia.nix`.
+- Umbriel, Noctalia, the greeter and XWayland are configured in
+  `modules/profiles/noctalia.nix`; host adapters configure concrete keyboards
+  and outputs.
 
 Primary references:
 
@@ -145,13 +146,15 @@ future `[idle]` change belongs in the same Nix-declared settings block.
 
 ## 4. Ownership and repository changes
 
-Keep the Linux pilot in its existing blackbox ownership seam.
+Keep the shared Linux desktop behavior in a reusable profile seam, with each
+host owning only hardware facts.
 
 | File | Required change |
 | --- | --- |
 | `flake.nix` | Add a non-flake `github:noctalia-dev/official-plugins` input and correct the stale greeter comment. Do not change the installed Umbriel, Noctalia or greeter inputs. |
 | `flake.lock` | Update with Nix tooling for the plugin input. Never edit manually. |
-| `hosts/blackbox/modules/noctalia.nix` | Add keyd, the two helper derivations, plugin source, application variables and the complete Umbriel map. |
+| `modules/profiles/noctalia.nix` | Own keyd enablement, the two helper derivations, plugin source, application variables and the complete Umbriel map. |
+| `hosts/*/modules/noctalia.nix` | Import the shared profile and declare host keyboard ids, output names, modes and scales. |
 | `home/todor/modules/terminal.nix` | Make WezTerm's Primary copy and paste behavior portable instead of unconditionally calling macOS-only `pbpaste`. |
 | `home/todor/modules/desktop-apps.nix` | No change. Reuse its applications, `wtype`, Voxtype and desktop entries. |
 | `docs/MACOS-SHORTCUTS.md` | No change. It remains a snapshot of the current Mac, not the future map. |
@@ -488,7 +491,7 @@ Do not enable Voxtype's evdev hotkey or add another service.
 ## 8. Helper programs
 
 Define exactly two helpers with `pkgs.writeShellApplication` in
-`hosts/blackbox/modules/noctalia.nix`. Put only the helper derivations in
+`modules/profiles/noctalia.nix`. Put only the helper derivations in
 `home-manager.users.todor.home.packages`; keep runtime inputs on the helpers for
 closure correctness. `jq` and `xdg-utils` already belong to shared Home Manager
 modules and must not be duplicated as top-level packages.
