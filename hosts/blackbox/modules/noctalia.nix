@@ -243,6 +243,10 @@ in
       # Catppuccin matches the Catppuccin Macchiato already used by nixvim,
       # tmux, wezterm, ghostty, kitty and sway.
       settings = {
+        # Spec section 7.2: MRU ordering for the Noctalia window switcher,
+        # now reached by Primary+Tab.
+        shell.window_switcher.mru = true;
+
         theme = {
           mode = "dark";
           source = "builtin";
@@ -346,8 +350,11 @@ in
           "Ctrl+Alt+Shift+Super+Slash" = "cheatsheet-toggle";
 
           # --- 7.2 Navigate ---------------------------------------------
-          "Mod+Tab" = "spawn:${umbriel-cycle-window}/bin/umbriel-cycle-window application";
-          "Alt+Tab" = {
+          # Linux-only divergence from the shared map: Primary+Tab is the
+          # all-window switcher here, not application cycling. macOS reserves
+          # Command+Tab for its own application switcher and will not yield it,
+          # so the Mac keeps Raycast's Switch Windows on Option+Tab.
+          "Mod+Tab" = {
             action = "spawn:noctalia msg window-switcher";
             repeat = false;
           };

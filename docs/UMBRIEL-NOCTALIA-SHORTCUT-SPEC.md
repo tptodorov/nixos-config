@@ -84,8 +84,10 @@ rare by design.
 4. Use `Control+Option` for Arrange actions.
 5. Directional focus means neighboring-window focus, not output focus. There
    is no output-focus shortcut.
-6. Keep separate scopes for application switching, all-window switching and
-   same-application switching.
+6. Keep separate scopes for all-window switching and same-application
+   switching. **Revised 2026-09-18 after live use:** application switching is
+   dropped as a bound action; `Primary+Tab` is the all-window switcher on
+   Linux. See section 7.2.
 7. Use Hyper+1 through Hyper+9 for direct workspace selection. Do not add a
    direct move-window-to-number layer.
 8. Prefer `Control+Option+Shift+Arrow` for moving windows across displays and
@@ -314,8 +316,7 @@ full editing.
 
 | Tier | Physical chord | Shared action | Linux implementation |
 | --- | --- | --- | --- |
-| F2 | `Primary+Tab` | Switch to the next application | `umbriel-cycle-window application` |
-| F2 | `Option+Tab` | Switch among all individual windows | `noctalia msg window-switcher` with MRU enabled |
+| F2 | `Primary+Tab` | Switch among all individual windows | `noctalia msg window-switcher` with MRU enabled |
 | F2 | `Primary+grave` | Switch among windows of the active application | `umbriel-cycle-window same-application` |
 | F2 | `Primary+Control+Left/Right/Up/Down` | Focus neighboring window | `window-focus-left/right/up/down` |
 | F2 | `Hyper+Left/Right` | Previous/next workspace | `workspace-previous/next` |
@@ -324,13 +325,23 @@ full editing.
 `Primary+Control+Arrow` replaces the old output-focus layer. Neighboring-window
 focus follows layout geometry; output focus has no binding.
 
-The three switchers have intentionally different scopes. `Primary+Tab` cycles
-one application identity at a time, `Option+Tab` exposes individual windows,
-and `Primary+grave` stays within the active application's regular windows on
-the active workspace. Do not route `Primary+Tab` to Noctalia's per-window
-switcher or label that surface an application switcher.
+**Revised 2026-09-18 after live use.** The original map kept three scopes and
+forbade routing `Primary+Tab` to Noctalia's per-window switcher. In practice
+the all-window switcher is what `Primary+Tab` should do, so application
+cycling is no longer bound and `Option+Tab` is removed. Two switchers remain:
+`Primary+Tab` exposes individual windows, and `Primary+grave` stays within the
+active application's regular windows on the active workspace.
 
-Set `shell.window_switcher.mru = true` for the `Option+Tab` Noctalia surface.
+This is a **Linux-only divergence** from the shared map, recorded in section
+11. macOS reserves `⌘Tab` for its own application switcher and will not yield
+it, so the Mac keeps Raycast's Switch Windows on `⌥Tab`. `Primary+Tab` is
+therefore the one chord whose action differs by platform.
+
+`umbriel-cycle-window` retains its `application` mode even though nothing
+binds it: it is the contract the macOS side still implements, and an unbound
+mode costs nothing.
+
+Set `shell.window_switcher.mru = true` for the `Primary+Tab` Noctalia surface.
 
 Keep dynamic workspaces but set `min_workspaces = 9` on every regular output
 reported by `umbriel outputs`. Umbriel's numeric selection is pointer-owned:
@@ -542,7 +553,9 @@ daemon, lock screen or wallpaper daemon.
 
 | Shortcut family | Decision | Reason |
 | --- | --- | --- |
-| Output focus | Omit | `Primary+Control+Arrow` is neighboring-window focus; application and window switchers cover discovery. |
+| Output focus | Omit | `Primary+Control+Arrow` is neighboring-window focus; the window switchers cover discovery. |
+| Application switching | Unbound on Linux from 2026-09-18 | Live use showed `Primary+Tab` should expose individual windows. The `umbriel-cycle-window application` mode is kept for the macOS contract. |
+| `Option+Tab` | Removed on Linux | Its action moved to `Primary+Tab`. macOS keeps `⌥Tab` because `⌘Tab` is reserved by the OS; this is the map's one platform-divergent chord. |
 | Direct window move to workspace 1…9 | Omit | Hyper already contains Shift, so there is no distinct Hyper+Shift layer; sequential movement is sufficient initially. |
 | Half-window directions | Omit from shared core | Umbriel exposes width/height extents, not the edge-placement semantics used on macOS. |
 | Scratchpad show/restore | Platform-local F4 only if needed | The shared action is minimize; recovery mechanics differ by platform. |

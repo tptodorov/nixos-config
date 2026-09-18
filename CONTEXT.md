@@ -115,7 +115,8 @@ _Avoid_: Identical configuration
 
 **Application switching**:
 Cycling one running application identity at a time, regardless of how many
-windows each application owns.
+windows each application owns. Implemented on Linux but no longer bound to a
+chord there; macOS still uses it for the reserved Command+Tab switcher.
 _Avoid_: All-window switching
 
 **All-window switching**:
