@@ -415,9 +415,15 @@ in
           "Ctrl+Alt+Shift+Right" = "window-move-to-output-next";
           "Ctrl+Alt+F" = "window-toggle-fullscreen";
           "Ctrl+Alt+C" = "window-center";
-          "Mod+M" = "window-move-to-scratchpad";
+          # window-toggle-scratchpad rather than window-move-to-scratchpad:
+          # the one-way action minimised with no way back from the keyboard.
+          "Mod+M" = "window-toggle-scratchpad";
+          "Mod+Shift+M" = "scratchpad-toggle";
 
           # --- 7.4 Invoke -----------------------------------------------
+          # Restored from Umbriel's built-in table, which defining [keybinds]
+          # replaces: without this there is no keyboard way to close a window.
+          "Mod+Q" = "window-close";
           "Mod+Space" = "spawn:noctalia msg panel-toggle launcher";
           "Ctrl+Alt+Shift+Super+Return" = "spawn:${shortcutApps.terminal}";
           "Ctrl+Alt+Shift+Super+B" = "spawn:${shortcutApps.browser}";
@@ -429,6 +435,8 @@ in
             "spawn:${pkgs.xdg-utils}/bin/xdg-open https://github.com/pulls";
 
           # --- 7.5 System -----------------------------------------------
+          "Ctrl+Alt+Shift+Super+X" = "spawn:noctalia msg notification-dnd-toggle";
+          "Ctrl+Alt+Shift+Super+comma" = "spawn:noctalia msg settings-toggle";
           "Ctrl+Alt+Shift+Super+Escape" = {
             action = "shortcuts-inhibit-toggle";
             allow_when_inhibited = true;

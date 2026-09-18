@@ -379,7 +379,11 @@ focus on different displays.
 | F2 | `Hyper+Up/Down` | Move window to previous/next workspace | `window-move-to-workspace-previous/next` |
 | F3 | `Control+Option+F` | Toggle fullscreen | `window-toggle-fullscreen` |
 | F3 | `Control+Option+C` | Center floating window | `window-center` |
-| F3 | `Primary+M` | Minimize | `window-move-to-scratchpad` |
+| F3 | `Primary+M` | Minimize and restore | `window-toggle-scratchpad` |
+| F4 | `Primary+Shift+M` | Show or hide scratchpad windows | `scratchpad-toggle` |
+| F2 | `Primary+Q` | Close window | `window-close` |
+| F4 | `Hyper+X` | Toggle Do Not Disturb | `noctalia msg notification-dnd-toggle` |
+| F4 | `Hyper+,` | Toggle the settings window | `noctalia msg settings-toggle` |
 
 The cross-display/workspace arrow family is conditional.
 
@@ -589,7 +593,9 @@ daemon, lock screen or wallpaper daemon.
 | Scratchpad show/restore | Platform-local F4 only if needed | The shared action is minimize; recovery mechanics differ by platform. |
 | Thirds and quarters | Omit | Explicitly unused. |
 | Cheatsheet "Hyper" label and a Displays section | Not possible upstream | `buildChordLabel` appends each modifier bit unconditionally, and `groupForActionImpl` assigns sections by action type in C++. Neither has a config surface, and section 14 forbids patching. Display moves therefore appear under "Move & size". |
-| Close, floating, pinned, overview and session quit | Omit | Application, Noctalia UI and CLI paths exist; do not allocate speculative chords. |
+| Floating, pinned, overview and session quit | Omit | Application, Noctalia UI and CLI paths exist; do not allocate speculative chords. |
+| Close | **Restored 2026-09-18** | Omitting it left no keyboard way to close a window once `[keybinds]` replaced Umbriel's built-in `Mod+Q`. |
+| Scratchpad show/restore | **Restored 2026-09-18** | Section 7.3 allowed these "if live use proves they are needed". `Primary+M` minimised one-way with no keyboard route back, so it now uses the round-trip `window-toggle-scratchpad`. |
 | Grow/shrink and maximize height | Omit | Lower frequency and no agreed shared semantic. |
 | Globe/Fn and global F1–F15 | Omit | Hardware-dependent or owned by development tools. |
 | Plain `Control+Shift+…` | Application-owned | Required by terminal workflows. |
