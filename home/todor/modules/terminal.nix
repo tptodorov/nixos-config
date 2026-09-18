@@ -80,13 +80,20 @@ let
       },
       -- WORKAROUND: WezTerm's built-in PasteFrom("Clipboard") action doesn't
       -- reliably reach panes attached via a unix-domain mux connection (see
-      -- https://github.com/wezterm/wezterm/issues/3968). Shell out to
-      -- pbpaste and inject the text directly instead.
+      -- https://github.com/wezterm/wezterm/issues/3968). Read the clipboard
+      -- ourselves and inject the text instead.
+      --
+      -- The reader is platform-dependent: pbpaste is macOS-only, so on Linux
+      -- this silently did nothing and Primary+V was dead in WezTerm. wl-paste
+      -- -n suppresses the trailing newline that pbpaste does not add.
       {
         key = "v",
         mods = "SUPER",
         action = wezterm.action_callback(function(window, pane)
-          local success, stdout = wezterm.run_child_process({ "pbpaste" })
+          local reader = wezterm.target_triple:find("darwin")
+            and { "pbpaste" }
+            or { "wl-paste", "-n" }
+          local success, stdout = wezterm.run_child_process(reader)
           if success then
             window:perform_action(act.SendString(stdout), pane)
           end

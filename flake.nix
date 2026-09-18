@@ -166,7 +166,7 @@
     # umbriel: Wayland compositor from the Noctalia project
     umbriel.url = "github:noctalia-dev/umbriel";
 
-    # noctalia-greeter: greetd login screen (staged, not enabled)
+    # noctalia-greeter: greetd login screen (active on blackbox)
     # - Not in our nixpkgs, so the project flake is required
     noctalia-greeter.url = "github:noctalia-dev/noctalia-greeter";
 
