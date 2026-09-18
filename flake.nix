@@ -157,7 +157,7 @@
     voxtype.url = "github:peteonrails/voxtype/v0.7.1";
 
     # noctalia: Wayland desktop shell (v5)
-    # - Used by: blackbox, experimental, runs under the Umbriel session only
+    # - Used by: blackbox/blade, experimental, runs under the Umbriel session only
     # - Overlaps with DMS (both draw a bar/panels); never run both at once
     # - No nixpkgs.follows: upstream warns it breaks their binary cache by
     #   changing derivation hashes (docs.noctalia.dev getting-started/nixos)
@@ -169,6 +169,13 @@
     # noctalia-greeter: greetd login screen (active on blackbox)
     # - Not in our nixpkgs, so the project flake is required
     noctalia-greeter.url = "github:noctalia-dev/noctalia-greeter";
+
+    # speaker-tuning-to-easyeffects: converts OEM Dolby DAX3 tuning XMLs into
+    # EasyEffects presets or PipeWire filter-chain configs for laptop speakers.
+    speaker-tuning-to-easyeffects = {
+      url = "github:antoinecellerier/speaker-tuning-to-easyeffects/v2026.08";
+      flake = false;
+    };
 
   };
 

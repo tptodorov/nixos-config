@@ -10,8 +10,9 @@
     # Hardware configuration
     ./hardware-configuration.nix
 
-    # NixOS hardware optimizations for Lenovo IdeaPad 5 Pro 14IMH9
-    #    inputs.nixos-hardware.nixosModules.lenovo-ideapad-14imh9
+    # This host identifies as Lenovo IdeaPad Pro 5 14IAH10 / product 83JK.
+    # Do not import the nixos-hardware 14IMH9 module here; it also applies
+    # model-specific display and GPU workarounds for a different chassis.
 
     # Home Manager integration
     inputs.home-manager.nixosModules.home-manager
@@ -29,7 +30,9 @@
     ../../modules/profiles/headscale.nix
 
     # Host-specific modules
-    ./modules/kernel.nix
+    ./modules/audio.nix
+    ./modules/noctalia.nix
+    # ./modules/kernel.nix
     ./modules/networking.nix
     ./modules/services.nix
 

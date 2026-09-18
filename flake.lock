@@ -791,6 +791,7 @@
         "nixvim": "nixvim",
         "noctalia": "noctalia",
         "noctalia-greeter": "noctalia-greeter",
+        "speaker-tuning-to-easyeffects": "speaker-tuning-to-easyeffects",
         "umbriel": "umbriel",
         "understand-anything": "understand-anything",
         "voxtype": "voxtype",
@@ -832,6 +833,23 @@
       "original": {
         "owner": "oxalica",
         "repo": "rust-overlay",
+        "type": "github"
+      }
+    },
+    "speaker-tuning-to-easyeffects": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1787597261,
+        "narHash": "sha256-mjyVj28jtfKE0TjeAP2lWsSuSJIAwlEjkZZbfGO1v7k=",
+        "owner": "antoinecellerier",
+        "repo": "speaker-tuning-to-easyeffects",
+        "rev": "86e0cb9d9756fc5c95648dd305f385192e696ade",
+        "type": "github"
+      },
+      "original": {
+        "owner": "antoinecellerier",
+        "ref": "v2026.08",
+        "repo": "speaker-tuning-to-easyeffects",
         "type": "github"
       }
     },
