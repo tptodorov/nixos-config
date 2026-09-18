@@ -502,7 +502,7 @@ in
     package = inputs.noctalia-greeter.packages.${system}.default;
     cursorTheme.package = pkgs.adwaita-icon-theme;
     settings = {
-      session.default = "niri";
+      session.default = "umbriel";
       user.default = "todor";
       appearance = {
         scheme = "Synced";

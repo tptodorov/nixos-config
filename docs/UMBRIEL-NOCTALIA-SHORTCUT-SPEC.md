@@ -139,8 +139,9 @@ built-in Lock and Monitor-off idle behaviors **disabled**, so the screensaver
 never activated under Umbriel. The module now enables them explicitly. Any
 future `[idle]` change belongs in the same Nix-declared settings block.
 
-Keep Niri as the greeter's default session during this rollout. Switching the
-default to Umbriel is a separate one-line follow-up after acceptance.
+~~Keep Niri as the greeter's default session during this rollout.~~ **Done
+2026-09-18.** The map was accepted in live use, so the greeter now defaults to
+`umbriel`. Niri, Sway, GNOME and Steam remain selectable at the login screen.
 
 ## 4. Ownership and repository changes
 
@@ -628,7 +629,7 @@ Build the complete `blackbox` closure before one activation.
 4. Validate the effective Noctalia configuration.
 
 Then run all static checks, build the complete closure, activate once, and run
-the live matrix. Making Umbriel the greeter default remains a later follow-up.
+the live matrix. Making Umbriel the greeter default is done.
 
 ## 13. Validation and acceptance
 
