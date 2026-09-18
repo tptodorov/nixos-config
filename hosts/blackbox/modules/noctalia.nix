@@ -29,6 +29,126 @@ let
   # alternate clipboard events, never as Ctrl+C/X/V.
   wtype = "${pkgs.wtype}/bin/wtype";
 
+  umbrielPkg = inputs.umbriel.packages.${system}.default;
+  noctaliaPkg = inputs.noctalia.packages.${system}.default;
+
+  # Spec section 8.1. One snapshot of `umbriel windows --json`, filtered to
+  # regular windows, then focus the selected id. Window ids are hex STRINGS,
+  # and `workspace` is output-qualified ("HDMI-A-1:1"), so both are compared
+  # as strings rather than numbers.
+  #
+  # Application order is the sorted unique app_id list, NOT snapshot order:
+  # Umbriel returns windows MRU-first, so the focused app jumps to position 0
+  # and "next after active" would oscillate between two applications forever.
+  umbriel-cycle-window = pkgs.writeShellApplication {
+    name = "umbriel-cycle-window";
+    runtimeInputs = [
+      umbrielPkg
+      pkgs.jq
+    ];
+    text = ''
+      mode=''${1:-}
+      case "$mode" in
+        application | same-application) ;;
+        *)
+          echo "usage: umbriel-cycle-window application|same-application" >&2
+          exit 2
+          ;;
+      esac
+
+      snapshot=$(umbriel windows --json)
+
+      if [ "$mode" = same-application ]; then
+        target=$(printf '%s' "$snapshot" | jq -r '
+          map(select(.app_id != "" and .scratchpad == "")) as $w
+          | ($w | map(select(.active)) | first) as $cur
+          | if $cur == null then empty else
+              ($w | map(select(.app_id == $cur.app_id and .workspace == $cur.workspace))
+                  | sort_by(.id)) as $sib
+              | if ($sib | length) < 2 then empty else
+                  ((($sib | map(.id) | index($cur.id)) // -1) + 1) as $i
+                  | $sib[$i % ($sib | length)] | .id
+                end
+            end')
+      else
+        target=$(printf '%s' "$snapshot" | jq -r '
+          map(select(.app_id != "" and .scratchpad == "")) as $w
+          | ($w | map(.app_id) | unique) as $apps
+          | ($w | map(select(.active)) | first) as $cur
+          | if $cur == null or ($apps | length) < 2 then empty else
+              ((($apps | index($cur.app_id)) // -1) + 1) as $i
+              | $apps[$i % ($apps | length)] as $next
+              | ($w | map(select(.app_id == $next))
+                   | (map(select(.focused)) + .) | first | .id)
+            end')
+      fi
+
+      [ -n "$target" ] || exit 0
+      umbriel msg "window-focus:$target"
+    '';
+  };
+
+  # Spec section 8.2. User text is never passed through a shell: it is read
+  # from noctalia dmenu, URL-encoded with jq @uri, and handed to xdg-open as a
+  # single argument. jira.env is parsed, never sourced.
+  macos-workflow = pkgs.writeShellApplication {
+    name = "macos-workflow";
+    runtimeInputs = [
+      noctaliaPkg
+      pkgs.jq
+      pkgs.xdg-utils
+      pkgs.libnotify
+    ];
+    text = ''
+      notify() {
+        notify-send "macos-workflow" "$1" || true
+      }
+
+      search() {
+        query=$(noctalia dmenu < /dev/null) || exit 0
+        [ -n "$query" ] || exit 0
+        encoded=$(printf '%s' "$1$query" | jq -sRr @uri)
+        xdg-open "https://www.google.com/search?q=$encoded"
+      }
+
+      case "''${1:-}" in
+        define) search "define:" ;;
+        google) search "" ;;
+        jira)
+          env_file="$HOME/.config/wtf/jira.env"
+          if [ ! -f "$env_file" ]; then
+            notify "missing $env_file"
+            exit 1
+          fi
+          count=$(grep -c '^JIRA_URL=' "$env_file" || true)
+          if [ "$count" != 1 ]; then
+            notify "expected exactly one JIRA_URL= in jira.env, found $count"
+            exit 1
+          fi
+          url=$(grep '^JIRA_URL=' "$env_file" | head -1 | cut -d= -f2-)
+          url=''${url%\"}
+          url=''${url#\"}
+          case "$url" in
+            http://* | https://*) ;;
+            *)
+              notify "JIRA_URL must be http(s)"
+              exit 1
+              ;;
+          esac
+          if printf '%s' "$url" | LC_ALL=C grep -q '[[:cntrl:]]'; then
+            notify "JIRA_URL contains control characters"
+            exit 1
+          fi
+          xdg-open "''${url%/}/secure/ManageFilters.jspa?search=Search"
+          ;;
+        *)
+          echo "usage: macos-workflow define|jira|google" >&2
+          exit 2
+          ;;
+      esac
+    '';
+  };
+
   # Spec section 7.4: application commands defined once.
   shortcutApps = {
     mail = "${pkgs.gtk3}/bin/gtk-launch notion-mail";
@@ -104,6 +224,13 @@ in
     imports = [
       inputs.umbriel.homeModules.default
       inputs.noctalia.homeModules.default
+    ];
+
+    # Spec section 8: only the helper derivations go here; their runtime
+    # inputs stay on the wrappers for closure correctness.
+    home.packages = [
+      umbriel-cycle-window
+      macos-workflow
     ];
 
     programs.noctalia = {
@@ -211,9 +338,20 @@ in
           # chord in docs/MACOS-SHORTCUTS.md. Kept alongside Hyper+L rather
           # than replacing it: Hyper+L is the shared cross-platform mnemonic.
           "Alt+Mod+Space" = "keyboard-layout-next";
+          "Ctrl+Alt+Shift+Super+N" = "spawn:noctalia msg panel-toggle launcher \"/nt \"";
+          "Ctrl+Alt+Shift+Super+T" = "spawn:noctalia msg panel-toggle launcher \"/tr \"";
+          "Ctrl+Alt+Shift+Super+W" = "spawn:${macos-workflow}/bin/macos-workflow define";
+          "Ctrl+Alt+Shift+Super+S" = "spawn:${macos-workflow}/bin/macos-workflow google";
+          "Ctrl+Alt+Shift+Super+J" = "spawn:${macos-workflow}/bin/macos-workflow jira";
           "Ctrl+Alt+Shift+Super+Slash" = "cheatsheet-toggle";
 
           # --- 7.2 Navigate ---------------------------------------------
+          "Mod+Tab" = "spawn:${umbriel-cycle-window}/bin/umbriel-cycle-window application";
+          "Alt+Tab" = {
+            action = "spawn:noctalia msg window-switcher";
+            repeat = false;
+          };
+          "Mod+grave" = "spawn:${umbriel-cycle-window}/bin/umbriel-cycle-window same-application";
           "Mod+Ctrl+Left" = "window-focus-left";
           "Mod+Ctrl+Right" = "window-focus-right";
           "Mod+Ctrl+Up" = "window-focus-up";

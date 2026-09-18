@@ -245,6 +245,11 @@ that case with a per-device keyd rule rather than by re-adding the swap here.
 Do not copy `grp:rwin_toggle` into Umbriel. Hyper letter bindings must be
 tested under both US and Bulgarian layouts.
 
+**Verified 2026-09-18.** Hyper mnemonics resolve identically under Bulgarian
+traditional phonetic, so keysym drift between layouts is not a problem here.
+A second layout switcher, `Alt+Mod+Space` (physically Option+Command+Space),
+mirrors the macOS input-source chord alongside the shared Hyper+L.
+
 ## 6. Shortcut architecture
 
 | Physical family | Purpose |
