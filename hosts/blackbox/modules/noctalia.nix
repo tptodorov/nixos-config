@@ -59,6 +59,26 @@ in
     recommendedServices.enable = true;
   };
 
+  # Caps Lock as Hyper (spec section 5.2).
+  #
+  # keyd remaps at the evdev layer, below the compositor, so Caps becomes a
+  # hold-only Control+Alt+Shift+Super modifier in every session -- Umbriel,
+  # niri and GNOME alike. Tapping it does nothing and must not toggle caps.
+  #
+  # Scoped to the Lofree Flow84 by id rather than "*": the machine also exposes
+  # a "ydotoold virtual device" keyboard, and grabbing that would put keyd in
+  # the path of Voxtype's own synthetic typing.
+  services.keyd = {
+    enable = true;
+    keyboards.flow84 = {
+      ids = [ "05ac:024f" ];
+      settings.main.capslock = "layer(hyper)";
+      extraConfig = ''
+        [hyper:C-A-S-M]
+      '';
+    };
+  };
+
   programs.umbriel = {
     enable = true;
     package = inputs.umbriel.packages.${system}.default;
