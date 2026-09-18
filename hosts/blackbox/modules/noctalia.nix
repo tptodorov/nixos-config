@@ -81,10 +81,48 @@ in
       # menu, so pinning the theme here does not make the shell read-only.
       # Catppuccin matches the Catppuccin Macchiato already used by nixvim,
       # tmux, wezterm, ghostty, kitty and sway.
-      settings.theme = {
-        mode = "dark";
-        source = "builtin";
-        builtin = "Catppuccin";
+      settings = {
+        theme = {
+          mode = "dark";
+          source = "builtin";
+          builtin = "Catppuccin";
+        };
+
+        # Idle / screensaver.
+        #
+        # Noctalia seeds built-in Lock and Monitor-off behaviors but leaves
+        # them DISABLED by default, so nothing ever triggered on this host --
+        # the shell was tracking idle (ext_idle_notifier_v1, which Umbriel
+        # implements) but had no enabled behavior to run.
+        #
+        # Timeouts mirror the AC values already used by DMS under niri
+        # (home/todor/modules/dms.nix): monitors off at 5 min, lock at 10 min,
+        # suspend at 30 min. blackbox is a desktop, so there is no battery set.
+        idle = {
+          behavior_order = [
+            "screen-off"
+            "lock"
+            "suspend"
+          ];
+          behavior = {
+            screen-off = {
+              enabled = true;
+              timeout = 300;
+              action = "screen_off";
+            };
+            lock = {
+              enabled = true;
+              timeout = 600;
+              action = "lock";
+            };
+            suspend = {
+              enabled = true;
+              timeout = 1800;
+              action = "suspend";
+              lock_before_suspend = true;
+            };
+          };
+        };
       };
     };
 
