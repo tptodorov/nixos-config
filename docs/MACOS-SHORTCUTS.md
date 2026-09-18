@@ -1,10 +1,11 @@
 # macOS shortcut inventory
 
-Last verified: 2026-09-17 on macOS 26.7 (25G229).
+Last verified: 2026-09-17 on macOS 26.7 (25G229). WhisperFlow shortcut
+confirmed by the user on 2026-09-18.
 
 This is a snapshot of active global shortcuts on this Mac. It covers macOS,
-Raycast, and the repository-managed Ghostty quick terminal. Per-application
-shortcuts are out of scope.
+Raycast, WhisperFlow, and the repository-managed Ghostty quick terminal.
+Shortcuts that act only inside one application's windows are out of scope.
 
 ## Legend
 
@@ -25,7 +26,8 @@ shortcuts are out of scope.
   macOS mappings.
 - F1–F12 act as standard function keys; hold Globe for the printed media keys.
 - Input sources are U.S. and Bulgarian – Phonetic.
-- Dictation starts by pressing Globe twice.
+- Built-in dictation starts by pressing Globe twice. WhisperFlow dictation
+  toggles with `⇧⌘D`.
 
 ## Raycast — 32 shortcuts
 
@@ -132,16 +134,17 @@ different chords.
 | `⌥⌘Space` | Select the next input source |
 | `⌥⇧⌘S` | Summarise selected text |
 
-## Other global shortcut
+## Other global shortcuts
 
 | Shortcut | Owner | Action |
 | --- | --- | --- |
+| `⇧⌘D` | WhisperFlow | Toggle dictation |
 | `⌥⌘\`` | Ghostty | Toggle Quick Terminal |
 
 Ghostty's shortcut is declarative in
 [`home/todor/modules/terminal.nix`](../home/todor/modules/terminal.nix#L263).
-The macOS and Raycast shortcuts above are currently GUI-managed rather than
-declared by this repository.
+The macOS, Raycast and WhisperFlow shortcuts above are currently GUI-managed
+rather than declared by this repository.
 
 ## Important disabled defaults
 
@@ -158,4 +161,5 @@ declared by this repository.
 1. Raycast → Settings → General, Keyboard, and Shortcuts.
 2. System Settings → Keyboard → Keyboard Shortcuts, checking every category.
 3. System Settings → Keyboard → Dictation.
-4. Compare the Ghostty binding with `home/todor/modules/terminal.nix`.
+4. WhisperFlow → Settings → Shortcuts.
+5. Compare the Ghostty binding with `home/todor/modules/terminal.nix`.
