@@ -247,6 +247,16 @@ in
         # now reached by Primary+Tab.
         shell.window_switcher.mru = true;
 
+        # Spec section 9. Only these two official plugins: notes backs the
+        # Hyper+N "/nt" quick-add and its side panel, translator backs
+        # Hyper+T "/tr". Their manifest defaults already match what the spec
+        # wants (~/Documents/Notes with md, Google with target en), so no
+        # plugin_settings overrides are declared -- the lock owns drift.
+        plugins.enabled = [
+          "noctalia/notes"
+          "noctalia/translator"
+        ];
+
         theme = {
           mode = "dark";
           source = "builtin";
