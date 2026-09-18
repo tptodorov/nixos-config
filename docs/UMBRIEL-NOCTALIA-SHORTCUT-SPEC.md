@@ -267,9 +267,14 @@ mirrors the macOS input-source chord alongside the shared Hyper+L.
 | Dedicated XF86 keys | Hardware controls. |
 
 Plain Primary letters, digits and arrows remain application-owned unless an
-exact exception appears in section 7. In particular, no global
-`Primary+Arrow`, `Primary+number` or generic `Primary+Shift+letter` family is
-created.
+exact exception appears in section 7. In particular, no `Primary+number` or
+generic `Primary+Shift+letter` family is created.
+
+**Revised 2026-09-18.** A `Primary+Arrow` focus family was added by request,
+reversing this rule for arrows. The cost is real and accepted: these are
+compositor grabs, so they shadow the application binding in every window, and
+`Command+Left/Right` is line start/end in macOS text fields and in the GTK and
+Electron applications that follow that convention on Linux.
 
 ## 7. Complete shared shortcut map
 
@@ -339,6 +344,7 @@ launcher itself, so there is no separate panel to open.
 | F2 | `Primary+Tab` | Switch among all individual windows | `noctalia msg window-switcher` with MRU enabled |
 | F2 | `Primary+grave` | Switch among windows of the active application | `umbriel-cycle-window same-application` |
 | F2 | `Primary+Control+Left/Right/Up/Down` | Focus neighboring window | `window-focus-left/right/up/down` |
+| F2 | `Primary+Left/Right/Up/Down` | Focus neighboring window (alias) | same; added 2026-09-18 |
 | F2 | `Hyper+Left/Right` | Previous/next workspace | `workspace-previous/next` |
 | F3 | `Hyper+1…9` | Select workspace position 1…9 | `workspace-switch:1…9` |
 

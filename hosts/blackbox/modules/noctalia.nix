@@ -384,6 +384,15 @@ in
           "Mod+Ctrl+Right" = "window-focus-right";
           "Mod+Ctrl+Up" = "window-focus-up";
           "Mod+Ctrl+Down" = "window-focus-down";
+          # Aliases for the same actions, against section 6's rule that no
+          # global Primary+Arrow family is created. These are compositor-level
+          # grabs, so they shadow the application binding everywhere: on macOS
+          # Command+Left/Right is line start/end in text fields, and GTK and
+          # Electron apps follow that convention on Linux too.
+          "Mod+Left" = "window-focus-left";
+          "Mod+Right" = "window-focus-right";
+          "Mod+Up" = "window-focus-up";
+          "Mod+Down" = "window-focus-down";
           "Ctrl+Alt+Shift+Super+Left" = "workspace-previous";
           "Ctrl+Alt+Shift+Super+Right" = "workspace-next";
           "Ctrl+Alt+Shift+Super+1" = "workspace-switch:1";
