@@ -352,7 +352,15 @@ in
           # chord in docs/MACOS-SHORTCUTS.md. Kept alongside Hyper+L rather
           # than replacing it: Hyper+L is the shared cross-platform mnemonic.
           "Alt+Mod+Space" = "keyboard-layout-next";
-          "Ctrl+Alt+Shift+Super+N" = "spawn:noctalia msg panel-toggle launcher \"/nt \"";
+          # Opens the Notes side panel directly (full-height, center_right)
+          # rather than the launcher filtered to "/nt ", which still required
+          # picking the Scratchpad entry by hand. The panel id comes from the
+          # plugin manifest's [[panel]] block; Noctalia lists it as
+          # "noctalia/notes:panel".
+          "Ctrl+Alt+Shift+Super+N" = "spawn:noctalia msg panel-toggle \"noctalia/notes:panel\"";
+          # Physically Option+Command+period, mirroring the macOS Raycast
+          # Notes chord in docs/MACOS-SHORTCUTS.md.
+          "Alt+Mod+period" = "spawn:noctalia msg panel-toggle \"noctalia/notes:panel\"";
           "Ctrl+Alt+Shift+Super+T" = "spawn:noctalia msg panel-toggle launcher \"/tr \"";
           "Ctrl+Alt+Shift+Super+W" = "spawn:${macos-workflow}/bin/macos-workflow define";
           "Ctrl+Alt+Shift+Super+S" = "spawn:${macos-workflow}/bin/macos-workflow google";

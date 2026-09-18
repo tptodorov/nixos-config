@@ -50,11 +50,13 @@ _Avoid_: Window scratchpad, Notes quick-add popup
 
 **Notes quick-add popup**:
 The focused Noctalia launcher scoped to the official Notes provider for adding
-or finding a note without creating an application window.
+or finding a note without creating an application window. Reachable by typing
+the `/nt ` prefix; from 2026-09-18 no chord opens it directly.
 _Avoid_: Notes panel, window scratchpad
 
 **Notes side panel**:
 The official Noctalia Notes surface for browsing and fully editing notes.
+Bound to Hyper+N and Option+Primary+. as the panel id `noctalia/notes:panel`.
 _Avoid_: Notes quick-add popup
 
 **Half-window extent**:

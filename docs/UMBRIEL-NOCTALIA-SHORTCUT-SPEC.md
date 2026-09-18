@@ -290,7 +290,8 @@ while held. The Noctalia window switcher and both mute toggles must not repeat.
 | F1 | `Primary+Shift+V` | Clipboard history | `noctalia msg panel-toggle clipboard` |
 | F2 | `Hyper+D` | Dictation | `voxtype record toggle` |
 | F2 | `Hyper+L` | Next typing language | `keyboard-layout-next` |
-| F2 | `Hyper+N` | Notes quick-add | `noctalia msg panel-toggle launcher "/nt "` |
+| F2 | `Hyper+N` | Notes side panel | `noctalia msg panel-toggle "noctalia/notes:panel"` |
+| F2 | `Option+Primary+.` | Notes side panel | same; mirrors the macOS Raycast Notes chord |
 | F3 | `Hyper+W` | Define word | `macos-workflow define` |
 | F3 | `Hyper+T` | Translate | Open the Noctalia launcher with `/tr `. |
 | F3 | `Hyper+S` | Web search | `macos-workflow google` |
@@ -306,11 +307,24 @@ back to injecting `Control+C/X/V` globally: in a terminal that would turn copy
 into interrupt. Do not accept the shared map until Brave, Obsidian, Nautilus,
 WezTerm, one native Wayland application and one XWayland application pass.
 
-The Notes popup must open focused on the active display, toggle closed on a
-second press, close on Escape, preserve notes as Markdown under
-`~/Documents/Notes`, and never create or move an Umbriel application window.
-The official Notes side panel remains available separately for browsing and
-full editing.
+**Revised 2026-09-18 after live use.** `Hyper+N` originally opened the
+launcher scoped to the `/nt ` provider, but that still required choosing the
+Scratchpad entry by hand. Both chords now open the Notes side panel directly.
+The panel comes from the plugin manifest's `[[panel]]` block -- 420 wide,
+full height, `center_right` -- and Noctalia addresses it as the panel id
+`noctalia/notes:panel`.
+
+Plugin dispatch (`noctalia msg plugin noctalia/notes:panel ...`) is not the
+route: that entry has no `onIpc` callback. Use `panel-toggle`, which also
+lists every valid panel id when given an unknown one.
+
+The panel must toggle closed on a second press, close on Escape, preserve
+notes as Markdown under `~/Documents/Notes`, and never create or move an
+Umbriel application window. The launcher `/nt ` provider remains available for
+find-and-append without opening the panel.
+
+`Hyper+T` keeps the launcher surface: translation input is typed into the
+launcher itself, so there is no separate panel to open.
 
 ### 7.2 Navigate
 
