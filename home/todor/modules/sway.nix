@@ -7,6 +7,7 @@
 }:
 let
   isX86Linux = pkgs.stdenv.hostPlatform.isLinux && pkgs.stdenv.hostPlatform.isx86_64;
+  defaultApps = import ../default-apps.nix { inherit pkgs; };
 in
 {
   # Sway window manager configuration
@@ -16,7 +17,7 @@ in
     checkConfig = false; # Disable config validation
     config = rec {
       modifier = "Mod4"; # Super key
-      terminal = "${pkgs.wezterm}/bin/wezterm";
+      terminal = defaultApps.terminal;
       menu = "dms ipc call spotlight toggle";
 
       # Keyboard layout - matching Niri config
@@ -54,10 +55,10 @@ in
         "${modifier}+Shift+slash" = "exec dms ipc call keybinds toggle sway";
 
         # File manager
-        "${modifier}+n" = "exec nautilus";
+        "${modifier}+n" = "exec ${defaultApps.files}";
 
         # Browser
-        "${modifier}+s" = "exec brave";
+        "${modifier}+s" = "exec ${defaultApps.browser}";
 
         # Window management - focus
         "${modifier}+h" = "focus left";
@@ -164,11 +165,11 @@ in
           command = "sh -c '${pkgs.wl-clipboard}/bin/wl-paste --type image --watch ${pkgs.cliphist}/bin/cliphist store'";
         }
         {
-          command = "${pkgs.wezterm}/bin/wezterm";
+          command = defaultApps.terminal;
           always = false;
         }
         {
-          command = "${pkgs.brave}/bin/brave";
+          command = defaultApps.browser;
           always = false;
         }
       ]

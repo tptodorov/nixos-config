@@ -151,10 +151,16 @@
       flake = false;
     };
 
+    # Noctalia's official plugins, supplied as an immutable Nix-store source.
+    official-plugins = {
+      url = "github:noctalia-dev/official-plugins";
+      flake = false;
+    };
+
     # voxtype: official voice-to-text flake
     # - Used by: Desktop Voxtype setup
     # - Package: vulkan variant per upstream NixOS installation docs
-    voxtype.url = "github:peteonrails/voxtype/v0.7.1";
+    voxtype.url = "github:peteonrails/voxtype/v1.0.1";
 
     # noctalia: Wayland desktop shell (v5)
     # - Used by: blackbox/blade, experimental, runs under the Umbriel session only
@@ -166,7 +172,7 @@
     # umbriel: Wayland compositor from the Noctalia project
     umbriel.url = "github:noctalia-dev/umbriel";
 
-    # noctalia-greeter: greetd login screen (active on blackbox)
+    # noctalia-greeter: greetd login screen (active on Linux hosts)
     # - Not in our nixpkgs, so the project flake is required
     noctalia-greeter.url = "github:noctalia-dev/noctalia-greeter";
 

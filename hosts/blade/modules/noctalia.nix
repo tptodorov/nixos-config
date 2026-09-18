@@ -8,10 +8,15 @@
   ];
 
   services.keyd.keyboards = {
-    # Caps Lock as Hyper on the built-in Lenovo keyboard.
+    # Caps Lock as Hyper and Left Alt as Super on the built-in PC-layout
+    # Lenovo keyboard.
     blade-internal = {
       ids = [ "0001:0001" ];
-      settings.main.capslock = "layer(hyper)";
+      settings.main = {
+        capslock = "layer(hyper)";
+        leftalt = "layer(meta)";
+        leftmeta = "layer(alt)";
+      };
       extraConfig = ''
         [hyper:C-A-S-M]
       '';

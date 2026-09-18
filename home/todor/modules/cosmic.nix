@@ -1,3 +1,6 @@
+let
+  defaultApps = import ../default-apps.nix { inherit pkgs; };
+in
 {
   pkgs,
   ...
@@ -21,7 +24,7 @@
       action = {
         __type = "enum";
         variant = "Spawn";
-        value = [ "${pkgs.wezterm}/bin/wezterm" ];
+        value = [ defaultApps.terminal ];
       };
     }
     # Super+Shift+V -> Clipboard history

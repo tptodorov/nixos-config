@@ -54,23 +54,23 @@ let
         --prefix PATH : ${lib.makeBinPath [ pkgs.git ]}
     '';
   };
-  orcaVersion = "1.4.203";
+  orcaVersion = "1.4.205";
   orcaSources = {
     aarch64-darwin = pkgs.fetchurl {
       url = "https://github.com/stablyai/orca/releases/download/v${orcaVersion}/Orca-${orcaVersion}-arm64-mac.zip";
-      hash = "sha256-ocW+tRm8JvOnJLmQ9qKaTXx4anWI5Rjygb2qY0qiDxQ=";
+      hash = lib.fakeHash;
     };
     x86_64-darwin = pkgs.fetchurl {
       url = "https://github.com/stablyai/orca/releases/download/v${orcaVersion}/Orca-${orcaVersion}-mac.zip";
-      hash = "sha256-b/fzZWMWYwPVmXcFrnEQbuPjtW6qztPCdKmO9z0c70E=";
+      hash = lib.fakeHash;
     };
     x86_64-linux = pkgs.fetchurl {
       url = "https://github.com/stablyai/orca/releases/download/v${orcaVersion}/orca-ide_${orcaVersion}_amd64.deb";
-      hash = "sha256-dRXrYSY2QInMMJSrZRJcR4rol+2XLi1fPR0vcNW4fjs=";
+      hash = "sha256-2nDJKu2fag1h3MNuKF1AOiwtzdMdoKUsOm3O2oSinMs=";
     };
     aarch64-linux = pkgs.fetchurl {
       url = "https://github.com/stablyai/orca/releases/download/v${orcaVersion}/orca-ide_${orcaVersion}_arm64.deb";
-      hash = "sha256-FxQP6mLYcjN+q1bFUad9Qg7s38Gx+6dA22w2aeB1Pxo=";
+      hash = lib.fakeHash;
     };
   };
   orcaSrc =
@@ -169,7 +169,7 @@ let
           ];
         };
       };
-  omnigentVersion = "0.13.0";
+  omnigentVersion = "0.14.0";
   omnigentRuntimeInputs = [
     pkgs.git
     pkgs.nodejs
@@ -210,25 +210,25 @@ let
     name = "codeburn";
     runtimeInputs = [ pkgs.nodejs ];
     text = ''
-      exec npm exec --yes --package=codeburn@0.9.20 -- codeburn "$@"
+      exec npm exec --yes --package=codeburn@0.9.24 -- codeburn "$@"
     '';
   };
   driftPackage = unstablePkgs.rustPlatform.buildRustPackage rec {
     pname = "drift";
-    version = "0.22.0";
+    version = "0.28.0";
     src = unstablePkgs.fetchCrate {
       pname = "drift-tui";
       inherit version;
-      hash = "sha256-TnWjmIHyGfX00LqmI4ZIJD92CY+mfPjpo2qDYjUNTes=";
+      hash = "sha256-C67uP3eL2vXDkvYfMHZZ5GsEZjNBcDFGrp04QZ/4EPk=";
     };
-    cargoHash = "sha256-yjgWoYAAKBwxLYVkM9Xt3r/WFe1ws28hdYIstOErS38=";
+    cargoHash = "sha256-6grKk1v134CApHvGZ5t6AyGsu5m7Bn1reikCyZIjCN0=";
     doCheck = false;
   };
   revdiffPackage = pkgs.writeShellApplication {
     name = "revdiff";
     runtimeInputs = [ unstablePkgs.go ];
     text = ''
-      exec go run -ldflags "-X main.revision=v1.12.0" github.com/umputun/revdiff/app@v1.12.0 "$@"
+      exec go run -ldflags "-X main.revision=v1.13.0" github.com/umputun/revdiff/app@v1.13.0 "$@"
     '';
   };
   workmuxConfig = (pkgs.formats.yaml { }).generate "workmux-config.yaml" {
@@ -310,7 +310,7 @@ let
   '';
   understandAnythingPlugin = pkgs.stdenv.mkDerivation (finalAttrs: {
     pname = "understand-anything-plugin";
-    version = "2.9.4";
+    version = "2.9.7";
     src = inputs.understand-anything + "/understand-anything-plugin";
 
     nativeBuildInputs = [
@@ -401,7 +401,6 @@ in
       jiratui
 
       # Neovim/LazyVim dependencies (cross-platform)
-      tree-sitter # Tree-sitter CLI
       ripgrep # Fast grep for telescope
       fd # Fast find for telescope
       fzf # Fuzzy finder

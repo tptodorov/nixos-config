@@ -7,6 +7,7 @@
 let
   isLinux = pkgs.stdenv.isLinux;
   isDarwin = pkgs.stdenv.isDarwin;
+  defaultApps = import ../default-apps.nix { inherit pkgs; };
   sshAddKeys = pkgs.writeShellScript "ssh-add-keys" ''
     if [ -f "$HOME/.ssh/id_ed25519" ]; then
       ${pkgs.openssh}/bin/ssh-add "$HOME/.ssh/id_ed25519" 2>/dev/null || true
@@ -512,11 +513,11 @@ in
 
   home.sessionVariables = {
     # Non-sensitive environment variables for todor
-    BROWSER = "brave";
-    TERMINAL = "wezterm";
+    BROWSER = defaultApps.browser;
+    TERMINAL = defaultApps.terminalName;
 
     # User-specific preferences
-    EDITOR = "nvim";
+    EDITOR = defaultApps.editor;
     PAGER = "less";
   }
   // (

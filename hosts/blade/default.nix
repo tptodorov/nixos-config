@@ -32,7 +32,7 @@
     # Host-specific modules
     ./modules/audio.nix
     ./modules/noctalia.nix
-    # ./modules/kernel.nix
+    ./modules/kernel.nix
     ./modules/networking.nix
     ./modules/services.nix
 

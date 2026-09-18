@@ -151,11 +151,12 @@ let
   shortcutApps = {
     mail = "${pkgs.gtk3}/bin/gtk-launch notion-mail";
     calendar = "${pkgs.gtk3}/bin/gtk-launch notion-calendar";
-    terminal = "${pkgs.wezterm}/bin/wezterm";
-    browser = "${pkgs.brave}/bin/brave";
-    files = "${pkgs.nautilus}/bin/nautilus";
+    terminal = defaultApps.terminal;
+    browser = defaultApps.browser;
+    files = defaultApps.files;
     notes = "${pkgs.obsidian}/bin/obsidian";
   };
+  defaultApps = import ../../home/todor/default-apps.nix { inherit pkgs; };
 in
 {
   imports = [
@@ -226,6 +227,10 @@ in
       [Unit]
       ConditionEnvironment=XDG_CURRENT_DESKTOP=sway
     '';
+    xdg.configFile."systemd/user/noctalia.service.d/10-notifications.conf".text = ''
+      [Service]
+      ExecStartPre=-${pkgs.procps}/bin/pkill -x .mako-wrapped
+    '';
 
     # Spec section 8: only the helper derivations go here; their runtime
     # inputs stay on the wrappers for closure correctness.
@@ -253,10 +258,23 @@ in
         # Hyper+T "/tr". Their manifest defaults already match what the spec
         # wants (~/Documents/Notes with md, Google with target en), so no
         # plugin_settings overrides are declared -- the lock owns drift.
-        plugins.enabled = [
-          "noctalia/notes"
-          "noctalia/translator"
-        ];
+        plugins = {
+          # Keep the source in the Nix store so Noctalia can read it but never
+          # mutate it. The flake lock pins the exact plugin revision.
+          source = [
+            {
+              name = "official";
+              kind = "path";
+              location = "${inputs.official-plugins}";
+              enabled = true;
+            }
+          ];
+          auto_update = "none";
+          enabled = [
+            "noctalia/notes"
+            "noctalia/translator"
+          ];
+        };
 
         theme = {
           mode = "dark";
@@ -369,6 +387,10 @@ in
             action = "spawn:noctalia msg window-switcher";
             repeat = false;
           };
+          "Mod+O" = {
+            action = "overview-toggle";
+            repeat = false;
+          };
           "Mod+grave" = "spawn:${umbriel-cycle-window}/bin/umbriel-cycle-window same-application";
           "Mod+Ctrl+Left" = "window-focus-left";
           "Mod+Ctrl+Right" = "window-focus-right";
@@ -402,6 +424,16 @@ in
           "Ctrl+Alt+Up" = "window-move-up";
           "Ctrl+Alt+Down" = "window-move-down";
           "Ctrl+Alt+Return" = "window-toggle-maximize-to-edges";
+          "Ctrl+Alt+M" = "window-toggle-maximize";
+          "Ctrl+Alt+1" = "window-move-to-workspace:1";
+          "Ctrl+Alt+2" = "window-move-to-workspace:2";
+          "Ctrl+Alt+3" = "window-move-to-workspace:3";
+          "Ctrl+Alt+4" = "window-move-to-workspace:4";
+          "Ctrl+Alt+5" = "window-move-to-workspace:5";
+          "Ctrl+Alt+6" = "window-move-to-workspace:6";
+          "Ctrl+Alt+7" = "window-move-to-workspace:7";
+          "Ctrl+Alt+8" = "window-move-to-workspace:8";
+          "Ctrl+Alt+9" = "window-move-to-workspace:9";
           # Moving a window between workspaces sits on Hyper+Up/Down rather
           # than the spec's Control+Option+Shift+Arrow: with Hyper on Caps,
           # Hyper+Left/Right is already workspace switching, so Up/Down is the
@@ -414,6 +446,16 @@ in
           "Ctrl+Alt+Shift+Right" = "window-move-to-output-next";
           "Ctrl+Alt+F" = "window-toggle-fullscreen";
           "Ctrl+Alt+C" = "window-center";
+          "Mod+T" = "window-toggle-floating";
+          "Mod+Shift+T" = "window-focus-switch-floating";
+          "Mod+P" = "window-toggle-pinned";
+          "Mod+R" = "window-cycle-primary-extent";
+          "Mod+Shift+R" = "window-cycle-primary-extent-back";
+          "Mod+Comma" = "window-consume-left";
+          "Mod+Period" = "window-consume-right";
+          "Mod+WheelUp" = "window-focus-left";
+          "Mod+WheelDown" = "window-focus-right";
+          "Mod+MouseMiddle" = "layout-scroll-drag";
           # window-toggle-scratchpad rather than window-move-to-scratchpad:
           # the one-way action minimised with no way back from the keyboard.
           "Mod+M" = "window-toggle-scratchpad";
@@ -423,6 +465,7 @@ in
           # Restored from Umbriel's built-in table, which defining [keybinds]
           # replaces: without this there is no keyboard way to close a window.
           "Mod+Q" = "window-close";
+          "Mod+Escape" = "session-quit";
           "Mod+Space" = "spawn:noctalia msg panel-toggle launcher";
           "Ctrl+Alt+Shift+Super+Return" = "spawn:${shortcutApps.terminal}";
           "Ctrl+Alt+Shift+Super+B" = "spawn:${shortcutApps.browser}";

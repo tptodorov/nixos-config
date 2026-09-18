@@ -8,6 +8,7 @@
 }:
 let
   isX86Linux = pkgs.stdenv.hostPlatform.isLinux && pkgs.stdenv.hostPlatform.isx86_64;
+  defaultApps = import ../default-apps.nix { inherit pkgs; };
 in
 {
   # MangoWC window manager configuration
@@ -53,7 +54,7 @@ in
     # Environment setup for systemd services
 
     exec-once=dms ipc call keybinds toggle mangowc
-    exec-once=wezterm
+    exec-once=${defaultApps.terminal}
     exec-once=dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
     exec-once=systemctl --user start mango-session.target
 
@@ -113,15 +114,15 @@ in
     exec-once=sh -c "$HOME/.config/mango/scripts/ssh-agent-init.sh"
     exec-once=sh -c "${pkgs.wl-clipboard}/bin/wl-paste --type text --watch ${pkgs.cliphist}/bin/cliphist store"
     exec-once=sh -c "${pkgs.wl-clipboard}/bin/wl-paste --type image --watch ${pkgs.cliphist}/bin/cliphist store"
-    exec-once=${pkgs.brave}/bin/brave
+    exec-once=${defaultApps.browser}
     exec-once=sh -c "dms ipc wallpaper set ~/.config/asset/3.jpg"
     ${lib.optionalString isX86Linux ''
       exec-once=${pkgs.spotify}/bin/spotify
       exec-once=${pkgs.viber}/bin/viber
     ''}
     exec-once=${pkgs.wasistlos}/bin/wasistlos
-    exec-once=${pkgs.brave}/bin/brave --app=https://mail.notion.so/
-    exec-once=${pkgs.brave}/bin/brave --app=https://calendar.notion.so/
+    exec-once=${defaultApps.browser} --app=https://mail.notion.so/
+    exec-once=${defaultApps.browser} --app=https://calendar.notion.so/
 
     source=./bind.conf
   '';
@@ -274,12 +275,12 @@ in
     # OUR CUSTOM BINDS
     # Basic keybindings
     bind=SUPER,slash,spawn,dms ipc call keybinds toggle mangowc
-    bind=SUPER,Return,spawn,wezterm
-    bind=ALT,t,spawn,wezterm
+    bind=SUPER,Return,spawn,${defaultApps.terminal}
+    bind=ALT,t,spawn,${defaultApps.terminal}
     bind=SUPER,Q,killclient,
-    bind=SUPER,W,spawn,${pkgs.nautilus}/bin/nautilus
-    bind=SUPER,S,spawn,${pkgs.brave}/bin/brave
-    bind=SUPER,A,spawn,${pkgs.brave}/bin/brave --app=https://mail.notion.so/
+    bind=SUPER,W,spawn,${defaultApps.files}
+    bind=SUPER,S,spawn,${defaultApps.browser}
+    bind=SUPER,A,spawn,${defaultApps.browser} --app=https://mail.notion.so/
 
     # Screenshots
     bind=NONE,Print,spawn,dms ipc niri screenshot

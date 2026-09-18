@@ -36,6 +36,7 @@ let
       }
     else
       llmAgentsPkgs.voxtype;
+  defaultApps = import ../default-apps.nix { inherit pkgs; };
   isX86Linux = pkgs.stdenv.hostPlatform.isLinux && pkgs.stdenv.hostPlatform.isx86_64;
 in
 {
@@ -124,7 +125,7 @@ in
     setBraveAsDefault = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       OLD_BROWSER="''${BROWSER-}"
       unset BROWSER
-      $DRY_RUN_CMD ${pkgs.xdg-utils}/bin/xdg-settings set default-web-browser brave-browser.desktop || true
+      $DRY_RUN_CMD ${pkgs.xdg-utils}/bin/xdg-settings set default-web-browser ${defaultApps.browserDesktop} || true
       if [ -n "$OLD_BROWSER" ]; then
         export BROWSER="$OLD_BROWSER"
       fi
@@ -135,17 +136,17 @@ in
         MIMEAPPS="$HOME/.config/mimeapps.list"
         if [ -f "$MIMEAPPS" ]; then
           $DRY_RUN_CMD sed -i \
-            -e 's|^text/html=.*|text/html=brave-browser.desktop|' \
-            -e 's|^x-scheme-handler/http=.*|x-scheme-handler/http=brave-browser.desktop|' \
-            -e 's|^x-scheme-handler/https=.*|x-scheme-handler/https=brave-browser.desktop|' \
-            -e 's|^x-scheme-handler/about=.*|x-scheme-handler/about=brave-browser.desktop|' \
-            -e 's|^x-scheme-handler/unknown=.*|x-scheme-handler/unknown=brave-browser.desktop|' \
-            -e 's|^x-scheme-handler/ftp=.*|x-scheme-handler/ftp=brave-browser.desktop|' \
+            -e 's|^text/html=.*|text/html=${defaultApps.browserDesktop}|' \
+            -e 's|^x-scheme-handler/http=.*|x-scheme-handler/http=${defaultApps.browserDesktop}|' \
+            -e 's|^x-scheme-handler/https=.*|x-scheme-handler/https=${defaultApps.browserDesktop}|' \
+            -e 's|^x-scheme-handler/about=.*|x-scheme-handler/about=${defaultApps.browserDesktop}|' \
+            -e 's|^x-scheme-handler/unknown=.*|x-scheme-handler/unknown=${defaultApps.browserDesktop}|' \
+            -e 's|^x-scheme-handler/ftp=.*|x-scheme-handler/ftp=${defaultApps.browserDesktop}|' \
             "$MIMEAPPS"
         fi
 
-        if grep -q "brave-browser.desktop" "$MIMEAPPS"; then
-          echo "✓ Brave set as default browser in mimeapps.list"
+        if grep -q "${defaultApps.browserDesktop}" "$MIMEAPPS"; then
+          echo "✓ ${defaultApps.browserDesktop} set as default browser in mimeapps.list"
         else
           echo "⚠ Warning: Failed to set Brave as default browser"
         fi
@@ -222,7 +223,7 @@ in
     desktopEntries = {
       notion-mail = {
         name = "Notion Mail";
-        exec = "brave --user-data-dir=${config.home.homeDirectory}/.config/brave-apps/notion-mail --app=https://mail.notion.so/";
+        exec = "${defaultApps.browser} --user-data-dir=${config.home.homeDirectory}/.config/brave-apps/notion-mail --app=https://mail.notion.so/";
         icon = "mail";
         categories = [
           "Network"
@@ -232,7 +233,7 @@ in
       };
       notion-calendar = {
         name = "Notion Calendar";
-        exec = "brave --user-data-dir=${config.home.homeDirectory}/.config/brave-apps/notion-calendar --app=https://calendar.notion.so/";
+        exec = "${defaultApps.browser} --user-data-dir=${config.home.homeDirectory}/.config/brave-apps/notion-calendar --app=https://calendar.notion.so/";
         icon = "calendar";
         categories = [
           "Office"
@@ -291,7 +292,7 @@ in
       Name=Voxtype
       Comment=Voice typing daemon
       Exec=env YDOTOOL_SOCKET=/run/ydotoold/socket ${voxtypePackage}/bin/voxtype --no-hotkey --driver=ydotool,wtype daemon
-      OnlyShowIn=GNOME;
+      OnlyShowIn=GNOME;Umbriel;
       X-GNOME-Autostart-enabled=true
       X-GNOME-Autostart-Delay=2
       NoDisplay=true
@@ -302,15 +303,9 @@ in
       enable = !standalone;
       defaultApplications =
         let
-          browser = [
-            "brave-browser.desktop"
-          ];
-          editor = [
-            "Helix.desktop"
-            "code.desktop"
-            "code-insiders.desktop"
-          ];
-          markdown = [ "obsidian.desktop" ] ++ editor;
+          browser = [ defaultApps.browserDesktop ];
+          editor = defaultApps.editorDesktops;
+          markdown = [ defaultApps.notesDesktop ] ++ editor;
         in
         {
           "application/json" = browser;
@@ -352,7 +347,7 @@ in
           "image/png" = [ "imv-dir.desktop" ];
           "image/webp" = [ "imv-dir.desktop" ];
 
-          "inode/directory" = [ "org.gnome.Nautilus.desktop" ];
+          "inode/directory" = [ defaultApps.filesDesktop ];
 
           # LibreOffice document types
           # Writer documents
@@ -414,11 +409,11 @@ in
   # Enable dconf for GNOME apps
   dconf.enable = true;
   dconf.settings."org/gnome/desktop/default-applications/terminal" = {
-    exec = "wezterm";
+    exec = defaultApps.terminalName;
     exec-arg = "";
   };
   dconf.settings."org/gnome/desktop/default-applications/file-manager" = {
-    exec = "nautilus";
+    exec = defaultApps.filesName;
     exec-arg = "";
   };
   dconf.settings."org/gnome/desktop/input-sources" = {
@@ -443,17 +438,17 @@ in
   };
   dconf.settings."org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/nautilus" = {
     name = "File Manager";
-    command = "nautilus";
+    command = defaultApps.files;
     binding = "<Super>e";
   };
   dconf.settings."org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/terminal" = {
     name = "Terminal";
-    command = "wezterm";
+    command = defaultApps.terminal;
     binding = "<Super>t";
   };
   dconf.settings."org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/terminal-alt" = {
     name = "Terminal";
-    command = "wezterm";
+    command = defaultApps.terminal;
     binding = "<Alt>t";
   };
 

@@ -8,6 +8,7 @@
 }:
 let
   isX86Linux = pkgs.stdenv.hostPlatform.isLinux && pkgs.stdenv.hostPlatform.isx86_64;
+  defaultApps = import ../default-apps.nix { inherit pkgs; };
 in
 {
   # Niri window manager configuration
@@ -128,8 +129,8 @@ in
     // Voice dictation daemon. The GNOME autostart entry is OnlyShowIn=GNOME,
     // so niri needs its own launch for Super+D to have a daemon to signal.
     spawn-at-startup "sh" "-c" "env YDOTOOL_SOCKET=/run/ydotoold/socket voxtype --no-hotkey --driver=ydotool,wtype daemon"
-    spawn-at-startup "${pkgs.wezterm}/bin/wezterm"
-    spawn-at-startup "${pkgs.brave}/bin/brave"
+    spawn-at-startup "${defaultApps.terminal}"
+    spawn-at-startup "${defaultApps.browser}"
     ${lib.optionalString isX86Linux ''
       spawn-at-startup "${pkgs.spotify}/bin/spotify"
       spawn-at-startup "sh" "-c" "env GDK_SCALE=2 GDK_DPI_SCALE=1 ${pkgs.viber}/bin/viber"
@@ -169,13 +170,13 @@ in
         Super+V hotkey-overlay-title="Paste" { spawn "${pkgs.wtype}/bin/wtype" "-M" "ctrl" "v" "-m" "ctrl"; }
 
         // Basic keybindings
-        Super+Return hotkey-overlay-title="Terminal" { spawn "${pkgs.wezterm}/bin/wezterm"; }
-        Super+T hotkey-overlay-title="Terminal" { spawn "${pkgs.wezterm}/bin/wezterm"; }
-        Alt+T hotkey-overlay-title="Terminal" { spawn "${pkgs.wezterm}/bin/wezterm"; }
+        Super+Return hotkey-overlay-title="Terminal" { spawn "${defaultApps.terminal}"; }
+        Super+T hotkey-overlay-title="Terminal" { spawn "${defaultApps.terminal}"; }
+        Alt+T hotkey-overlay-title="Terminal" { spawn "${defaultApps.terminal}"; }
         Super+Q { close-window; }
-        Super+E hotkey-overlay-title="File Manager" { spawn "${pkgs.nautilus}/bin/nautilus"; }
-        Super+S hotkey-overlay-title="Web Browser" { spawn "${pkgs.brave}/bin/brave"; }
-        Super+A hotkey-overlay-title="Email Client" { spawn "${pkgs.brave}/bin/brave" "--app=https://mail.notion.so/" ; }
+        Super+E hotkey-overlay-title="File Manager" { spawn "${defaultApps.files}"; }
+        Super+S hotkey-overlay-title="Web Browser" { spawn "${defaultApps.browser}"; }
+        Super+A hotkey-overlay-title="Email Client" { spawn "${defaultApps.browser}" "--app=https://mail.notion.so/" ; }
 
         // Voice dictation: toggles the voxtype daemon's recording state.
         // Matches the GNOME <Super>d binding in desktop-apps.nix.
