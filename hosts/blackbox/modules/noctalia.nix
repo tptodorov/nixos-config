@@ -366,6 +366,9 @@ in
           "Ctrl+Alt+Shift+Super+S" = "spawn:${macos-workflow}/bin/macos-workflow google";
           "Ctrl+Alt+Shift+Super+J" = "spawn:${macos-workflow}/bin/macos-workflow jira";
           "Ctrl+Alt+Shift+Super+Slash" = "cheatsheet-toggle";
+          # Physically Command+/, the easier chord for an F4 surface that is
+          # reached for precisely when the Hyper mnemonics are forgotten.
+          "Mod+Slash" = "cheatsheet-toggle";
 
           # --- 7.2 Navigate ---------------------------------------------
           # Linux-only divergence from the shared map: Primary+Tab is the

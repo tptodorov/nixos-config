@@ -296,6 +296,11 @@ while held. The Noctalia window switcher and both mute toggles must not repeat.
 | F3 | `Hyper+T` | Translate | Open the Noctalia launcher with `/tr `. |
 | F3 | `Hyper+S` | Web search | `macos-workflow google` |
 | F4 | `Hyper+/` | Shortcut cheatsheet | `cheatsheet-toggle` |
+| F4 | `Primary+/` | Shortcut cheatsheet | same; added 2026-09-18 as the easier chord |
+
+`Primary+/` is a further Primary-namespace exception beyond the list in
+section 2.3 rule 2, accepted because a cheatsheet is reached for exactly when
+the Hyper mnemonics have been forgotten, and few applications claim that chord.
 
 `Primary+Shift+V` is a deliberate global exception: clipboard history is used
 as a paste operation frequently enough to outrank application-specific “paste
