@@ -226,6 +226,25 @@ in
       inputs.noctalia.homeModules.default
     ];
 
+    # mako ships a D-Bus-activated user unit that claims
+    # org.freedesktop.Notifications, and whichever daemon claims that name
+    # first wins. It kept beating Noctalia to it, which disabled Noctalia's
+    # notifications entirely:
+    #
+    #   [WRN] [app] notifications disabled: org.freedesktop.Notifications
+    #   is owned by another service
+    #
+    # Masking the unit stops the D-Bus activation. The package stays installed
+    # and sway still spawns mako explicitly from its own config, so only the
+    # automatic activation is suppressed.
+    # A drop-in, not a unit definition: home-manager's systemd.user.services
+    # writes a complete replacement file, which would drop mako's own
+    # ExecStart and BusName and break it in sway as well.
+    xdg.configFile."systemd/user/mako.service.d/10-sway-only.conf".text = ''
+      [Unit]
+      ConditionEnvironment=XDG_CURRENT_DESKTOP=sway
+    '';
+
     # Spec section 8: only the helper derivations go here; their runtime
     # inputs stay on the wrappers for closure correctness.
     home.packages = [
@@ -444,6 +463,14 @@ in
             "spawn:${pkgs.xdg-utils}/bin/xdg-open https://github.com/pulls";
 
           # --- 7.5 System -----------------------------------------------
+          # The bar's clock and bell open control-center tabs. Valid tab names
+          # come from the shipped translations (assets/translations/en.json,
+          # key "control-center"): audio, bluetooth, calendar, display, home,
+          # media, network, notifications, power, screen-time, shortcuts,
+          # system, weather. panel-toggle accepts any string without
+          # validating it, so an unknown tab silently opens the default view.
+          "Ctrl+Alt+Shift+Super+K" = "spawn:noctalia msg panel-toggle control-center calendar";
+          "Ctrl+Alt+Shift+Super+A" = "spawn:noctalia msg panel-toggle control-center notifications";
           "Ctrl+Alt+Shift+Super+X" = "spawn:noctalia msg notification-dnd-toggle";
           "Ctrl+Alt+Shift+Super+comma" = "spawn:noctalia msg settings-toggle";
           "Ctrl+Alt+Shift+Super+Escape" = {
