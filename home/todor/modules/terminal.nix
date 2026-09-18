@@ -4,6 +4,12 @@
   ...
 }:
 let
+  # WezTerm is the reference for inactive-pane contrast across all terminals.
+  paneStyle = {
+    saturation = 0.7;
+    brightness = 0.42;
+    divider = "#f5a97f";
+  };
   weztermConfig = ''
     local wezterm = require("wezterm")
     local act = wezterm.action
@@ -25,11 +31,11 @@ let
 
     config.color_scheme = "Catppuccin Macchiato"
     config.inactive_pane_hsb = {
-      saturation = 0.75,
-      brightness = 0.55,
+      saturation = ${toString paneStyle.saturation},
+      brightness = ${toString paneStyle.brightness},
     }
     config.colors = {
-      split = "#6e738d",
+      split = "${paneStyle.divider}",
     }
 
     config.default_prog = { "zsh" }
@@ -237,8 +243,10 @@ in
       "macos-option-as-alt" = true;
       "shell-integration" = "zsh";
 
-      "split-divider-color" = "#6e738d";
-      "unfocused-split-opacity" = 0.75;
+      # Keep inactive panes visibly distinct on GTK/Wayland as well as macOS.
+      "split-divider-color" = paneStyle.divider;
+      "unfocused-split-opacity" = paneStyle.brightness;
+      "unfocused-split-fill" = "#181926";
 
       keybind = [
         "super+v=paste_from_clipboard"
@@ -339,6 +347,7 @@ in
       tab_bar_style = "slant";
       tab_title_template = "{index}: {session_name + ' ' if session_name and session_name != 'default' else ''}{title}{custom}";
       watcher = "workmux_watcher.py";
+      inactive_text_alpha = paneStyle.brightness;
     };
 
     # Use predefined Catppuccin Macchiato theme
