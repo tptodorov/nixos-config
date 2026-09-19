@@ -159,6 +159,18 @@ let
     exec ${pkgs.gopass}/bin/gopass "$@"
   '';
 
+  # launcher-pass indexes GNU Pass's .gpg files, while this Gopass store uses
+  # age-backed .age entries. Keep the upstream plugin unchanged and provide a
+  # small higher-priority source that teaches its indexer about both suffixes.
+  launcherPassAgePlugin = pkgs.runCommand "noctalia-launcher-pass-age" { } ''
+    mkdir -p "$out/launcher-pass"
+    cp -R ${inputs.community-plugins}/launcher-pass/. "$out/launcher-pass/"
+    chmod -R u+w "$out/launcher-pass"
+    substituteInPlace "$out/launcher-pass/launcher.luau" \
+      --replace-fail "-o -type f -name '*.gpg'" "-o -type f -name '*.gpg' -printf '%P\\n' -o -type f -name '*.age'" \
+      --replace-fail 'path:sub(-4) == ".gpg"' '(path:sub(-4) == ".gpg" or path:sub(-4) == ".age")'
+  '';
+
   # Spec section 7.4: application commands defined once.
   shortcutApps = {
     mail = "${pkgs.gtk3}/bin/gtk-launch notion-mail";
@@ -289,6 +301,12 @@ in
               name = "community";
               kind = "path";
               location = "${inputs.community-plugins}";
+              enabled = true;
+            }
+            {
+              name = "community-age-compat";
+              kind = "path";
+              location = "${launcherPassAgePlugin}";
               enabled = true;
             }
           ];
