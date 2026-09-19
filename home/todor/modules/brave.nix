@@ -3,6 +3,23 @@
   pkgs,
   ...
 }:
+let
+  # Gopass Bridge (github:gopasspw/gopassbridge) talks to gopass-jsonapi over
+  # Chrome's native messaging protocol, not a shell pipe -- there is no TTY,
+  # so GUI pinentry (pinentry-gnome3/pinentry-bemenu, already wired for
+  # gopass elsewhere) is what will prompt for the GPG passphrase.
+  gopassJsonapiWrapper = pkgs.writeShellApplication {
+    name = "gopass-jsonapi-wrapper";
+    runtimeInputs = [
+      pkgs.gopass-jsonapi
+      pkgs.gopass
+      pkgs.gnupg
+    ];
+    text = ''
+      exec gopass-jsonapi listen
+    '';
+  };
+in
 {
   # Brave browser configuration with sync support
   programs.chromium = {
@@ -21,6 +38,8 @@
       { id = "pkehgijcmpdhfbdbbnkijodmdjhbjlgp"; }
       # ClearURLs - Remove tracking parameters
       { id = "lckanjgmijmafbedllaakclkaicjfmnk"; }
+      # Gopass Bridge - Fill logins from the gopass password store
+      { id = "kkhfnlkhiapbiehimabddjbimfaijdhk"; }
     ];
 
     # Command line arguments for optimal performance and privacy
@@ -62,6 +81,25 @@
       "--enable-features=VaapiVideoDecoder"
     ];
   };
+
+  home.packages = [ gopassJsonapiWrapper ];
+
+  # Native messaging host manifest for Gopass Bridge. Chrome-family browsers
+  # only look for this under the browser's OWN config dir, not a shared
+  # Chromium location -- Brave's is BraveSoftware/Brave-Browser, not
+  # ~/.config/chromium. Host name and allowed_origins come from
+  # gopass-jsonapi's own manifest package (com.justwatch.gopass /
+  # chrome-extension://kkhfnlkhiapbiehimabddjbimfaijdhk/), reproduced here
+  # by hand since `gopass-jsonapi configure` is interactive and would fight
+  # a declarative config on every run.
+  xdg.configFile."BraveSoftware/Brave-Browser/NativeMessagingHosts/com.justwatch.gopass.json".text =
+    builtins.toJSON {
+      name = "com.justwatch.gopass";
+      description = "Gopass wrapper to search and return passwords";
+      path = "${gopassJsonapiWrapper}/bin/gopass-jsonapi-wrapper";
+      type = "stdio";
+      allowed_origins = [ "chrome-extension://kkhfnlkhiapbiehimabddjbimfaijdhk/" ];
+    };
 
   # Desktop file for proper application integration
   xdg.desktopEntries.brave-browser = {
