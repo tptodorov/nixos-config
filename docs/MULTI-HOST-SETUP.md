@@ -34,12 +34,9 @@ Located in `modules/profiles/`:
    - Custom USB gadget networking
    - Full desktop environment
 
-2. **pero** - MacBook Pro 13" 2017
+2. **blade** - Laptop
    - Profiles: `base.nix` + `desktop.nix` + `laptop.nix`
-   - Apple hardware optimizations
-   - Retina display scaling
-   - Power management
-   - See `docs/PERO-SETUP.md` for installation guide
+   - Power management, TLP, touchpad, lid switch handling
 
 ### User Accounts
 

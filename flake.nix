@@ -15,7 +15,7 @@
 
     # nixpkgs: The main NixOS package repository
     # - Contains all system packages and NixOS modules
-    # - Used by: All hosts (blackbox, pero, blade), standalone home-manager configs, darwin
+    # - Used by: All hosts (blackbox, blade), standalone home-manager configs, darwin
     # - Version: nixpkgs-25.11-darwin stable release branch (compatible with both NixOS and macOS)
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-25.11-darwin";
 

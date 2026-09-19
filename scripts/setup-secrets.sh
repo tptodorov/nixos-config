@@ -4,11 +4,11 @@
 # This should be run BEFORE applying the NixOS configuration
 #
 # Usage: ./setup-secrets.sh <target-host> [source-home-dir]
-#   target-host: SSH host to copy secrets to (e.g., pero.local, 192.168.1.197)
+#   target-host: SSH host to copy secrets to (e.g., blade.local, 192.168.1.197)
 #   source-home-dir: Optional source directory (defaults to $HOME)
 #
 # Example:
-#   ./setup-secrets.sh pero.local
+#   ./setup-secrets.sh blade.local
 #   ./setup-secrets.sh 192.168.1.197 /home/todor
 #
 
@@ -37,7 +37,7 @@ print_error() {
 if [ $# -lt 1 ]; then
     print_error "Missing required argument: target-host"
     echo "Usage: $0 <target-host> [source-home-dir]"
-    echo "Example: $0 pero.local"
+    echo "Example: $0 blade.local"
     echo "Example: $0 192.168.1.197 /home/todor"
     exit 1
 fi

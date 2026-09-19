@@ -35,7 +35,7 @@ cd ~/mycfg
 ./scripts/setup-secrets.sh <target-host>
 
 # Examples:
-./scripts/setup-secrets.sh pero.local
+./scripts/setup-secrets.sh blade.local
 ./scripts/setup-secrets.sh 192.168.1.197
 ```
 
@@ -47,7 +47,7 @@ If your secrets are in a different location:
 ./scripts/setup-secrets.sh <target-host> <source-home-dir>
 
 # Example:
-./scripts/setup-secrets.sh pero.local /home/olduser
+./scripts/setup-secrets.sh blade.local /home/olduser
 ```
 
 ## What Gets Copied
@@ -100,8 +100,8 @@ After secrets are set up:
 
 2. **Apply NixOS configuration**:
    ```bash
-   # Replace 'pero' with your hostname
-   sudo nixos-rebuild switch --flake .#pero
+   # Replace 'blade' with your hostname
+   sudo nixos-rebuild switch --flake .#blade
    ```
 
 3. **Apply Home Manager configuration** (if not included in NixOS rebuild):
