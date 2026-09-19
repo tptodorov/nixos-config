@@ -157,6 +157,13 @@
       flake = false;
     };
 
+    # Noctalia's community plugins (e.g. mellotanica/launcher-pass), same
+    # immutable Nix-store source pattern as official-plugins.
+    community-plugins = {
+      url = "github:noctalia-dev/community-plugins";
+      flake = false;
+    };
+
     # voxtype: official voice-to-text flake
     # - Used by: Desktop Voxtype setup
     # - Package: vulkan variant per upstream NixOS installation docs

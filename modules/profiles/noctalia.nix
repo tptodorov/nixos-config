@@ -150,6 +150,15 @@ let
     '';
   };
 
+  # mellotanica/launcher-pass shells out to a literal `pass` binary on PATH
+  # (storePath defaults to ~/.password-store, which matches the GPG-backed
+  # store this user already keeps for gopass -- see docs/SECRETS-SETUP.md).
+  # gopass is command-compatible with pass but ships no `pass`-named binary,
+  # so this shim is the thing the plugin actually execs.
+  gopass-as-pass = pkgs.writeShellScriptBin "pass" ''
+    exec ${pkgs.gopass}/bin/gopass "$@"
+  '';
+
   # Spec section 7.4: application commands defined once.
   shortcutApps = {
     mail = "${pkgs.gtk3}/bin/gtk-launch notion-mail";
@@ -240,6 +249,7 @@ in
     home.packages = [
       umbriel-cycle-window
       macos-workflow
+      gopass-as-pass
     ];
 
     programs.noctalia = {
@@ -256,11 +266,15 @@ in
         # now reached by Primary+Tab.
         shell.window_switcher.mru = true;
 
-        # Spec section 9. Only these two official plugins: notes backs the
-        # Hyper+N "/nt" quick-add and its side panel, translator backs
-        # Hyper+T "/tr". Their manifest defaults already match what the spec
-        # wants (~/Documents/Notes with md, Google with target en), so no
-        # plugin_settings overrides are declared -- the lock owns drift.
+        # Spec section 9. notes backs the Hyper+N "/nt" quick-add and its
+        # side panel, translator backs Hyper+T "/tr". screen_recorder,
+        # wallhaven, wallpaper_depth and umbriel-companion (all official) and
+        # mellotanica/launcher-pass (community, gopass via the pass shim
+        # above) are enabled without keybinds: they surface through the main
+        # launcher / Noctalia settings UI rather than a dedicated panel.
+        # Manifest defaults already match what the spec wants (~/Documents/
+        # Notes with md, Google with target en), so no plugin_settings
+        # overrides are declared -- the lock owns drift.
         plugins = {
           # Keep the source in the Nix store so Noctalia can read it but never
           # mutate it. The flake lock pins the exact plugin revision.
@@ -271,11 +285,22 @@ in
               location = "${inputs.official-plugins}";
               enabled = true;
             }
+            {
+              name = "community";
+              kind = "path";
+              location = "${inputs.community-plugins}";
+              enabled = true;
+            }
           ];
           auto_update = "none";
           enabled = [
             "noctalia/notes"
             "noctalia/translator"
+            "noctalia/screen_recorder"
+            "noctalia/wallhaven"
+            "noctalia/wallpaper_depth"
+            "noctalia/umbriel-companion"
+            "mellotanica/launcher-pass"
           ];
         };
 
