@@ -3,6 +3,7 @@
 {
   inputs,
   outputs,
+  pkgs,
   ...
 }:
 {
@@ -51,6 +52,9 @@
     };
     users.todor = ../../home/todor;
   };
+
+  # VA-API (iHD) for the Arrow Lake iGPU: hardware video decode/encode in browsers, mpv
+  hardware.graphics.extraPackages = [ pkgs.intel-media-driver ];
 
   # Disable nixos-hardware workaround that doesn't apply to this hardware
   # The workaround checks for a Chicony webcam, but this laptop has Bison Electronics
