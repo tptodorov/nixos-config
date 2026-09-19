@@ -110,7 +110,6 @@ in
     ''}
 
     exec-once=${pkgs.xwayland-satellite}/bin/xwayland-satellite :1
-    exec-once=sh -c "$HOME/.config/mango/scripts/ssh-agent-init.sh"
     exec-once=sh -c "${pkgs.wl-clipboard}/bin/wl-paste --type text --watch ${pkgs.cliphist}/bin/cliphist store"
     exec-once=sh -c "${pkgs.wl-clipboard}/bin/wl-paste --type image --watch ${pkgs.cliphist}/bin/cliphist store"
     exec-once=${defaultApps.browser}
@@ -340,30 +339,6 @@ in
       --dark
       ${lib.optionalString laptop "--force-device-scale-factor=2.0"}
     '';
-
-    # SSH agent initialization script (gnome-keyring removed)
-    ".config/mango/scripts/ssh-agent-init.sh" = {
-      text = ''
-        #!/bin/sh
-        # Ensure SSH_AUTH_SOCK points to Home Manager's ssh-agent
-        export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent"
-        ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd SSH_AUTH_SOCK
-
-        # Add SSH keys to ssh-agent
-        if [ -f "$HOME/.ssh/id_ed25519" ]; then
-          ${pkgs.openssh}/bin/ssh-add "$HOME/.ssh/id_ed25519" 2>/dev/null
-        fi
-        if [ -f "$HOME/.ssh/id_rsa" ]; then
-          ${pkgs.openssh}/bin/ssh-add "$HOME/.ssh/id_rsa" 2>/dev/null
-        fi
-        if [ -f "$HOME/.ssh/id_ecdsa" ]; then
-          ${pkgs.openssh}/bin/ssh-add "$HOME/.ssh/id_ecdsa" 2>/dev/null
-        fi
-
-        echo "SSH agent: SSH_AUTH_SOCK=$SSH_AUTH_SOCK"
-      '';
-      executable = true;
-    };
 
     # Asset folder for desktop access
     ".config/asset".source = ../config/asset;

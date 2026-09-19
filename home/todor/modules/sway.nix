@@ -157,7 +157,6 @@ in
         { command = "mako"; }
         # Idle management handled by DMS (Settings app: Mod+comma → Power & Sleep / Lock Screen)
         { command = "${pkgs.xwayland-satellite}/bin/xwayland-satellite :1"; }
-        { command = "sh -c '$HOME/.config/sway/scripts/ssh-agent-init.sh'"; }
         {
           command = "sh -c '${pkgs.wl-clipboard}/bin/wl-paste --type text --watch ${pkgs.cliphist}/bin/cliphist store'";
         }
@@ -264,30 +263,6 @@ in
       --ozone-platform=wayland
       ${lib.optionalString laptop "--force-device-scale-factor=2.0"}
     '';
-
-    # SSH agent initialization script
-    ".config/sway/scripts/ssh-agent-init.sh" = {
-      text = ''
-        #!/bin/sh
-        # Ensure SSH_AUTH_SOCK points to Home Manager's ssh-agent
-        export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent"
-        ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd SSH_AUTH_SOCK
-
-        # Add SSH keys to ssh-agent
-        if [ -f "$HOME/.ssh/id_ed25519" ]; then
-          ${pkgs.openssh}/bin/ssh-add "$HOME/.ssh/id_ed25519" 2>/dev/null
-        fi
-        if [ -f "$HOME/.ssh/id_rsa" ]; then
-          ${pkgs.openssh}/bin/ssh-add "$HOME/.ssh/id_rsa" 2>/dev/null
-        fi
-        if [ -f "$HOME/.ssh/id_ecdsa" ]; then
-          ${pkgs.openssh}/bin/ssh-add "$HOME/.ssh/id_ecdsa" 2>/dev/null
-        fi
-
-        echo "SSH agent: SSH_AUTH_SOCK=$SSH_AUTH_SOCK"
-      '';
-      executable = true;
-    };
   };
 
   # Sway-specific environment variables are set inside sway config itself.

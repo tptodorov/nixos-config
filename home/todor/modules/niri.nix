@@ -122,7 +122,6 @@ in
     spawn-at-startup "dms" "run"
     spawn-at-startup "${pkgs.xwayland-satellite}/bin/xwayland-satellite" ":1" // X11 server for snaps and X11 apps
     spawn-at-startup "sh" "-c" "dms ipc wallpaper set ~/.config/asset/3.jpg"
-    spawn-at-startup "sh" "-c" "$HOME/.config/niri/scripts/ssh-agent-init.sh"
     spawn-at-startup "sh" "-c" "${pkgs.wl-clipboard}/bin/wl-paste --type text --watch ${pkgs.cliphist}/bin/cliphist store"
     spawn-at-startup "sh" "-c" "${pkgs.wl-clipboard}/bin/wl-paste --type image --watch ${pkgs.cliphist}/bin/cliphist store"
     // Voice dictation daemon. The GNOME autostart entry is OnlyShowIn=GNOME,
@@ -349,30 +348,6 @@ in
       --ozone-platform=wayland
       ${lib.optionalString laptop "--force-device-scale-factor=2.0"}
     '';
-
-    # SSH agent initialization script (gnome-keyring removed)
-    ".config/niri/scripts/ssh-agent-init.sh" = {
-      text = ''
-        #!/bin/sh
-        # Ensure SSH_AUTH_SOCK points to Home Manager's ssh-agent
-        export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent"
-        ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd SSH_AUTH_SOCK
-
-        # Add SSH keys to ssh-agent
-        if [ -f "$HOME/.ssh/id_ed25519" ]; then
-          ${pkgs.openssh}/bin/ssh-add "$HOME/.ssh/id_ed25519" 2>/dev/null
-        fi
-        if [ -f "$HOME/.ssh/id_rsa" ]; then
-          ${pkgs.openssh}/bin/ssh-add "$HOME/.ssh/id_rsa" 2>/dev/null
-        fi
-        if [ -f "$HOME/.ssh/id_ecdsa" ]; then
-          ${pkgs.openssh}/bin/ssh-add "$HOME/.ssh/id_ecdsa" 2>/dev/null
-        fi
-
-        echo "SSH agent: SSH_AUTH_SOCK=$SSH_AUTH_SOCK"
-      '';
-      executable = true;
-    };
 
     # DMS bindings for application launcher and system controls
     ".config/niri/dms/binds.kdl".text = ''
