@@ -26,7 +26,9 @@
   # The platform the configuration will be used on.
   nixpkgs.hostPlatform = "aarch64-darwin";
 
-  system.primaryUser = "todor.todorov"; # This option does not appear to be a valid nix-darwin option
+  # The user options like homebrew/defaults previously applied to the user
+  # running darwin-rebuild now attach to explicitly.
+  system.primaryUser = "todor.todorov";
 
   homebrew.enable = true;
   system.tools.darwin-rebuild.enable = true;
