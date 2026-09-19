@@ -215,6 +215,16 @@ in
     '';
   };
 
+  # Automount removable drives (USB sticks, SD cards) on insertion, with a
+  # tray icon for unmount/eject. desktop.nix already turns on the system-side
+  # services.udisks2 backend; this is the missing user-space piece that
+  # actually calls it.
+  services.udiskie = {
+    enable = true;
+    tray = "auto";
+    notify = true;
+  };
+
   # XDG configuration
   xdg = {
     enable = true;

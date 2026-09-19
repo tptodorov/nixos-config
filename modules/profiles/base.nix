@@ -151,4 +151,10 @@
 
   # Enable nix-ld for running dynamically linked executables
   programs.nix-ld.enable = true;
+
+  # Let systemd-oomd kill the single runaway cgroup under memory/IO pressure
+  # instead of the kernel OOM-killer taking out the whole session (or nothing,
+  # while everything thrashes). Applies to every host regardless of desktop
+  # choice -- no swap or per-app tuning required, it watches PSI via cgroups.
+  systemd.oomd.enable = true;
 }
