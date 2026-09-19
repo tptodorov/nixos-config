@@ -9,6 +9,8 @@ let
     saturation = 0.7;
     brightness = 0.42;
     divider = "#f5a97f";
+    # Catppuccin Macchiato "crust" -- fill behind unfocused Ghostty splits.
+    unfocusedFill = "#181926";
   };
   weztermConfig = ''
     local wezterm = require("wezterm")
@@ -245,7 +247,7 @@ in
       # Keep inactive panes visibly distinct on GTK/Wayland as well as macOS.
       "split-divider-color" = paneStyle.divider;
       "unfocused-split-opacity" = paneStyle.brightness;
-      "unfocused-split-fill" = "#181926";
+      "unfocused-split-fill" = paneStyle.unfocusedFill;
 
       keybind = [
         "super+v=paste_from_clipboard"
