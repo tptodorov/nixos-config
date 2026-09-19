@@ -45,7 +45,6 @@ in
     # Command line arguments for optimal performance and privacy
     commandLineArgs = [
       # Wayland support for better Linux integration
-      "--enable-features=UseOzonePlatform,WaylandWindowDecorations"
       "--ozone-platform=wayland"
 
       # Security and privacy enhancements
@@ -68,7 +67,6 @@ in
       # Better user experience
       "--restore-last-session"
       "--no-default-browser-check"
-      "--disable-features=TranslateUI"
       "--enable-smooth-scrolling"
 
       # GPU acceleration and performance
@@ -77,8 +75,12 @@ in
       "--enable-hardware-overlays"
       "--max_old_space_size=4096"
 
-      # Audio/Video codec support
-      "--enable-features=VaapiVideoDecoder"
+      # Chromium honours only the LAST --enable-features / --disable-features flag, so keep
+      # exactly one of each and repeat the nixpkgs wrapper's live defaults. HW video decode
+      # is on by default once the VA-API driver exists; AcceleratedVideoEncoder replaces
+      # the removed VaapiVideoEncoder.
+      "--enable-features=AcceleratedVideoEncoder"
+      "--disable-features=OutdatedBuildDetector"
     ];
   };
 
