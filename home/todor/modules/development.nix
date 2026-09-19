@@ -389,6 +389,7 @@ in
       llmAgentsPkgs.fence
       llmAgentsPkgs.workmux
       llmAgentsPkgs.herdr
+      llmAgentsPkgs.opencode # hardcoded into hds/tds's fourth pane
       llmAgentsPkgs.rtk
       llmAgentsPkgs.gastown
       llmAgentsPkgs.beads
@@ -397,6 +398,7 @@ in
       llmAgentsPkgs.omp
       llmAgentsPkgs.pi
       jq # for jsontools plugin
+      gawk # awk on PATH -- used by the herdr hsl layout helper's ratio math
       unstablePkgs.neovim # Neovim 0.12 until it lands in the 25.11 branch
       jiratui
 

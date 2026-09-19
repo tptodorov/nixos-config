@@ -309,6 +309,9 @@ in
           fi
 
           source <(herdr completion zsh)
+
+          source ${../config/shell/herdr-fns.sh}
+          source ${../config/shell/ssh-reconnect.sh}
         ''
       ];
     };
@@ -460,6 +463,12 @@ in
         "*" = {
           addKeysToAgent = "yes";
           identityFile = "~/.ssh/id_ed25519";
+          # A dead connection with no traffic can sit unnoticed for minutes
+          # on plain TCP timeouts. 15s x 3 missed replies surfaces it in
+          # ~45s, matching what Omarchy Quattro's ssh-reconnect wrapper
+          # (sourced above) expects before it starts retrying.
+          serverAliveInterval = 15;
+          serverAliveCountMax = 3;
           extraOptions = lib.optionalAttrs isDarwin {
             UseKeychain = "yes";
           };

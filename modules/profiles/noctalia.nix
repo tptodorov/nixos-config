@@ -496,6 +496,9 @@ in
           "Mod+Escape" = "session-quit";
           "Mod+Space" = "spawn:noctalia msg panel-toggle launcher";
           "Ctrl+Alt+Shift+Super+Return" = "spawn:${shortcutApps.terminal}";
+          # Mirrors Omarchy Quattro's Super+Ctrl+Return (herdr opened
+          # alongside, not instead of, the plain terminal/tmux above).
+          "Ctrl+Alt+Shift+Super+H" = "spawn:${defaultApps.terminal} -e herdr";
           "Ctrl+Alt+Shift+Super+B" = "spawn:${shortcutApps.browser}";
           "Ctrl+Alt+Shift+Super+E" = "spawn:${shortcutApps.files}";
           "Ctrl+Alt+Shift+Super+O" = "spawn:${shortcutApps.notes}";
