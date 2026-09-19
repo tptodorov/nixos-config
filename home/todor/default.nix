@@ -4,6 +4,7 @@
   lib,
   inputs,
   standalone ? false,
+  nixos ? false,
   ...
 }:
 {
@@ -17,13 +18,14 @@
     ./modules/wtf.nix
   ]
   ++ lib.optionals (!standalone) [
-    # Desktop modules (only for NixOS, not for standalone Home Manager)
-    ./modules/niri.nix
-    ./modules/sway.nix
     ./modules/dms.nix
     ./modules/desktop-apps.nix
     ./modules/brave.nix
     ./modules/media.nix
+  ]
+  ++ lib.optionals (!nixos) [
+    ./modules/niri.nix
+    ./modules/sway.nix
   ];
 
   # Nixpkgs configuration

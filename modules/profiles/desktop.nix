@@ -45,7 +45,7 @@
     config.common.default = lib.mkDefault "wlr";
   };
 
-  # Enable Niri and Sway window managers
+  # Enable desktop support utilities used by the WM profiles.
   programs = {
     appimage = {
       enable = true;
@@ -53,24 +53,10 @@
     };
     ydotool.enable = true;
     xwayland.enable = true;
-    niri = {
-      enable = lib.mkDefault true;
-      package = pkgs.niri-unstable; # Use latest niri build from main branch
-    };
-    sway = {
-      enable = lib.mkDefault true;
-      package = pkgs.sway;
-    };
   };
 
   # System-wide desktop support packages
   environment.systemPackages = with pkgs; [
-    # Window managers
-    sway
-    swaybg
-    swayidle
-    swaylock
-
     # Status bar and utilities
     waybar
     mako

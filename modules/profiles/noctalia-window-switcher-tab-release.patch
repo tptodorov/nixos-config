@@ -1,0 +1,15 @@
+diff --git a/src/shell/switcher/window_switcher.cpp b/src/shell/switcher/window_switcher.cpp
+--- a/src/shell/switcher/window_switcher.cpp
++++ b/src/shell/switcher/window_switcher.cpp
+@@ -905,8 +905,10 @@ bool WindowSwitcher::onKeyboardEvent(const KeyboardEvent& event) {
+     return false;
+   }
+ 
+-  if (isModifierRelease(event)) {
++  // Tab release closes the race where the overlay receives Tab-up but misses
++  // Super-up because the layer surface was mapped after the modifier release.
++  if (isModifierRelease(event) || (!event.pressed && event.sym == XKB_KEY_Tab)) {
+     activateSelected();
+     hide();
+     return true;
+   }

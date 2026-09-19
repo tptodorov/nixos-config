@@ -22,6 +22,9 @@
 }:
 let
   system = pkgs.stdenv.hostPlatform.system;
+  noctaliaPackage = inputs.noctalia.packages.${system}.default.overrideAttrs (old: {
+    patches = (old.patches or [ ]) ++ [ ./noctalia-window-switcher-tab-release.patch ];
+  });
 
   # Spec section 7.1: Primary copy/cut/paste are emitted as the conventional
   # alternate clipboard events, never as Ctrl+C/X/V.
@@ -177,7 +180,7 @@ in
 
   programs.noctalia = {
     enable = true;
-    package = inputs.noctalia.packages.${system}.default;
+    package = noctaliaPackage;
     # Starts the shell with the session. Scoped to umbriel-session.target
     # rather than the default graphical-session.target, which fires in EVERY
     # Wayland session -- that would start Noctalia alongside DMS under niri and
@@ -241,7 +244,7 @@ in
 
     programs.noctalia = {
       enable = true;
-      package = inputs.noctalia.packages.${system}.default;
+      package = noctaliaPackage;
       # Seeds ~/.config/noctalia/config.toml, which is separate from the
       # runtime ~/.local/state/noctalia/settings.toml that Noctalia owns and
       # rewrites. Upstream states these stay overridable from the settings

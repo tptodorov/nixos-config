@@ -17,12 +17,10 @@
     # Home Manager integration
     inputs.home-manager.nixosModules.home-manager
 
-    # Niri window manager module
-    inputs.niri.nixosModules.niri
-
     # Configuration profiles
     ../../modules/profiles/base.nix
     ../../modules/profiles/desktop.nix
+    ../../modules/profiles/window-managers.nix
     ../../modules/profiles/gnome.nix
     ../../modules/profiles/laptop.nix
     ../../modules/profiles/snap.nix
@@ -49,6 +47,7 @@
       inherit inputs outputs;
       laptop = true; # This is a laptop
       standalone = false; # Not standalone Home Manager
+      nixos = true;
     };
     sharedModules = [
       inputs.nixvim.homeModules.nixvim

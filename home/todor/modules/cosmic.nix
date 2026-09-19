@@ -1,10 +1,10 @@
-let
-  defaultApps = import ../default-apps.nix { inherit pkgs; };
-in
 {
   pkgs,
   ...
 }:
+let
+  defaultApps = import ../default-apps.nix { inherit pkgs; };
+in
 {
   # COSMIC Desktop Environment configuration using cosmic-manager
   # Universal clipboard keybindings (Omarchy-style)
