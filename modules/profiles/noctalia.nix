@@ -271,8 +271,8 @@ in
       # runtime ~/.local/state/noctalia/settings.toml that Noctalia owns and
       # rewrites. Upstream states these stay overridable from the settings
       # menu, so pinning the theme here does not make the shell read-only.
-      # Catppuccin matches the Catppuccin Macchiato already used by nixvim,
-      # tmux, wezterm, ghostty, kitty and sway.
+      # The theme below is the Catppuccin Macchiato community palette, matching
+      # nixvim, tmux, wezterm, ghostty, kitty and sway.
       settings = {
         # Spec section 7.2: MRU ordering for the Noctalia window switcher,
         # now reached by Primary+Tab.
@@ -322,10 +322,14 @@ in
           ];
         };
 
+        # The builtin "Catppuccin" is Mocha only, so use the community catalog's
+        # Macchiato palette (fetched from api.noctalia.dev on first use). Peach
+        # is the accent picked in Settings; keep it in step with
+        # home/todor/modules/catppuccin.nix.
         theme = {
           mode = "dark";
-          source = "builtin";
-          builtin = "Catppuccin";
+          source = "community";
+          community_palette = "Catppuccin Macchiato Peach";
         };
 
         # Idle / screensaver.

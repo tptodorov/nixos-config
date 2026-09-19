@@ -6,6 +6,7 @@
   imports = [
     # User modules
     ./modules/agents.nix
+    ./modules/catppuccin.nix
     ./modules/development.nix
     ./modules/shell.nix
     ./modules/terminal.nix
