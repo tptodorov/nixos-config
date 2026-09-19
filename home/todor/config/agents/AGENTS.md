@@ -1,5 +1,8 @@
+# Basic Information for Agents
 
-# My personal information
+This is how info for all my agents.
+
+## My personal information
 
 My name is Todor Todorov
 
@@ -9,7 +12,11 @@ My phone number is +41762816722
 
 My telegram user Id: 7030206966
 
-# General Guidelines
+My github user name is tptodorov
+
+My home address is : Obstgartenweg 17, 8136 Gattikon, Switzerland
+
+## General Guidelines
 
 Read this document to optimise cli and token usage - @RTK.md
 
@@ -19,20 +26,30 @@ When making technical decisions, do not give much weight to the development cost
 
 When implementing bug fixes always start with reproducing the bug with a test to make sure a test will fail before you start fixing the code. This will save you time and effort when fixing the bug. Only then, fix the bug until the reproduced test passes.
 
-Use `gh` for all GitHub access. Do not use GitHub MCP/app connector tools. Run `gh` commands with escalated sandbox permissions; `~/.codex/rules/default.rules` preapproves the `["gh"]` prefix for GitHub CLI access.
-
-Use `twg` (Teamwork Graph CLI) for Atlassian access — Jira, Confluence, Bitbucket. Prefer its Claude Code skills (`twg`, `twg-jira`, `twg-confluence`, `twg-engineering-work`, etc.) over raw CLI calls. Do not use the Atlassian MCP (Docker-based); it's too heavy.
-
 Use concise messages and write concise documents. Use markdown syntax.
 
-I use wezterm for terminals. You should too.
-
-I use workmux for multiplexers. You should too. When spinning a new interactive agent job use `workmux` to create a new worktree, new window and run the agent in it.
-
 Use ponytail skills.
-
-My system configuration is defined by a nixos project in ~/mycfg and contains most of my dev tools and system setup especially for linux machines. For Mac, it defines the nixos darwin configuration. I prefer to configure that nix os repository rather than using one time or local system installations.
 
 If you need to stack PRs, use github's native 'gh stack' commands.
 
 Don't ask for my approvals when pushing code to PRs, or creating new PRs. I trust you to do the right thing.
+
+Home folder structure:
+
+* ~/mycfg - My system configuration is defined by a nixos project in ~/mycfg and contains most of my dev tools and system setup especially for linux machines. For Mac, it defines the nixos darwin configuration. I prefer to configure that nix os repository rather than using one time or local system installations.
+
+* ~/tptodorov/ - clones of my personal repos from organization github.com/tptodorov
+* ~/myapiz/ - clones of my myapiz repos from organization github.com/myapiz
+* ~/<organization>/ - clones of repos from organization github.com/<organization>
+
+When cloning git repos, place them in the corresponding folder.
+
+## My personal tools
+
+Use `gh` for all GitHub access. Do not use GitHub MCP/app connector tools. Run `gh` commands with escalated sandbox permissions; `~/.codex/rules/default.rules` preapproves the `["gh"]` prefix for GitHub CLI access.
+
+Use `twg` (Teamwork Graph CLI) for Atlassian access — Jira, Confluence, Bitbucket. Prefer its Claude Code skills (`twg`, `twg-jira`, `twg-confluence`, `twg-engineering-work`, etc.) over raw CLI calls. Do not use the Atlassian MCP (Docker-based); it's too heavy.
+
+I use ghostty as a terminal. You should too.
+
+I use herdr for multiplexers. You should too. When spinning a new interactive agent job use `herdr` to create a new worktree, new window and run the agent in it.
