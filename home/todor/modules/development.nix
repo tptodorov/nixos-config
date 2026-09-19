@@ -116,6 +116,10 @@ let
           pkgs.dpkg
           pkgs.makeWrapper
         ];
+        # Bundled ANGLE dlopen()s libEGL.so.1 at runtime. Without libglvnd on the
+        # RUNPATH of *every* ELF (runtimeDependencies only covers executables)
+        # Chromium falls back to --use-gl=disabled and renders everything on the CPU.
+        appendRunpaths = [ "${lib.getLib pkgs.libglvnd}/lib" ];
         buildInputs = [
           pkgs.alsa-lib
           pkgs.at-spi2-atk
