@@ -29,15 +29,16 @@
 
       # Runtime power management for PCI(e) devices
       # Note: "on" means runtime PM is disabled, "auto" means enabled
-      # For MacBook Pro 2017, keep devices active to prevent suspend issues
+      # Keep devices active to prevent suspend/resume issues with the
+      # Intel BE200 WiFi 7 card (see the iwlwifi fix below)
       RUNTIME_PM_ON_AC = "on";
-      RUNTIME_PM_ON_BAT = "on"; # Changed from "auto" to fix MacBook suspend issues
+      RUNTIME_PM_ON_BAT = "on"; # Changed from "auto" to fix WiFi suspend issues
 
       # Exclude specific devices from runtime PM to prevent suspend issues
-      # Particularly important for NVMe and Thunderbolt on MacBook Pro 2017
-      RUNTIME_PM_BLACKLIST = "01:00.0"; # Typically NVMe controller
+      RUNTIME_PM_BLACKLIST = "01:00.0"; # Intel BE200 WiFi 7 card
 
-      # WiFi power saving (disabled for MacBook Pro 2017 Broadcom WiFi stability)
+      # WiFi power saving (disabled for Intel BE200 stability, alongside the
+      # iwlwifi power_save=0 modprobe option below)
       WIFI_PWR_ON_AC = "off";
       WIFI_PWR_ON_BAT = "off";
     };

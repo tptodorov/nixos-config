@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a NixOS system configuration repository using Nix Flakes for declarative system and user environment management. It supports **multiple hosts** (blackbox, blade, pero, vm-aarch64) and **multiple users** with reusable configuration profiles. The modular structure makes it easy to add new machines and user accounts.
+This is a NixOS system configuration repository using Nix Flakes for declarative system and user environment management. It supports **multiple hosts** (blackbox, blade) and **multiple users** with reusable configuration profiles. The modular structure makes it easy to add new machines and user accounts.
 
 **Important for Claude Code**: This repo is shared across multiple machines. Always run `hostname` to detect which machine you are currently on before making assumptions about the active host.
 
@@ -74,7 +74,6 @@ This repository is structured to support **multiple NixOS hosts** and **multiple
   - `default.nix`: Host configuration (imports base + laptop + desktop profiles)
   - `hardware-configuration.nix`: Hardware-specific configuration
   - `modules/`: Host-specific modules (networking, services)
-- **`hosts/vm-aarch64/`**: ARM64 VM configuration
 
 #### User Configurations
 - **`modules/users/`**: User account definitions (can be reused across hosts)
@@ -86,7 +85,6 @@ This repository is structured to support **multiple NixOS hosts** and **multiple
     - `hyprland.nix`: Hyprland window manager configuration
     - `terminal.nix`: Terminal emulator configurations
     - `development.nix`: Development tools and settings
-    - `nixvim.nix`: Neovim configuration
     - `brave.nix`: Browser configuration
     - Other module files
   - `config/`: Static configuration files
@@ -128,8 +126,7 @@ This repository is structured to support **multiple NixOS hosts** and **multiple
 2. Add new files to git (Nix flakes require files to be tracked): `git add <file>`
 3. Rebuild system (includes Home Manager):
    - **On blackbox**: `sudo nixos-rebuild switch --flake .#blackbox`
-   - **On pero**: `sudo nixos-rebuild switch --flake .#pero`
-   - **On vm-aarch64**: `sudo nixos-rebuild switch --flake .#vm-aarch64`
+   - **On blade**: `sudo nixos-rebuild switch --flake .#blade`
 4. Commit changes to git after testing
 
 **Important:** Nix flakes only see files tracked by git, so new files must be added before rebuilding.

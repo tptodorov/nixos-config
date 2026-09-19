@@ -41,9 +41,6 @@ Located in `modules/profiles/`:
    - Power management
    - See `docs/PERO-SETUP.md` for installation guide
 
-3. **vm-aarch64** - ARM64 virtual machine
-   - Custom VM configuration
-
 ### User Accounts
 
 All user accounts are defined in `modules/users/` and can be imported by any host:
@@ -70,7 +67,6 @@ cat > hosts/<hostname>/default.nix <<EOF
   inputs,
   outputs,
   pkgs,
-  vm ? false,
   ...
 }:
 {
@@ -97,10 +93,7 @@ cat > hosts/<hostname>/default.nix <<EOF
   # Home Manager configuration
   home-manager = {
     backupFileExtension = "backup";
-    extraSpecialArgs = { inherit inputs outputs vm; };
-    sharedModules = [
-      inputs.nixvim.homeModules.nixvim
-    ];
+    extraSpecialArgs = { inherit inputs outputs; };
     users.todor = ../../home/todor;
   };
 
@@ -115,7 +108,7 @@ nixos-generate-config --show-hardware-config > hosts/<hostname>/hardware-configu
 # 4. Add to flake.nix
 # Edit flake.nix and add to nixosConfigurations:
 #   <hostname> = nixpkgs.lib.nixosSystem {
-#     specialArgs = { inherit inputs outputs; vm = false; };
+#     specialArgs = { inherit inputs outputs; };
 #     modules = [
 #       inputs.home-manager.nixosModules.home-manager
 #       ./hosts/<hostname>
@@ -156,7 +149,7 @@ EOF
 # 2. Create Home Manager configuration
 mkdir -p home/<username>
 cat > home/<username>/default.nix <<EOF
-{ config, lib, vm ? false, ... }:
+{ config, lib, ... }:
 {
   imports = [
     # Import desired user modules

@@ -2,7 +2,6 @@
   config,
   lib,
   pkgs,
-  vm ? false,
   laptop ? false,
   ...
 }:

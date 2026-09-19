@@ -6,8 +6,8 @@
   ...
 }:
 let
-  isLinux = pkgs.stdenv.isLinux;
-  isDarwin = pkgs.stdenv.isDarwin;
+  isLinux = pkgs.stdenv.hostPlatform.isLinux;
+  isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
   llmAgentsPkgs = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system};
   unstablePkgs = import inputs.nixpkgsUnstable {
     system = pkgs.stdenv.hostPlatform.system;
@@ -55,29 +55,23 @@ let
     '';
   };
   orcaVersion = "1.4.205";
+  # Real hashes are only prefetched for x86_64-linux so far. The other
+  # platforms are left unlisted (rather than using lib.fakeHash) so
+  # orcaPackage is simply omitted there instead of failing the build with a
+  # hash mismatch -- see the `orcaSrc != null` guard on home.packages below.
+  # TODO: prefetch aarch64-darwin/x86_64-darwin/aarch64-linux hashes and add
+  # them here once available.
   orcaSources = {
-    aarch64-darwin = pkgs.fetchurl {
-      url = "https://github.com/stablyai/orca/releases/download/v${orcaVersion}/Orca-${orcaVersion}-arm64-mac.zip";
-      hash = lib.fakeHash;
-    };
-    x86_64-darwin = pkgs.fetchurl {
-      url = "https://github.com/stablyai/orca/releases/download/v${orcaVersion}/Orca-${orcaVersion}-mac.zip";
-      hash = lib.fakeHash;
-    };
     x86_64-linux = pkgs.fetchurl {
       url = "https://github.com/stablyai/orca/releases/download/v${orcaVersion}/orca-ide_${orcaVersion}_amd64.deb";
       hash = "sha256-2nDJKu2fag1h3MNuKF1AOiwtzdMdoKUsOm3O2oSinMs=";
     };
-    aarch64-linux = pkgs.fetchurl {
-      url = "https://github.com/stablyai/orca/releases/download/v${orcaVersion}/orca-ide_${orcaVersion}_arm64.deb";
-      hash = lib.fakeHash;
-    };
   };
-  orcaSrc =
-    orcaSources.${pkgs.stdenv.hostPlatform.system}
-      or (throw "Orca is not packaged for ${pkgs.stdenv.hostPlatform.system}");
+  orcaSrc = orcaSources.${pkgs.stdenv.hostPlatform.system} or null;
   orcaPackage =
-    if isDarwin then
+    if orcaSrc == null then
+      null
+    else if isDarwin then
       pkgs.stdenvNoCC.mkDerivation {
         pname = "orca";
         version = orcaVersion;
@@ -382,7 +376,6 @@ in
       llmAgentsPkgs.hunk
       llmAgentsPkgs.but
       skillsPackage
-      orcaPackage
       omnigentPackage
       llmAgentsPkgs.openspec
       llmAgentsPkgs.openspecui
@@ -449,14 +442,6 @@ in
       erlang_28
       beam28Packages.elixir_1_19
 
-      # PHP development (cross-platform)
-      php
-      phpactor
-
-      # BEAM development (cross-platform)
-      erlang_28
-      beam28Packages.elixir_1_19
-
       # Lua development (for Neovim config, cross-platform)
       lua-language-server
 
@@ -473,6 +458,7 @@ in
       lazydocker # TUI Docker client
     ]
     ++ lib.optional (voxtypePackage != null) voxtypePackage
+    ++ lib.optional (orcaPackage != null) orcaPackage
     ++ lib.optionals isLinux [
       # Linux-only packages
       pinentry-bemenu # Wayland-native pinentry for gopass/age

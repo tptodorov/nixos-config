@@ -1,3 +1,7 @@
+# Local services profile: containers/VMs, audio, printing/scanning, media
+# serving, and local LLM runtime. Shared by every NixOS host with this kind
+# of desktop hardware (blackbox, blade). Host-only extras (e.g. blackbox's
+# xrdp RDP server) stay in that host's own modules/services.nix instead.
 {
   config,
   pkgs,
@@ -96,7 +100,7 @@
       enable = true;
       openFirewall = true;
       settings = {
-        friendly_name = "blade";
+        friendly_name = config.networking.hostName;
         media_dir = [ "V,/srv/media/video" ];
         root_container = "V";
         notify_interval = 30;
@@ -104,7 +108,6 @@
         enable_subtitles = "yes";
       };
     };
-
   };
 
   # Give Plex read access to the shared video directory and GPU devices for transcoding.

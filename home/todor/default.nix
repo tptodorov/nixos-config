@@ -12,7 +12,6 @@
     # Core user modules (always included)
     ./modules/agents.nix
     ./modules/development.nix
-    ./modules/nixvim.nix
     ./modules/shell.nix
     ./modules/terminal.nix
     ./modules/wtf.nix

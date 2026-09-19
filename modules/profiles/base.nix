@@ -14,6 +14,23 @@
   # Use latest Linux kernel
   boot.kernelPackages = lib.mkDefault pkgs.linuxPackages_latest;
 
+  # Kernel sysctl settings shared by every host (desktop and laptop alike):
+  # VM tuning plus BBR congestion control. Host-specific boot.kernelParams
+  # live in hosts/<name>/modules/kernel.nix instead.
+  #
+  # mkDefault must be applied per-key, not to the whole attrset: boot.kernel.sysctl
+  # is attrsOf, and NixOS's module merge resolves priority across whole
+  # per-module definitions before merging keys -- a single mkDefault around
+  # the entire set here would make NixOS silently drop all four keys
+  # whenever any other module (e.g. modules/profiles/gaming.nix) sets a
+  # sibling key at normal priority.
+  boot.kernel.sysctl = {
+    "vm.swappiness" = lib.mkDefault 10; # Reduce swap usage
+    "vm.vfs_cache_pressure" = lib.mkDefault 50; # Keep more directory/inode cache
+    "net.core.default_qdisc" = lib.mkDefault "fq";
+    "net.ipv4.tcp_congestion_control" = lib.mkDefault "bbr";
+  };
+
   # Nix settings
   nix = {
     # Enable flakes and new command line interface

@@ -26,13 +26,13 @@
     ../../modules/profiles/snap.nix
     ../../modules/profiles/gaming.nix
     ../../modules/profiles/headscale.nix
+    ../../modules/profiles/services.nix
 
     # Host-specific modules
     ./modules/audio.nix
     ./modules/noctalia.nix
     ./modules/kernel.nix
     ./modules/networking.nix
-    ./modules/services.nix
 
     # Shared modules
     ../../modules/common/fonts.nix
@@ -49,9 +49,6 @@
       standalone = false; # Not standalone Home Manager
       nixos = true;
     };
-    sharedModules = [
-      inputs.nixvim.homeModules.nixvim
-    ];
     users.todor = ../../home/todor;
   };
 

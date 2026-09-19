@@ -1,7 +1,6 @@
 { pkgs, ... }:
 {
   networking.hostName = "blackbox";
-  networking.networkmanager.enable = true;
 
   # Create NetworkManager connection file for USB gadget
   environment.etc."NetworkManager/system-connections/usb-gadget.nmconnection" = {
@@ -62,27 +61,6 @@
     script = "${pkgs.kmod}/bin/modprobe g_ether";
   };
 
-  # Enable mDNS for hostname resolution (blackbox.local)
-  services.avahi = {
-    enable = true;
-    nssmdns4 = true;
-    publish = {
-      enable = true;
-      addresses = true;
-      domain = true;
-      hinfo = true;
-      userServices = true;
-      workstation = true;
-    };
-  };
-
-  # Enable OpenSSH daemon
-  services.openssh = {
-    enable = true;
-    settings = {
-      PermitRootLogin = "no";
-      PasswordAuthentication = true;
-      PubkeyAuthentication = true;
-    };
-  };
+  # avahi and openssh are already enabled with these exact settings in
+  # modules/profiles/base.nix; blackbox has nothing to add here.
 }

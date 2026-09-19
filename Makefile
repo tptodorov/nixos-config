@@ -1,8 +1,3 @@
-# Connectivity info for Linux VM
-NIXADDR ?= unset
-NIXPORT ?= 22
-NIXUSER ?= todor
-
 # Get the path to this Makefile and directory
 MAKEFILE_DIR := $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
 
@@ -13,10 +8,6 @@ NIXNAME ?= blade
 # The name of the homeConfiguration for standalone Home Manager
 # Available: todor (x86_64), todor-aarch64 (ARM64)
 HMNAME ?= todor
-
-# SSH options that are used. These aren't meant to be overridden but are
-# reused a lot so we just store them up here.
-SSH_OPTIONS=-o PubkeyAuthentication=yes -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o MACs=hmac-sha2-256-etm@openssh.com
 
 # We need to do some OS switching below.
 UNAME := $(shell uname)
@@ -49,13 +40,6 @@ help:
 	@echo "  NixOS hosts:     blackbox, blade"
 	@echo "  nix-darwin:      mac"
 	@echo "  Home Manager:    todor (x86_64), todor-aarch64 (ARM64)"
-	@echo ""
-	@echo "VM Management:"
-	@echo "  make vm/bootstrap0            - Initial VM bootstrap"
-	@echo "  make vm/bootstrap             - Finalize VM setup"
-	@echo "  make vm/copy                  - Copy config to VM"
-	@echo "  make vm/switch                - Switch VM configuration"
-	@echo "  make vm/login                 - SSH into VM"
 	@echo ""
 	@echo "Secrets Management:"
 	@echo "  make secrets/backup           - Backup SSH/GPG keys"
@@ -175,85 +159,6 @@ secrets/restore:
 	chmod 700 $(HOME)/.ssh $(HOME)/.gnupg
 	chmod 600 $(HOME)/.ssh/* || true
 	chmod 700 $(HOME)/.gnupg/* || true
-
-# bootstrap a brand new VM. The VM should have NixOS ISO on the CD drive
-# and just set the password of the root user to "root". This will install
-# NixOS. After installing NixOS, you must reboot and set the root password
-# for the next step.
-#
-# NOTE(mitchellh): I'm sure there is a way to do this and bootstrap all
-# in one step but when I tried to merge them I got errors. One day.
-vm/bootstrap0:
-	ssh $(SSH_OPTIONS) -p$(NIXPORT) root@$(NIXADDR) " \
-		parted /dev/sda -- mklabel gpt; \
-		parted /dev/sda -- mkpart primary 512MB -8GB; \
-		parted /dev/sda -- mkpart primary linux-swap -8GB 100\%; \
-		parted /dev/sda -- mkpart ESP fat32 1MB 512MB; \
-		parted /dev/sda -- set 3 esp on; \
-		sleep 1; \
-		mkfs.ext4 -L nixos /dev/sda1; \
-		mkswap -L swap /dev/sda2; \
-		mkfs.fat -F 32 -n boot /dev/sda3; \
-		sleep 1; \
-		mount /dev/disk/by-label/nixos /mnt; \
-		mkdir -p /mnt/boot; \
-		mount /dev/disk/by-label/boot /mnt/boot; \
-		nixos-generate-config --root /mnt; \
-		sed --in-place '/system\.stateVersion = .*/a \
-			nix.package = pkgs.nixVersions.latest;\n \
-			nix.extraOptions = \"experimental-features = nix-command flakes\";\n \
-			nix.settings.substituters = [\"https://mitchellh-nixos-config.cachix.org\"];\n \
-			nix.settings.trusted-public-keys = [\"mitchellh-nixos-config.cachix.org-1:bjEbXJyLrL1HZZHBbO4QALnI5faYZppzkU4D2s0G8RQ=\"];\n \
-  			services.openssh.enable = true;\n \
-			services.openssh.settings.PasswordAuthentication = true;\n \
-			services.openssh.settings.PermitRootLogin = \"yes\";\n \
-			users.users.root.initialPassword = \"root\";\n \
-		' /mnt/etc/nixos/configuration.nix; \
-		nixos-install --no-root-passwd && reboot; \
-	"
-
-# after bootstrap0, run this to finalize. After this, do everything else
-# in the VM unless secrets change.
-vm/bootstrap:
-	NIXUSER=root $(MAKE) vm/copy
-	NIXUSER=root $(MAKE) vm/switch
-	# $(MAKE) vm/secrets
-	# # to be able to ssh into the VM
-	# NIXUSER=root $(MAKE) vm/secrets
-
-vm/login:
-	ssh $(SSH_OPTIONS) -p$(NIXPORT) $(NIXUSER)@$(NIXADDR)
-
-# copy our secrets into the VM
-vm/secrets:
-	# GPG keyring
-	# rsync -av -e 'ssh $(SSH_OPTIONS)' \
-	# 	--exclude='.#*' \
-	# 	--exclude='S.*' \
-	# 	--exclude='*.conf' \
-	# 	$(HOME)/.gnupg/ $(NIXUSER)@$(NIXADDR):~/.gnupg
-	# SSH keys
-	rsync -av -e 'ssh $(SSH_OPTIONS)' \
-		--exclude='environment' \
-		$(HOME)/.ssh/ $(NIXUSER)@$(NIXADDR):~/.ssh
-
-# copy the Nix configurations into the VM.
-vm/copy:
-	rsync -av -e 'ssh $(SSH_OPTIONS) -p$(NIXPORT)' \
-		--exclude='vendor/' \
-		--exclude='.git/' \
-		--exclude='.git-crypt/' \
-		--exclude='.jj/' \
-		--exclude='iso/' \
-		--rsync-path="sudo rsync" \
-		$(MAKEFILE_DIR)/ $(NIXUSER)@$(NIXADDR):/nix-config
-
-# run the nixos-rebuild switch command. This does NOT copy files so you
-# have to run vm/copy before.
-vm/switch:
-	ssh $(SSH_OPTIONS) -p$(NIXPORT) $(NIXUSER)@$(NIXADDR) " \
-		sudo NIXPKGS_ALLOW_UNSUPPORTED_SYSTEM=1 nixos-rebuild switch --flake \"/nix-config#${NIXNAME}\" \
-	"
 
 # Build a WSL installer
 .PHONY: wsl

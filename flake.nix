@@ -24,12 +24,6 @@
     # - Version: nixpkgs-unstable
     nixpkgsUnstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
-    # nixos-hardware: Hardware-specific NixOS configurations
-    # - Provides optimized settings for specific hardware (laptops, GPUs, etc.)
-    # - Used by: hosts/pero (MacBook Pro), can be used by other hosts for hardware quirks
-    # - Version: master branch (latest hardware support)
-    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
-
     # home-manager: Declarative user environment management
     # - Manages user packages, dotfiles, and application configurations
     # - Used by: All NixOS hosts (integrated), standalone configs (todor, todor-aarch64)
@@ -39,15 +33,9 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # jujutsu: Next-generation version control system (alternative to Git)
-    # - Provides the `jj` command for version control
-    # - Used by: User environment (home/todor/default.nix)
-    # - Version: main branch (latest features)
-    jujutsu.url = "github:martinvonz/jj";
-
     # zig: Zig programming language overlay
     # - Provides latest Zig compiler and toolchain
-    # - Used by: All NixOS hosts via overlay (blackbox, pero, blade)
+    # - Used by: All NixOS hosts via overlay (blackbox, blade)
     # - Version: main branch (latest Zig releases)
     zig.url = "github:mitchellh/zig-overlay";
 
@@ -61,12 +49,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # nixvim: NixOS module for configuring Neovim declaratively
-    # - Provides Neovim configuration as Nix modules
-    # - Used by: Home manager config (home/todor/modules/nixvim.nix)
-    # - Version: nixos-25.11 stable branch (matches system)
-    nixvim = {
-      url = "github:nix-community/nixvim/nixos-25.11";
+    # catppuccin: Catppuccin theme modules for Home Manager
+    # - Themes every programs.<name>.enable program from one flavor setting
+    # - Used by: Home manager config (home/todor/modules/catppuccin.nix)
+    # - Version: release-25.11 stable branch (matches nixpkgs/home-manager)
+    catppuccin = {
+      url = "github:catppuccin/nix/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -196,16 +184,13 @@
     {
       self,
       nixpkgs,
-      nixos-hardware,
       home-manager,
-      nixvim,
       nix-snapd,
       fenix,
       zig,
       niri,
       dms,
       dgop,
-      jujutsu,
       nix-darwin,
       disko,
       ...
@@ -284,7 +269,6 @@
               # Import the existing home configuration
               imports = [
                 inputs.niri.homeModules.niri
-                inputs.nixvim.homeModules.nixvim
                 ./home/todor/default.nix
               ];
 
@@ -322,7 +306,6 @@
 
               imports = [
                 inputs.niri.homeModules.niri
-                inputs.nixvim.homeModules.nixvim
                 ./home/todor/default.nix
               ];
 
@@ -385,5 +368,10 @@
         };
       };
 
+      # `nix fmt` support: run nixfmt over the whole repo, matching what
+      # .githooks/pre-commit already enforces on staged files.
+      formatter = nixpkgs.lib.genAttrs [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" ] (
+        system: nixpkgs.legacyPackages.${system}.nixfmt
+      );
     };
 }

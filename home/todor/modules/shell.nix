@@ -5,8 +5,8 @@
   ...
 }:
 let
-  isLinux = pkgs.stdenv.isLinux;
-  isDarwin = pkgs.stdenv.isDarwin;
+  isLinux = pkgs.stdenv.hostPlatform.isLinux;
+  isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
   defaultApps = import ../default-apps.nix { inherit pkgs; };
   sshAddKeys = pkgs.writeShellScript "ssh-add-keys" ''
     if [ -f "$HOME/.ssh/id_ed25519" ]; then
@@ -77,9 +77,7 @@ in
       starship
       viewFileCmd
 
-      yazi
       dysk
-      btop
       eza
 
       # Network diagnostic tools
@@ -325,6 +323,9 @@ in
       enableZshIntegration = false;
     };
     eza.enable = true;
+    # Enabled as programs (not packages) so catppuccin/nix can theme them.
+    btop.enable = true;
+    yazi.enable = true;
     starship = {
       enable = true;
       settings = {
@@ -362,15 +363,6 @@ in
 
       # Vim-friendly prefix key (Ctrl-a instead of Ctrl-b)
       prefix = "C-a";
-
-      plugins = [
-        {
-          plugin = pkgs.tmuxPlugins.catppuccin;
-          extraConfig = ''
-            set -g @catppuccin_flavor "macchiato"
-          '';
-        }
-      ];
 
       # Additional tmux configuration
       extraConfig = ''

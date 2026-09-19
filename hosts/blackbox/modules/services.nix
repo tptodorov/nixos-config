@@ -1,171 +1,19 @@
+# blackbox-only services. Everything shared with blade lives in
+# modules/profiles/services.nix instead.
+{ pkgs, ... }:
 {
-  config,
-  pkgs,
-  lib,
-  ...
-}:
-{
-  # Docker - Container runtime
-  virtualisation.docker = {
+  # RDP (Remote Desktop Protocol)
+  services.xrdp = {
     enable = true;
-    package = pkgs.docker_29;
-    daemon.settings = {
-      log-driver = "json-file";
-      log-opts = {
-        max-size = "10m";
-        max-file = "3";
-      };
-    };
+    defaultWindowManager = "${pkgs.writeScript "startwm.sh" ''
+      #!/bin/sh
+      . /etc/profile
+      export XDG_SESSION_TYPE=x11
+      export GDK_BACKEND=x11
+      exec ${pkgs.dbus}/bin/dbus-launch --exit-with-session ${pkgs.gnome-session}/bin/gnome-session
+    ''}";
+    openFirewall = true;
   };
-
-  # Local VM runtime for installing and testing desktop OS images.
-  virtualisation.libvirtd = {
-    enable = true;
-    qemu = {
-      package = pkgs.qemu_kvm;
-      swtpm.enable = true;
-    };
-  };
-
-  virtualisation.spiceUSBRedirection.enable = true;
-  programs.virt-manager.enable = true;
-
-  # System services configuration
-  security.rtkit.enable = true;
-
-  services = {
-    # Audio services
-    pulseaudio.enable = false;
-    pipewire = {
-      enable = true;
-      alsa.enable = true;
-      alsa.support32Bit = true;
-      pulse.enable = true;
-    };
-
-    # Firmware updates
-    fwupd.enable = true;
-
-    # Local LLM runtime for embeddings and model experimentation.
-    ollama = {
-      enable = true;
-      loadModels = [ "nomic-embed-text" ];
-    };
-
-    # Plex Media Server for browsing/streaming the local video library.
-    plex = {
-      enable = true;
-      openFirewall = true;
-    };
-
-    # Printing - CUPS with Epson XP-630 support
-    printing = {
-      enable = true;
-      drivers = with pkgs; [
-        gutenprint
-        epson-escpr
-        epson-escpr2
-      ];
-      browsing = true;
-      defaultShared = false;
-      listenAddresses = [ "*:631" ];
-      allowFrom = [ "all" ];
-      browsedConf = ''
-        BrowseRemoteProtocols dnssd cups
-        BrowseLocalProtocols dnssd cups
-      '';
-    };
-
-    # Avahi - for network printer/scanner discovery (mDNS/DNS-SD)
-    avahi = {
-      enable = true;
-      nssmdns4 = true;
-      openFirewall = true;
-      publish = {
-        enable = true;
-        addresses = true;
-        userServices = true;
-      };
-    };
-
-    # DLNA server for smart TVs on the local network.
-    minidlna = {
-      enable = true;
-      openFirewall = true;
-      settings = {
-        friendly_name = "blackbox";
-        media_dir = [ "V,/srv/media/video" ];
-        root_container = "V";
-        notify_interval = 30;
-        inotify = "yes";
-        enable_subtitles = "yes";
-      };
-    };
-
-    # RDP (Remote Desktop Protocol)
-    xrdp = {
-      enable = true;
-      defaultWindowManager = "${pkgs.writeScript "startwm.sh" ''
-        #!/bin/sh
-        . /etc/profile
-        export XDG_SESSION_TYPE=x11
-        export GDK_BACKEND=x11
-        exec ${pkgs.dbus}/bin/dbus-launch --exit-with-session ${pkgs.gnome-session}/bin/gnome-session
-      ''}";
-      openFirewall = true;
-    };
-  };
-
-  # Give Plex read access to the shared video directory and GPU devices for transcoding.
-  users.users.plex.extraGroups = [
-    "users"
-    "video"
-    "render"
-  ];
-
-  # Shared directory for videos served over Plex to the local network.
-  systemd.tmpfiles.rules = [
-    "d /srv/media 2775 root users - -"
-    "d /srv/media/video 2775 root users - -"
-  ];
-
-  # SANE - Scanner Access Now Easy (for Epson XP-630 scanner)
-  hardware.sane = {
-    enable = true;
-    extraBackends = with pkgs; [
-      sane-airscan
-      epkowa
-    ];
-    netConf = ''
-      # Allow scanning from network scanners
-      # Format: scanner-ip-address
-      # Example: scanner-ip-address
-    '';
-  };
-
-  # System settings
-  i18n.defaultLocale = "en_US.UTF-8";
-
-  # Nix configuration
-  nix.settings.experimental-features = [
-    "nix-command"
-    "flakes"
-  ];
-  nix.settings.trusted-users = [
-    "todor"
-    "root"
-  ];
-
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
-
-  environment.systemPackages = with pkgs; [
-    ollama
-    qemu_kvm
-    quickemu
-    virt-manager
-    virt-viewer
-  ];
 
   # Custom xrdp xorg.conf for higher resolutions
   environment.etc."xrdp/xorg.conf".text = ''

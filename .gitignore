@@ -12,6 +12,9 @@ secrets/*.pem
 result/
 result-*
 
+# Stray lock-file backups (never a real artifact worth versioning)
+*.lock.backup
+
 # Editor files
 .vscode/
 .idea/

@@ -118,22 +118,22 @@ let
         action = act.ActivateTabRelative(-1),
       },
       {
-        key = "LeftArrow",
+        key = "phys:LeftArrow",
         mods = "CTRL|SHIFT",
         action = act.ActivatePaneDirection("Left"),
       },
       {
-        key = "RightArrow",
+        key = "phys:RightArrow",
         mods = "CTRL|SHIFT",
         action = act.ActivatePaneDirection("Right"),
       },
       {
-        key = "UpArrow",
+        key = "phys:UpArrow",
         mods = "CTRL|SHIFT",
         action = act.ActivatePaneDirection("Up"),
       },
       {
-        key = "DownArrow",
+        key = "phys:DownArrow",
         mods = "CTRL|SHIFT",
         action = act.ActivatePaneDirection("Down"),
       },
@@ -222,7 +222,6 @@ in
 
     settings = {
       command = "zsh";
-      theme = "Catppuccin Macchiato";
       "font-family" = "ZedMono Nerd Font Mono";
       "font-size" = if laptop then 14 else 20;
 
@@ -349,9 +348,6 @@ in
       watcher = "workmux_watcher.py";
       inactive_text_alpha = paneStyle.brightness;
     };
-
-    # Use predefined Catppuccin Macchiato theme
-    themeFile = "Catppuccin-Macchiato";
 
     # Key mappings
     keybindings = {

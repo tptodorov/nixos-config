@@ -1,9 +1,4 @@
-{
-  config,
-  pkgs,
-  lib,
-  ...
-}:
+{ pkgs, ... }:
 {
   # System-wide font configuration
   fonts.packages = with pkgs; [

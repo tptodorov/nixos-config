@@ -67,11 +67,6 @@ Applied to: **blackbox, blade**
 
 Gaming-related packages and optimizations.
 
-### Form Factor Profile (`modules/profiles/form-factor.nix`)
-Applied to: **All NixOS hosts** (auto-determined)
-
-Conditionally applies form-factor-specific settings based on `formFactor` option.
-
 ## Quick Reference
 
 ### Applying Configuration Changes
@@ -92,7 +87,6 @@ nixos-rebuild build --flake .#<hostname>
 # NixOS
 make blackbox
 make blade
-make vm
 
 # nix-darwin
 make mac
@@ -134,9 +128,6 @@ make home-aarch64      # todor-aarch64
          laptop = false;  # Set to true for laptops
          standalone = false;
        };
-       sharedModules = [
-         inputs.nixvim.homeModules.nixvim
-       ];
        users.todor = ../../home/todor;
      };
 

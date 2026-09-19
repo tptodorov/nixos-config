@@ -2,7 +2,6 @@
   config,
   lib,
   pkgs,
-  vm ? false,
   laptop ? false,
   ...
 }:
@@ -339,7 +338,7 @@ in
       --ozone-platform=wayland
       --enable-wayland-ime
       --dark
-      ${lib.optionalString laptop "--force-device-scale-factor=1.0"}
+      ${lib.optionalString laptop "--force-device-scale-factor=2.0"}
     '';
 
     # SSH agent initialization script (gnome-keyring removed)

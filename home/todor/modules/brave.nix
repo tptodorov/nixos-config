@@ -93,13 +93,14 @@ in
   # by hand since `gopass-jsonapi configure` is interactive and would fight
   # a declarative config on every run.
   xdg.configFile."BraveSoftware/Brave-Browser/NativeMessagingHosts/com.justwatch.gopass.json".text =
-    builtins.toJSON {
-      name = "com.justwatch.gopass";
-      description = "Gopass wrapper to search and return passwords";
-      path = "${gopassJsonapiWrapper}/bin/gopass-jsonapi-wrapper";
-      type = "stdio";
-      allowed_origins = [ "chrome-extension://kkhfnlkhiapbiehimabddjbimfaijdhk/" ];
-    };
+    builtins.toJSON
+      {
+        name = "com.justwatch.gopass";
+        description = "Gopass wrapper to search and return passwords";
+        path = "${gopassJsonapiWrapper}/bin/gopass-jsonapi-wrapper";
+        type = "stdio";
+        allowed_origins = [ "chrome-extension://kkhfnlkhiapbiehimabddjbimfaijdhk/" ];
+      };
 
   # Desktop file for proper application integration
   xdg.desktopEntries.brave-browser = {
