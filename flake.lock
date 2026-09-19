@@ -34,6 +34,22 @@
         "type": "github"
       }
     },
+    "community-plugins": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1789746172,
+        "narHash": "sha256-5DaGeYso0d1SJCrZ8rjakl/C2RSxwgBc1Df+kB3xTQQ=",
+        "owner": "noctalia-dev",
+        "repo": "community-plugins",
+        "rev": "e19f5b122685cd6631dd46cc3d83e64e9f5ccf82",
+        "type": "github"
+      },
+      "original": {
+        "owner": "noctalia-dev",
+        "repo": "community-plugins",
+        "type": "github"
+      }
+    },
     "dgop": {
       "inputs": {
         "nixpkgs": [
@@ -791,6 +807,7 @@
     },
     "root": {
       "inputs": {
+        "community-plugins": "community-plugins",
         "dgop": "dgop",
         "disko": "disko",
         "dms": "dms",
